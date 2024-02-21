@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetflix.Web", "dotnetflix.Web\dotnetflix.Web.csproj", "{F8B41B28-AA48-4C8D-9DC1-3124926674A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetflix.Api", "dotnetflix.Api\dotnetflix.Api.csproj", "{EF48F515-B74D-4FD8-B9A7-429AFE7E1982}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetflix.Models", "dotnetflix.Models\dotnetflix.Models.csproj", "{D1E20594-3A45-4CB2-8994-18FC7D4BAEA5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8B41B28-AA48-4C8D-9DC1-3124926674A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8B41B28-AA48-4C8D-9DC1-3124926674A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8B41B28-AA48-4C8D-9DC1-3124926674A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8B41B28-AA48-4C8D-9DC1-3124926674A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF48F515-B74D-4FD8-B9A7-429AFE7E1982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF48F515-B74D-4FD8-B9A7-429AFE7E1982}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF48F515-B74D-4FD8-B9A7-429AFE7E1982}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF48F515-B74D-4FD8-B9A7-429AFE7E1982}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1E20594-3A45-4CB2-8994-18FC7D4BAEA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1E20594-3A45-4CB2-8994-18FC7D4BAEA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1E20594-3A45-4CB2-8994-18FC7D4BAEA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1E20594-3A45-4CB2-8994-18FC7D4BAEA5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {230A3175-BAFF-4E65-BB26-035B8A4F2A82}
+	EndGlobalSection
+EndGlobal
