@@ -34,7 +34,6 @@ namespace dotnetflix.Api.Data.Entities
     public enum MovieType
     {
         Regular,
-        Premiere,
-        Matinee
+        ThreeD,
     }
 }
