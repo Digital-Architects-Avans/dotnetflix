@@ -1,12 +1,20 @@
+using dotnetflix.Api.Data;
 using dotnetflix.Api.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace dotnetflix.Api.Repositories.Shows;
 
-public class ShowRepository
+public class ShowRepository:IShowRepository
 {
-    public Task<IEnumerable<Show>> GetShows()
+    private readonly DotNetFlixDbContext dotNetFlixDbContext;
+    public ShowRepository(DotNetFlixDbContext dotNetFlixDbContext)
     {
-        throw new NotImplementedException();
+        this.dotNetFlixDbContext = dotNetFlixDbContext;
+    }
+    public async Task<IEnumerable<Show>> GetShows()
+    {
+        var shows = await this.dotNetFlixDbContext.Shows.ToListAsync();
+        return shows;
     }
 
     public Task<Show> GetShow(int id)

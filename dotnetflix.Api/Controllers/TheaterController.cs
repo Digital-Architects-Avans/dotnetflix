@@ -1,5 +1,5 @@
 using dotnetflix.Api.Data.Entities;
-using dotnetflix.Api.Repositories.Shows;
+using dotnetflix.Api.Repositories.Theaters;
 
 namespace dotnetflix.Api.Controllers;
 using Microsoft.AspNetCore.Mvc;

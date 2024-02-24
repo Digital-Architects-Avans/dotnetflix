@@ -1,6 +1,6 @@
 using dotnetflix.Api.Data.Entities;
 
-namespace dotnetflix.Api.Repositories.Shows;
+namespace dotnetflix.Api.Repositories.Theaters;
 
 public interface ITheaterRepository
 {

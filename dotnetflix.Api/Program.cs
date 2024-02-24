@@ -1,4 +1,7 @@
 using dotnetflix.Api.Data;
+using dotnetflix.Api.Repositories.Movies;
+using dotnetflix.Api.Repositories.Shows;
+using dotnetflix.Api.Repositories.Theaters;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +15,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DotNetFlixDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<ITheaterRepository, TheaterRepository>();
+builder.Services.AddScoped<IShowRepository, ShowRepository>();
 
 var app = builder.Build();
 
