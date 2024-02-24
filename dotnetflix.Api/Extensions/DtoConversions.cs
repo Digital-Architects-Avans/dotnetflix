@@ -44,5 +44,47 @@ public static class DtoConversions
             Seats = theater.Seats
         };
     }
+    
+    public static Movie ConvertToEntity(this MovieDto movieDto)
+    {
+        return new Movie
+        {
+            Id = movieDto.Id,
+            Title = movieDto.Title,
+            Year = movieDto.Year,
+            Description = movieDto.Description,
+            // Rating = movieDto.Rating,
+            Runtime = movieDto.Runtime,
+            Image = movieDto.Image
+            // Map other properties as needed
+        };
+    }
+
+    public static Theater ConvertToEntity(this TheaterDto theaterDto)
+    {
+        return new Theater
+        {
+            Id = theaterDto.Id,
+            Name = theaterDto.Name,
+            Seats = theaterDto.Seats
+            // Map other properties as needed
+        };
+    }
+
+    public static Show ConvertToEntity(this ShowDto showDto)
+    {
+        return new Show
+        {
+            Id = showDto.Id,
+            MovieId = showDto.MovieId,
+            TheaterId = showDto.TheaterId,
+            Date = showDto.Date,
+            Time = showDto.Time,
+            // Type = showDto.Type,
+            BasePrice = showDto.BasePrice
+            // Map other properties as needed
+        };
+    }
+    
 }
 

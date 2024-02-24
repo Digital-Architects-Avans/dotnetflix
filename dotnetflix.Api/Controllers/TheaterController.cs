@@ -1,5 +1,7 @@
 using dotnetflix.Api.Data.Entities;
+using dotnetflix.Api.Extensions;
 using dotnetflix.Api.Repositories.Theaters;
+using dotnetflix.Models.Dtos;
 
 namespace dotnetflix.Api.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +18,7 @@ public class TheaterController : ControllerBase
         this.theaterRepository = theaterRepository;
     }
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Theater>>> GetTheaters()
+    public async Task<ActionResult<IEnumerable<TheaterDto>>> GetTheaters()
     {
         try
         {
@@ -29,7 +31,7 @@ public class TheaterController : ControllerBase
         }
     }
     [HttpGet("{id}")]
-    public async Task<ActionResult<Theater>> GetTheater(int id)
+    public async Task<ActionResult<TheaterDto>> GetTheater(int id)
     {
         try
         {
@@ -42,25 +44,28 @@ public class TheaterController : ControllerBase
         }
     }
     [HttpPost]
-    public async Task<ActionResult<Theater>> AddTheater(Theater theater)
+    public async Task<ActionResult<TheaterDto>> AddTheater(TheaterDto theaterDto)
     {
         try
         {
+            var theater = theaterDto.ConvertToEntity();
             var newTheater = await this.theaterRepository.AddTheater(theater);
-            return Ok(newTheater);
+            return Ok(newTheater.ConvertToDto());
         }
         catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+
     [HttpPut]
-    public async Task<ActionResult<Theater>> UpdateTheater(Theater theater)
+    public async Task<ActionResult<TheaterDto>> UpdateTheater(TheaterDto theaterDto)
     {
         try
         {
+            var theater = theaterDto.ConvertToEntity();
             var updatedTheater = await this.theaterRepository.UpdateTheater(theater);
-            return Ok(updatedTheater);
+            return Ok(updatedTheater.ConvertToDto());
         }
         catch (Exception ex)
         {
@@ -68,7 +73,7 @@ public class TheaterController : ControllerBase
         }
     }
     [HttpDelete("{id}")]
-    public async Task<ActionResult<Theater>> DeleteTheater(int id)
+    public async Task<ActionResult<TheaterDto>> DeleteTheater(int id)
     {
         try
         {
@@ -80,4 +85,7 @@ public class TheaterController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+    
+
 }
+

@@ -1,5 +1,7 @@
 using dotnetflix.Api.Data.Entities;
+using dotnetflix.Api.Extensions;
 using dotnetflix.Api.Repositories.Shows;
+using dotnetflix.Models.Dtos;
 
 namespace dotnetflix.Api.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +18,7 @@ public class ShowController : ControllerBase
         this.showRepository = showRepository;
     }
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Show>>> GetShows()
+    public async Task<ActionResult<IEnumerable<ShowDto>>> GetShows()
     {
         try
         {
@@ -29,7 +31,7 @@ public class ShowController : ControllerBase
         }
     }
     [HttpGet("{id}")]
-    public async Task<ActionResult<Show>> GetShow(int id)
+    public async Task<ActionResult<ShowDto>> GetShow(int id)
     {
         try
         {
@@ -42,10 +44,11 @@ public class ShowController : ControllerBase
         }
     }
     [HttpPost]
-    public async Task<ActionResult<Show>> AddShow(Show show)
+    public async Task<ActionResult<ShowDto>> AddShow(ShowDto showDto)
     {
         try
         {
+            var show = showDto.ConvertToEntity();
             var newShow = await this.showRepository.AddShow(show);
             return Ok(newShow);
         }
@@ -55,7 +58,7 @@ public class ShowController : ControllerBase
         }
     }
     [HttpPut]
-    public async Task<ActionResult<Show>> UpdateShow(Show show)
+    public async Task<ActionResult<ShowDto>> UpdateShow(Show show)
     {
         try
         {
@@ -68,7 +71,7 @@ public class ShowController : ControllerBase
         }
     }
     [HttpDelete("{id}")]
-    public async Task<ActionResult<Show>> DeleteShow(int id)
+    public async Task<ActionResult<ShowDto>> DeleteShow(int id)
     {
         try
         {

@@ -1,5 +1,7 @@
 using dotnetflix.Api.Data.Entities;
+using dotnetflix.Api.Extensions;
 using dotnetflix.Api.Repositories.Movies;
+using dotnetflix.Models.Dtos;
 
 namespace dotnetflix.Api.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +30,7 @@ public class MovieController : ControllerBase
         }
     }
     [HttpGet("{id}")]
-    public async Task<ActionResult<Movie>> GetMovie(int id)
+    public async Task<ActionResult<MovieDto>> GetMovie(int id)
     {
         try
         {
@@ -41,10 +43,11 @@ public class MovieController : ControllerBase
         }
     }
     [HttpPost]
-    public async Task<ActionResult<Movie>> AddMovie(Movie movie)
+    public async Task<ActionResult<MovieDto>> AddMovie(MovieDto movieDto)
     {
         try
         {
+            var movie = movieDto.ConvertToEntity();
             var newMovie = await this.movieRepository.AddMovie(movie);
             return Ok(newMovie);
         }
@@ -54,7 +57,7 @@ public class MovieController : ControllerBase
         }
     }
     [HttpPut]
-    public async Task<ActionResult<Movie>> UpdateMovie(Movie movie)
+    public async Task<ActionResult<MovieDto>> UpdateMovie(Movie movie)
     {
         try
         {
@@ -67,7 +70,7 @@ public class MovieController : ControllerBase
         }
     }
     [HttpDelete("{id}")]
-    public async Task<ActionResult<Movie>> DeleteMovie(int id)
+    public async Task<ActionResult<MovieDto>> DeleteMovie(int id)
     {
         try
         {
