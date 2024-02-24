@@ -40,9 +40,9 @@ public static class DtoConversions
         {
             Id = show.Id,
             MovieId = show.MovieId,
-            Movie = show.Movie.Title,
+            // Movie = show.Movie.Title,
             TheaterId = show.TheaterId,
-            Theater = show.Theater.Name,
+            // Theater = show.Theater.Name,
             Date = show.Date,
             Time = show.Time,
             Type = show.Type.ToString(),
