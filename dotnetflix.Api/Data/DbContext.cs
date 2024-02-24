@@ -13,7 +13,7 @@ namespace dotnetflix.Api.Data
                 protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+        
             // Seed data for Movie
             modelBuilder.Entity<Movie>().HasData(
                 new Movie
@@ -52,7 +52,7 @@ namespace dotnetflix.Api.Data
                     Rating = Rating.PG13, Runtime = 181, Image = "avengersendgame.jpg"
                 }
             );
-
+        
             // Seed data for Theater
             modelBuilder.Entity<Theater>().HasData(
                 new Theater { Id = 1, Name = "Theater 1", Seats = 120 },
@@ -62,7 +62,7 @@ namespace dotnetflix.Api.Data
                 new Theater { Id = 5, Name = "Theater 5", Seats = 50 },
                 new Theater { Id = 6, Name = "Theater 6", Seats = 50 }
             );
-
+        
             // Seed data for Show
             // Assuming a pattern for shows, adjust as necessary
             int showId = 1;
