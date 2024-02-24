@@ -1,12 +1,20 @@
+using dotnetflix.Api.Data;
 using dotnetflix.Api.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace dotnetflix.Api.Repositories.Movies;
 
 public class MovieRepository: IMovieRepository
 {
-    public Task<IEnumerable<Movie>> GetMovies()
+    private readonly DotNetFlixDbContext dotNetFlixDbContext;
+    public MovieRepository(DotNetFlixDbContext dotNetFlixDbContext)
     {
-        throw new NotImplementedException();
+        this.dotNetFlixDbContext = dotNetFlixDbContext;
+    }
+    public async Task<IEnumerable<Movie>> GetMovies()
+    {
+        var movies = await this.dotNetFlixDbContext.Movies.ToListAsync();
+        return movies;
     }
 
     public Task<Movie> GetMovie(int id)
