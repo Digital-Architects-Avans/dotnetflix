@@ -9,7 +9,6 @@ namespace dotnetflix.Api.Data
             : base(options)
         {
         }
-
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Show> Shows { get; set; }
         public DbSet<Theater> Theaters { get; set; }
