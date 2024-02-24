@@ -11,10 +11,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3e252641-834f-46d9-b723-d0d1430808de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dotnetflix.Api/Data/DbContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dotnetflix.Api/Data/Entities/Movie.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dotnetflix.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/dotnetflix.Api/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dotnetflix.Api/dotnetflix.Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/dotnetflix.Api/dotnetflix.Api.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dotnetflix.Api/Data/Entities/Show.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dotnetflix.Api/Data/Entities/Theater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dotnetflix.Api/Data/Entities/Movie.cs" beforeDir="false" afterPath="$PROJECT_DIR$/dotnetflix.Api/Data/Entities/Movie.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,38 +26,38 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2co3CMPecJoqacxOuj0wDey1IZi" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Migrations",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Migrations&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "azure"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;azure&quot;
     ],
-    "rider.external.source.directories": [
-      "/Users/sgbuddy/Library/Application Support/JetBrains/Rider2023.3/resharper-host/DecompilerCache",
-      "/Users/sgbuddy/Library/Application Support/JetBrains/Rider2023.3/resharper-host/SourcesCache",
-      "/Users/sgbuddy/.local/share/Symbols/src"
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/Users/sgbuddy/Library/Application Support/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
+      &quot;/Users/sgbuddy/Library/Application Support/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
+      &quot;/Users/sgbuddy/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.dotnetflix.Web: http">
+}</component>
+  <component name="RunManager" selected=".NET Launch Settings Profile.dotnetflix.Api: https">
     <configuration name="dotnetflix.Api: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/dotnetflix.Api/dotnetflix.Api.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
@@ -129,6 +128,7 @@
       <option name="presentableId" value="Default" />
       <updated>1708763975464</updated>
       <workItem from="1708763976638" duration="1849000" />
+      <workItem from="1708765841485" duration="2678000" />
     </task>
     <servers />
   </component>
