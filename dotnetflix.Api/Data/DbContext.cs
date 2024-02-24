@@ -28,39 +28,39 @@ namespace dotnetflix.Api.Data
                     Id = 2, Title = "The Dark Knight", Year = 2008,
                     Description =
                         "When the menace known as the Joker emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham.",
-                    Rating = Rating.Twelve, Runtime = 152, Image = "thedarkknight.jpg"
+                    Rating = Rating.PG13, Runtime = 152, Image = "thedarkknight.jpg"
                 },
                 new Movie
                 {
                     Id = 3, Title = "Inception", Year = 2010,
                     Description =
                         "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
-                    Rating = Rating.Twelve, Runtime = 148, Image = "inception.jpg"
+                    Rating = Rating.PG13, Runtime = 148, Image = "inception.jpg"
                 },
                 new Movie
                 {
                     Id = 4, Title = "Parasite", Year = 2019,
                     Description =
                         "Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.",
-                    Rating = Rating.Sixteen, Runtime = 132, Image = "parasite.jpg"
+                    Rating = Rating.R, Runtime = 132, Image = "parasite.jpg"
                 },
                 new Movie
                 {
                     Id = 5, Title = "Avengers: Endgame", Year = 2019,
                     Description =
                         "After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.",
-                    Rating = Rating.Twelve, Runtime = 181, Image = "avengersendgame.jpg"
+                    Rating = Rating.PG13, Runtime = 181, Image = "avengersendgame.jpg"
                 }
             );
 
             // Seed data for Theater
             modelBuilder.Entity<Theater>().HasData(
-                new Theater { Id = 1, Name = "Cinema Park", Seats = 120, Location = "Downtown" },
-                new Theater { Id = 2, Name = "Grand Theater", Seats = 120, Location = "Uptown" },
-                new Theater { Id = 3, Name = "Metro Cinema", Seats = 120, Location = "Midtown" },
-                new Theater { Id = 4, Name = "Indie House", Seats = 60, Location = "Eastside" },
-                new Theater { Id = 5, Name = "Silver Screen", Seats = 50, Location = "Westside" },
-                new Theater { Id = 6, Name = "Pixar Place", Seats = 50, Location = "Southside" }
+                new Theater { Id = 1, Name = "Theater 1", Seats = 120 },
+                new Theater { Id = 2, Name = "Theater 2", Seats = 120 },
+                new Theater { Id = 3, Name = "Theater 3", Seats = 120 },
+                new Theater { Id = 4, Name = "Theater 4", Seats = 60 },
+                new Theater { Id = 5, Name = "Theater 5", Seats = 50 },
+                new Theater { Id = 6, Name = "Theater 6", Seats = 50 }
             );
 
             // Seed data for Show
