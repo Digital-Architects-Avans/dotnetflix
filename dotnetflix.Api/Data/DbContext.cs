@@ -9,8 +9,8 @@ namespace dotnetflix.Api.Data
             : base(options)
         {
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        
+                protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -85,7 +85,7 @@ namespace dotnetflix.Api.Data
                 }
             }
         }
-
+        
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Show> Shows { get; set; }
         public DbSet<Theater> Theaters { get; set; }
