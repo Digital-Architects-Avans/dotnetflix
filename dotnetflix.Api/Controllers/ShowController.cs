@@ -23,11 +23,20 @@ public class ShowController : ControllerBase
         try
         {
             var shows = await this.showRepository.GetShows();
-            return Ok(shows);
+            if (shows == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var showDtos = shows.ConvertToDto();
+                return Ok(showDtos);
+            }
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, 
+                "Error retrieving data from the database");
         }
     }
     [HttpGet("{id}")]

@@ -5,6 +5,21 @@ namespace dotnetflix.Api.Extensions;
 
 public static class DtoConversions
 {
+    public static IEnumerable<MovieDto> ConvertToDto(this IEnumerable<Movie> movies)
+    {
+        return movies.Select(movie => movie.ConvertToDto()).ToList();
+    }
+    
+    public static IEnumerable<TheaterDto> ConvertToDto(this IEnumerable<Theater> theaters)
+    {
+        return theaters.Select(theater => theater.ConvertToDto());
+    }
+    
+    public static IEnumerable<ShowDto> ConvertToDto(this IEnumerable<Show> shows)
+    {
+        return shows.Select(show => show.ConvertToDto());
+    }
+    
     public static MovieDto ConvertToDto(this Movie movie)
     {
         return new MovieDto

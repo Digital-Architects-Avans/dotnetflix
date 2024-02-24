@@ -23,11 +23,20 @@ public class TheaterController : ControllerBase
         try
         {
             var theaters = await this.theaterRepository.GetTheaters();
-            return Ok(theaters);
+            if (theaters == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var theaterDtos = theaters.ConvertToDto();
+                return Ok(theaterDtos);
+            }
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, 
+                "Error retrieving data from the database");
         }
     }
     [HttpGet("{id}")]

@@ -22,11 +22,20 @@ public class MovieController : ControllerBase
         try
         {
             var movies = await this.movieRepository.GetMovies();
-            return Ok(movies);
+            if (movies == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var movieDtos = movies.ConvertToDto();
+                return Ok(movieDtos);
+            }
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, 
+                "Error retrieving data from the database");
         }
     }
     [HttpGet("{id}")]
