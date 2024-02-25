@@ -1,4 +1,6 @@
 using dotnetflix.Api.Data.Entities;
+using dotnetflix.Models.Dtos.Movie;
+using dotnetflix.Models.Dtos.Show;
 using Microsoft.EntityFrameworkCore;
 
 namespace dotnetflix.Api.Data
@@ -77,7 +79,7 @@ namespace dotnetflix.Api.Data
                             MovieId = movieId,
                             TheaterId = theaterId,
                             Date = DateTime.Today.AddDays(theaterId), // Just an example, adjust accordingly
-                            Time = new TimeSpan(19, 0, 0), // 7 PM for simplicity, adjust as needed
+                            ScreenTime = 90, // 7 PM for simplicity, adjust as needed
                             Type = MovieType.Regular,
                             BasePrice = 10.00m + (2 * movieId) // Example pricing strategy
                         }
