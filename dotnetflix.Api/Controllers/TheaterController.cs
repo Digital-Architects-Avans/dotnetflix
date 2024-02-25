@@ -49,7 +49,17 @@ public class TheaterController : ControllerBase
         try
         {
             var theater = await _theaterRepository.GetTheater(id);
-            return Ok(theater);
+
+            if (theater == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var theaterDto = theater.ConvertToDto();
+                
+                return Ok(theaterDto);
+            }
         }
         catch (Exception ex)
         {
@@ -63,11 +73,14 @@ public class TheaterController : ControllerBase
         try
         {
             var newTheater = await _theaterRepository.AddTheater(addTheaterDto);
+            
             if (newTheater == null)
             {
                 return NoContent();
             }
+            
             var newTheaterDto = newTheater.ConvertToDto();
+            
             return Ok(newTheaterDto);
         }
         catch (Exception ex)
@@ -82,7 +95,15 @@ public class TheaterController : ControllerBase
         try
         {
             var updatedTheater = await _theaterRepository.UpdateTheater(id, updateTheaterDto);
-            return Ok(updatedTheater.ConvertToDto());
+
+            if (updatedTheater == null)
+            {
+                return NotFound();
+            }
+            
+            var updatedTheaterDto = updatedTheater.ConvertToDto();
+            
+            return Ok(updatedTheaterDto);
         }
         catch (Exception ex)
         {
@@ -96,7 +117,14 @@ public class TheaterController : ControllerBase
         try
         {
             var theater = await _theaterRepository.DeleteTheater(id);
-            return Ok(theater);
+
+            if (theater == null)
+            {
+                return NotFound();
+            }
+            var theaterDto = theater.ConvertToDto();
+            
+            return Ok(theaterDto);
         }
         catch (Exception ex)
         {

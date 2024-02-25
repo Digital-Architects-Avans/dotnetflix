@@ -18,7 +18,8 @@ public class ShowController : ControllerBase
     private readonly IMovieRepository _movieRepository;
     private readonly ITheaterRepository _theaterRepository;
 
-    public ShowController(IShowRepository showRepository, IMovieRepository movieRepository, ITheaterRepository theaterRepository)
+    public ShowController(IShowRepository showRepository, IMovieRepository movieRepository,
+        ITheaterRepository theaterRepository)
     {
         _showRepository = showRepository;
         _movieRepository = movieRepository;
@@ -35,19 +36,19 @@ public class ShowController : ControllerBase
             {
                 return NotFound();
             }
-            
+
             var movies = await _movieRepository.GetMovies();
             if (movies == null)
             {
                 throw new Exception("No movies exists in the system");
             }
-            
+
             var theaters = await _theaterRepository.GetTheaters();
             if (theaters == null)
             {
                 throw new Exception("No theaters exists in the system");
             }
-            
+
 
             var showDtos = shows.ConvertToDto(movies, theaters);
             return Ok(showDtos);
@@ -65,7 +66,15 @@ public class ShowController : ControllerBase
         try
         {
             var show = await _showRepository.GetShow(id);
-            return Ok(show);
+
+            if (show == null)
+            {
+                return NotFound();
+            }
+
+            var showDto = show.ConvertToDto();
+
+            return Ok(showDto);
         }
         catch (Exception ex)
         {
@@ -99,7 +108,15 @@ public class ShowController : ControllerBase
         try
         {
             var updatedShow = await _showRepository.UpdateShow(id, updateShowDto);
-            return Ok(updatedShow);
+
+            if (updatedShow == null)
+            {
+                return NotFound();
+            }
+
+            var updatedShowDto = updatedShow.ConvertToDto();
+
+            return Ok(updatedShowDto);
         }
         catch (Exception ex)
         {
@@ -113,7 +130,15 @@ public class ShowController : ControllerBase
         try
         {
             var show = await _showRepository.DeleteShow(id);
-            return Ok(show);
+
+            if (show == null)
+            {
+                return NotFound();
+            }
+
+            var showDto = show.ConvertToDto();
+
+            return Ok(showDto);
         }
         catch (Exception ex)
         {

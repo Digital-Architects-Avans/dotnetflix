@@ -29,6 +29,7 @@ public class MovieController : ControllerBase
             else
             {
                 var movieDtos = movies.ConvertToDto();
+                
                 return Ok(movieDtos);
             }
         }
@@ -44,7 +45,18 @@ public class MovieController : ControllerBase
         try
         {
             var movie = await _movieRepository.GetMovie(id);
-            return Ok(movie);
+            
+            if (movie == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                var movieDto = movie.ConvertToDto();
+                
+                return Ok(movieDto);
+            }
+            
         }
         catch (Exception ex)
         {
@@ -78,7 +90,15 @@ public class MovieController : ControllerBase
         try
         {
             var updatedMovie = await _movieRepository.UpdateMovie(id, updateMovieDto);
-            return Ok(updatedMovie);
+            
+            if (updatedMovie == null)
+            {
+                return NoContent();
+            }
+            
+            var updatedMovieDto = updatedMovie.ConvertToDto();
+            
+            return Ok(updatedMovieDto);
         }
         catch (Exception ex)
         {
@@ -92,7 +112,15 @@ public class MovieController : ControllerBase
         try
         {
             var movie = await _movieRepository.DeleteMovie(id);
-            return Ok(movie);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            
+            var movieDto = movie.ConvertToDto();
+            
+            return Ok(movieDto);
         }
         catch (Exception ex)
         {
