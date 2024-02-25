@@ -60,7 +60,7 @@ public class ShowController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<ShowDto>> GetShow(int id)
     {
         try
@@ -94,6 +94,7 @@ public class ShowController : ControllerBase
             }
 
             var newShowDto = newShow.ConvertToDto();
+            
             return Ok(newShowDto);
         }
         catch (Exception ex)
