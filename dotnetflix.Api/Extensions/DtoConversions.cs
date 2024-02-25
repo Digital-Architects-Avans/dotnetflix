@@ -1,5 +1,7 @@
 using dotnetflix.Api.Data.Entities;
-using dotnetflix.Models.Dtos;
+using dotnetflix.Models.Dtos.Movie;
+using dotnetflix.Models.Dtos.Show;
+using dotnetflix.Models.Dtos.Theater;
 
 namespace dotnetflix.Api.Extensions;
 
@@ -9,17 +11,33 @@ public static class DtoConversions
     {
         return movies.Select(movie => movie.ConvertToDto()).ToList();
     }
-    
+
     public static IEnumerable<TheaterDto> ConvertToDto(this IEnumerable<Theater> theaters)
     {
         return theaters.Select(theater => theater.ConvertToDto());
     }
-    
-    public static IEnumerable<ShowDto> ConvertToDto(this IEnumerable<Show> shows)
+
+    public static IEnumerable<ShowDto> ConvertToDto(this IEnumerable<Show> shows, IEnumerable<Movie> movies,
+        IEnumerable<Theater> theaters)
     {
-        return shows.Select(show => show.ConvertToDto());
+        return (from show in shows
+            join movie in movies on show.MovieId equals movie.Id
+            join theater in theaters on show.TheaterId equals theater.Id
+            select new ShowDto
+            {
+                Id = show.Id,
+                MovieId = show.MovieId,
+                MovieTitle = movie.Title,
+                TheaterId = show.TheaterId,
+                TheaterName = theater.Name,
+                Date = show.Date,
+                ScreenTime = show.ScreenTime,
+                Type = show.Type.ToString(),
+                BasePrice = show.BasePrice
+            }).ToList();
     }
-    
+
+
     public static MovieDto ConvertToDto(this Movie movie)
     {
         return new MovieDto
@@ -28,7 +46,7 @@ public static class DtoConversions
             Title = movie.Title,
             Year = movie.Year,
             Description = movie.Description,
-            Rating = movie.Rating.ToString(),
+            Rating = movie.Rating,
             Runtime = movie.Runtime,
             Image = movie.Image
         };
@@ -40,16 +58,16 @@ public static class DtoConversions
         {
             Id = show.Id,
             MovieId = show.MovieId,
-            // Movie = show.Movie.Title,
+            MovieTitle = show.Movie.Title,
             TheaterId = show.TheaterId,
-            // Theater = show.Theater.Name,
+            TheaterName = show.Theater.Name,
             Date = show.Date,
-            Time = show.Time,
+            ScreenTime = show.ScreenTime,
             Type = show.Type.ToString(),
             BasePrice = show.BasePrice
         };
     }
-    
+
     public static TheaterDto ConvertToDto(this Theater theater)
     {
         return new TheaterDto
@@ -59,47 +77,4 @@ public static class DtoConversions
             Seats = theater.Seats
         };
     }
-    
-    public static Movie ConvertToEntity(this MovieDto movieDto)
-    {
-        return new Movie
-        {
-            Id = movieDto.Id,
-            Title = movieDto.Title,
-            Year = movieDto.Year,
-            Description = movieDto.Description,
-            // Rating = movieDto.Rating,
-            Runtime = movieDto.Runtime,
-            Image = movieDto.Image
-            // Map other properties as needed
-        };
-    }
-
-    public static Theater ConvertToEntity(this TheaterDto theaterDto)
-    {
-        return new Theater
-        {
-            Id = theaterDto.Id,
-            Name = theaterDto.Name,
-            Seats = theaterDto.Seats
-            // Map other properties as needed
-        };
-    }
-
-    public static Show ConvertToEntity(this ShowDto showDto)
-    {
-        return new Show
-        {
-            Id = showDto.Id,
-            MovieId = showDto.MovieId,
-            TheaterId = showDto.TheaterId,
-            Date = showDto.Date,
-            Time = showDto.Time,
-            // Type = showDto.Type,
-            BasePrice = showDto.BasePrice
-            // Map other properties as needed
-        };
-    }
-    
 }
-
