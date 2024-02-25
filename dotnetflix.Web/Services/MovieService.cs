@@ -10,7 +10,7 @@ public class MovieService : IMovieService
 
     public MovieService(HttpClient httpClient)
     {
-        this._httpClient = httpClient;
+        _httpClient = httpClient;
     }
 
     /*

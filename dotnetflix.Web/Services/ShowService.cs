@@ -10,7 +10,7 @@ public class ShowService : IShowService
 
     public ShowService(HttpClient httpClient)
     {
-        this._httpClient = httpClient;
+        _httpClient = httpClient;
     }
 
     /*
