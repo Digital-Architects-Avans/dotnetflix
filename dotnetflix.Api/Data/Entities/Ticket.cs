@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using dotnetflix.Models.Dtos;
 
-namespace dotnetflix.Api.Entities
+namespace dotnetflix.Api.Data.Entities
 {
     public class Ticket
     {
