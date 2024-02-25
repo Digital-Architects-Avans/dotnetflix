@@ -1,4 +1,6 @@
 using dotnetflix.Api.Data.Entities;
+using dotnetflix.Api.Entities;
+using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Show;
 using dotnetflix.Models.Dtos.Theater;
@@ -37,8 +39,37 @@ public static class DtoConversions
             }).ToList();
     }
 
+	public static IEnumerable<TicketDto> ConvertToDto
+    (this
+		IEnumerable<Ticket> tickets,
+		IEnumerable<Movie> movies,
+		IEnumerable<Show> shows,
+		IEnumerable<Theater> theaters,
+		IEnumerable<Seat> seats
+    )
+	{
+		return (from ticket in tickets
+				join movie in movies on ticket.MovieId equals movie.Id
+				join show in shows on ticket.ShowId equals show.Id
+				join theater in theaters on ticket.TheaterId equals theater.Id
+                join seat in seats on ticket.SeatId equals seat.Id
+				select new TicketDto
+				{
+					Id = ticket.Id,
+					MovieId = ticket.MovieId,
+                    MovieTitle = movie.Title,
+                    MovieRuntime = movie.Runtime,
+					ShowId = ticket.ShowId,
+                    ShowDate = show.Date,
+                    // ShowTime = show.ScreenTime,
+                    BasePrice = show.BasePrice,
+					Discount = ticket.Discount,
+					TheaterId = ticket.TheaterId
+				}).ToList();
+	}
 
-    public static MovieDto ConvertToDto(this Movie movie)
+
+	public static MovieDto ConvertToDto(this Movie movie)
     {
         return new MovieDto
         {
@@ -77,4 +108,17 @@ public static class DtoConversions
             Seats = theater.Seats
         };
     }
+
+	public static TicketDto ConvertToDto(this Ticket ticket)
+	{
+		return new TicketDto
+        {
+			Id = ticket.Id,
+			MovieId = ticket.MovieId,
+			ShowId = ticket.ShowId,
+			TheaterId = ticket.TheaterId,
+			SeatId = ticket.SeatId,
+			Row = ticket.Row
+		};
+	}
 }

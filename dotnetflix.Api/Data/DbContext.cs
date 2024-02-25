@@ -1,4 +1,5 @@
-using dotnetflix.Api.Data.Entities;
+﻿using dotnetflix.Api.Data.Entities;
+using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Show;
 using Microsoft.EntityFrameworkCore;
@@ -85,10 +86,51 @@ namespace dotnetflix.Api.Data
                     );
                 }
             }
-        }
+
+			// Seed data for Seat
+
+			/* De bioscoop bestaat uit 6 zalen: 3 grote zalen (1 tot en met 3) en 3 kleine (4 tot en met 6).
+            *    - Zaal 1 tot en met 3 hebben elk 8 rijen van 15 stoelen.
+            *    - Zaal 4 is een kleine(re) zaal en heeft 60 stoelen in 6 rijen van 10.
+            *    - Zaal 5 en 6 zijn de kleine zalen met allebei 50 stoelen, voorin 2 maal 10 stoelen, achterin 2 maal 15 stoelen
+            */
+			for (int theaterId = 1; theaterId <= 6; theaterId++)
+			{
+				int rowCount, seatCount;
+
+				if (theaterId >= 1 && theaterId <= 3)
+				{
+					rowCount = 8;
+					seatCount = 15;
+				}
+				else if (theaterId == 4)
+				{
+					rowCount = 6;
+					seatCount = 10;
+				}
+				else
+				{
+					rowCount = 6;
+					seatCount = 15;
+				}
+
+				for (int row = 1; row <= rowCount; row++)
+				{
+					for (int seat = 1; seat <= seatCount; seat++)
+					{
+						Seat newSeat = new Seat { Row = row, Id = seat, TheaterId = theaterId };
+						modelBuilder.Entity<Seat>().HasData(newSeat);
+					}
+				}
+			}
+		}
+
+
         
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Show> Shows { get; set; }
         public DbSet<Theater> Theaters { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Seat> Seats { get; set; }
     }
 }

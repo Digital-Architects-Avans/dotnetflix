@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace dotnetflix.Models.Dtos;
+﻿namespace dotnetflix.Models.Dtos;
 
 public class TicketDto
 {
@@ -13,17 +7,17 @@ public class TicketDto
 
 	// MOVIE
 	public int MovieId { get; set; }
-	public string MovieName { get; set; }
+	public string MovieTitle { get; set; }
 	public int MovieRuntime {  get; set; }
 
 	// SHOW
 	public int ShowId { get; set; }
 	public DateTime ShowDate {  get; set; }
-	public DateTime ShowTime { get; set; }
-	public float BasePrice { get; set; }
+	// public DateTime ShowTime { get; set; }
+	public decimal BasePrice { get; set; }
 	public Discount Discount { get; set; }
 
-		// THEATER
+	// THEATER
 	public int TheaterId {  get; set; }
 
 	// SEAT
