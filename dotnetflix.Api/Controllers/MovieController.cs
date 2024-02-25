@@ -1,3 +1,4 @@
+using dotnetflix.Api.Data.Entities;
 using dotnetflix.Api.Extensions;
 using dotnetflix.Api.Repositories.Movies;
 using Microsoft.AspNetCore.Mvc;
@@ -22,16 +23,15 @@ public class MovieController : ControllerBase
         try
         {
             var movies = await _movieRepository.GetMovies();
+            
             if (movies == null)
             {
                 return NotFound();
             }
-            else
-            {
-                var movieDtos = movies.ConvertToDto();
-                
-                return Ok(movieDtos);
-            }
+
+            var movieDtos = movies.ConvertToDto();
+
+            return Ok(movieDtos);
         }
         catch (Exception ex)
         {
@@ -39,24 +39,21 @@ public class MovieController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<MovieDto>> GetMovie(int id)
     {
         try
         {
             var movie = await _movieRepository.GetMovie(id);
-            
+
             if (movie == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-            else
-            {
-                var movieDto = movie.ConvertToDto();
-                
-                return Ok(movieDto);
-            }
-            
+
+            var movieDto = movie.ConvertToDto();
+
+            return Ok(movieDto);
         }
         catch (Exception ex)
         {
@@ -76,6 +73,7 @@ public class MovieController : ControllerBase
             }
 
             var newMovieDto = newMovie.ConvertToDto();
+
             return Ok(newMovieDto);
         }
         catch (Exception ex)
@@ -90,14 +88,14 @@ public class MovieController : ControllerBase
         try
         {
             var updatedMovie = await _movieRepository.UpdateMovie(id, updateMovieDto);
-            
+
             if (updatedMovie == null)
             {
                 return NoContent();
             }
-            
+
             var updatedMovieDto = updatedMovie.ConvertToDto();
-            
+
             return Ok(updatedMovieDto);
         }
         catch (Exception ex)
@@ -117,9 +115,9 @@ public class MovieController : ControllerBase
             {
                 return NotFound();
             }
-            
+
             var movieDto = movie.ConvertToDto();
-            
+
             return Ok(movieDto);
         }
         catch (Exception ex)

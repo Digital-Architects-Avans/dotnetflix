@@ -5,12 +5,12 @@ using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.Theater;
 
 namespace dotnetflix.Api.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
 [Route("api/[controller]")]
 [ApiController]
-
 public class TheaterController : ControllerBase
 {
     private readonly ITheaterRepository _theaterRepository;
@@ -26,15 +26,15 @@ public class TheaterController : ControllerBase
         try
         {
             var theaters = await _theaterRepository.GetTheaters();
+            
             if (theaters == null)
             {
                 return NotFound();
             }
-            else
-            {
-                var theaterDtos = theaters.ConvertToDto();
-                return Ok(theaterDtos);
-            }
+
+            var theaterDtos = theaters.ConvertToDto();
+            
+            return Ok(theaterDtos);
         }
         catch (Exception ex)
         {
@@ -54,12 +54,10 @@ public class TheaterController : ControllerBase
             {
                 return NotFound();
             }
-            else
-            {
-                var theaterDto = theater.ConvertToDto();
-                
-                return Ok(theaterDto);
-            }
+
+            var theaterDto = theater.ConvertToDto();
+
+            return Ok(theaterDto);
         }
         catch (Exception ex)
         {
@@ -73,14 +71,14 @@ public class TheaterController : ControllerBase
         try
         {
             var newTheater = await _theaterRepository.AddTheater(addTheaterDto);
-            
+
             if (newTheater == null)
             {
                 return NoContent();
             }
-            
+
             var newTheaterDto = newTheater.ConvertToDto();
-            
+
             return Ok(newTheaterDto);
         }
         catch (Exception ex)
@@ -100,9 +98,9 @@ public class TheaterController : ControllerBase
             {
                 return NotFound();
             }
-            
+
             var updatedTheaterDto = updatedTheater.ConvertToDto();
-            
+
             return Ok(updatedTheaterDto);
         }
         catch (Exception ex)
@@ -122,8 +120,9 @@ public class TheaterController : ControllerBase
             {
                 return NotFound();
             }
+
             var theaterDto = theater.ConvertToDto();
-            
+
             return Ok(theaterDto);
         }
         catch (Exception ex)
@@ -132,4 +131,3 @@ public class TheaterController : ControllerBase
         }
     }
 }
-

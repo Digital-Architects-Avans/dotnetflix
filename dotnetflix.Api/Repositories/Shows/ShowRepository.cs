@@ -20,10 +20,24 @@ public class ShowRepository : IShowRepository
         return shows;
     }
 
-    public Task<Show> GetShow(int id)
+    public async Task<Show> GetShow(int id)
     {
-        var show = _dotNetFlixDbContext.Shows.SingleOrDefaultAsync(s => s.Id == id);
-        return show;
+        return await (from show in _dotNetFlixDbContext.Shows
+            join movie in _dotNetFlixDbContext.Movies on show.MovieId equals movie.Id
+            join theater in _dotNetFlixDbContext.Theaters on show.TheaterId equals theater.Id
+            where show.Id == id
+            select new Show
+            {
+                Id = show.Id,
+                MovieId = show.MovieId,
+                Movie = movie,
+                TheaterId = show.TheaterId,
+                Theater = theater,
+                Date = show.Date,
+                ScreenTime = show.ScreenTime,
+                Type = show.Type,
+                BasePrice = show.BasePrice
+            }).SingleOrDefaultAsync();
     }
 
     public async Task<Show> AddShow(AddShowDto addShowDto)
