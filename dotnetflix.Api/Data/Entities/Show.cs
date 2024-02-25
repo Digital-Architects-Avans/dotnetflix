@@ -1,6 +1,6 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using dotnetflix.Models.Dtos.Show;
 
 namespace dotnetflix.Api.Data.Entities
 {
@@ -22,7 +22,7 @@ namespace dotnetflix.Api.Data.Entities
         public DateTime Date { get; set; }
 
         [Required]
-        public TimeSpan Time { get; set; }
+        public int ScreenTime { get; set; }
 
         [Required]
         public MovieType Type { get; set; }
@@ -30,10 +30,5 @@ namespace dotnetflix.Api.Data.Entities
         [Required]
         public decimal BasePrice { get; set; }
     }
-
-    public enum MovieType
-    {
-        Regular,
-        ThreeD,
-    }
+    
 }

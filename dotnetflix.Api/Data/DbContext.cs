@@ -1,4 +1,6 @@
 using dotnetflix.Api.Data.Entities;
+using dotnetflix.Models.Dtos.Movie;
+using dotnetflix.Models.Dtos.Show;
 using Microsoft.EntityFrameworkCore;
 
 namespace dotnetflix.Api.Data
@@ -6,11 +8,10 @@ namespace dotnetflix.Api.Data
     public class DotNetFlixDbContext : DbContext
     {
         public DotNetFlixDbContext(DbContextOptions<DotNetFlixDbContext> options)
-            : base(options)
-        {
-        }
+            : base(options) 
+        { }
         
-                protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
         
@@ -76,10 +77,10 @@ namespace dotnetflix.Api.Data
                             Id = showId++,
                             MovieId = movieId,
                             TheaterId = theaterId,
-                            Date = DateTime.Today.AddDays(theaterId), // Just an example, adjust accordingly
-                            Time = new TimeSpan(19, 0, 0), // 7 PM for simplicity, adjust as needed
+                            Date = DateTime.Today.AddDays(theaterId),
+                            ScreenTime = 90,
                             Type = MovieType.Regular,
-                            BasePrice = 10.00m + (2 * movieId) // Example pricing strategy
+                            BasePrice = 12
                         }
                     );
                 }
