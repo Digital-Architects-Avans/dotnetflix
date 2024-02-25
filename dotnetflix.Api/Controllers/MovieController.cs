@@ -1,27 +1,27 @@
-using dotnetflix.Api.Data.Entities;
 using dotnetflix.Api.Extensions;
 using dotnetflix.Api.Repositories.Movies;
-using dotnetflix.Models.Dtos;
+using Microsoft.AspNetCore.Mvc;
+using dotnetflix.Models.Dtos.Movie;
 
 namespace dotnetflix.Api.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 
 [Route("api/[controller]")]
 [ApiController]
 public class MovieController : ControllerBase
 {
-    private readonly IMovieRepository movieRepository;
+    private readonly IMovieRepository _movieRepository;
+
     public MovieController(IMovieRepository movieRepository)
     {
-        this.movieRepository = movieRepository;
+        _movieRepository = movieRepository;
     }
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
+    public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
     {
         try
         {
-            var movies = await this.movieRepository.GetMovies();
+            var movies = await _movieRepository.GetMovies();
             if (movies == null)
             {
                 return NotFound();
@@ -34,16 +34,16 @@ public class MovieController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, 
-                "Error retrieving data from the database");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<MovieDto>> GetMovie(int id)
     {
         try
         {
-            var movie = await this.movieRepository.GetMovie(id);
+            var movie = await _movieRepository.GetMovie(id);
             return Ok(movie);
         }
         catch (Exception ex)
@@ -51,26 +51,33 @@ public class MovieController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+
     [HttpPost]
-    public async Task<ActionResult<MovieDto>> AddMovie(MovieDto movieDto)
+    public async Task<ActionResult<MovieDto>> AddMovie([FromBody] AddMovieDto addMovieDto)
     {
         try
         {
-            var movie = movieDto.ConvertToEntity();
-            var newMovie = await this.movieRepository.AddMovie(movie);
-            return Ok(newMovie);
+            var newMovie = await _movieRepository.AddMovie(addMovieDto);
+            if (newMovie == null)
+            {
+                return NoContent();
+            }
+
+            var newMovieDto = newMovie.ConvertToDto();
+            return Ok(newMovieDto);
         }
         catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
-    [HttpPut]
-    public async Task<ActionResult<MovieDto>> UpdateMovie(Movie movie)
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<MovieDto>> UpdateMovie(int id, UpdateMovieDto updateMovieDto)
     {
         try
         {
-            var updatedMovie = await this.movieRepository.UpdateMovie(movie);
+            var updatedMovie = await _movieRepository.UpdateMovie(id, updateMovieDto);
             return Ok(updatedMovie);
         }
         catch (Exception ex)
@@ -78,12 +85,13 @@ public class MovieController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+
     [HttpDelete("{id}")]
     public async Task<ActionResult<MovieDto>> DeleteMovie(int id)
     {
         try
         {
-            var movie = await this.movieRepository.DeleteMovie(id);
+            var movie = await _movieRepository.DeleteMovie(id);
             return Ok(movie);
         }
         catch (Exception ex)
