@@ -1,4 +1,4 @@
-namespace dotnetflix.Models.Dtos;
+namespace dotnetflix.Models.Dtos.Theater;
 
 public class TheaterDto
 {
