@@ -1,0 +1,25 @@
+@page "/manager/theaters"
+@using System.Net.Http
+@using System.Net.Http.Json
+@using dotnetflix.Models.Dtos.Theater
+@inject HttpClient Http
+<h3>Manager: Theaters</h3>
+
+<NavigationHeader />
+
+@foreach (var theater in TheaterRooms)
+{
+    <p>@theater.Name</p>
+}
+
+@code {
+    
+
+    
+    List<TheaterDto> TheaterRooms = new List<TheaterDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        TheaterRooms = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
+    }
+}

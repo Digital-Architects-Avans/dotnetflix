@@ -1,0 +1,24 @@
+@page "/manager/movies"
+@using System.Net.Http
+@using System.Net.Http.Json
+@using dotnetflix.Models.Dtos.Movie
+@inject HttpClient Http
+<h3>Manager: Movies</h3>
+
+<NavigationHeader />
+
+@foreach (var movie in Movies)
+{
+    <p>@movie.Title</p>
+}
+
+@code {
+    
+
+    List<MovieDto> Movies = new List<MovieDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Movies = await Http.GetFromJsonAsync<List<MovieDto>>("http://localhost:5247/api/movie");
+    }
+}
