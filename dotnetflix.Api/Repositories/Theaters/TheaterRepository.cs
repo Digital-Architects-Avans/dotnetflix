@@ -1,39 +1,69 @@
 using dotnetflix.Api.Data;
 using dotnetflix.Api.Data.Entities;
+using dotnetflix.Models.Dtos.Theater;
 using Microsoft.EntityFrameworkCore;
 
 namespace dotnetflix.Api.Repositories.Theaters;
 
-public class TheaterRepository: ITheaterRepository
+public class TheaterRepository : ITheaterRepository
 {
-    private readonly DotNetFlixDbContext dotNetFlixDbContext;
+    private readonly DotNetFlixDbContext _dotNetFlixDbContext;
+
     public TheaterRepository(DotNetFlixDbContext dotNetFlixDbContext)
     {
-        this.dotNetFlixDbContext = dotNetFlixDbContext;
+        _dotNetFlixDbContext = dotNetFlixDbContext;
     }
+
     public async Task<IEnumerable<Theater>> GetTheaters()
     {
-        var theaters = await this.dotNetFlixDbContext.Theaters.ToListAsync();
+        var theaters = await _dotNetFlixDbContext.Theaters.ToListAsync();
         return theaters;
     }
 
-    public Task<Theater> GetTheater(int id)
+    public async Task<Theater> GetTheater(int id)
     {
-        throw new NotImplementedException();
+        var theater = await _dotNetFlixDbContext.Theaters.SingleOrDefaultAsync(t => t.Id == id);
+        return theater;
     }
 
-    public Task<Theater> AddTheater(Theater theater)
-    {
-        throw new NotImplementedException();
+    public async Task<Theater> AddTheater(AddTheaterDto addTheaterDto)
+    { 
+        var theater = new Theater
+        {
+            Name = addTheaterDto.Name,
+            Seats = addTheaterDto.Seats
+        };
+        
+        var result = await _dotNetFlixDbContext.Theaters.AddAsync(theater);
+        await _dotNetFlixDbContext.SaveChangesAsync();
+        return result.Entity;
     }
 
-    public Task<Theater> UpdateTheater(Theater theater)
+    public async Task<Theater> UpdateTheater(int id, UpdateTheaterDto updateTheaterDto)
     {
-        throw new NotImplementedException();
+        var theater = await _dotNetFlixDbContext.Theaters.FindAsync(id);
+
+        if (theater != null)
+        {
+            theater.Name = updateTheaterDto.Name;
+            theater.Seats = updateTheaterDto.Seats;
+            await _dotNetFlixDbContext.SaveChangesAsync();
+            return theater;
+        }
+
+        return null;
     }
 
-    public Task<Theater> DeleteTheater(int id)
+    public async Task<Theater> DeleteTheater(int id)
     {
-        throw new NotImplementedException();
+        var theater = await _dotNetFlixDbContext.Theaters.FindAsync(id);
+
+        if (theater != null)
+        {
+            _dotNetFlixDbContext.Theaters.Remove(theater);
+            await _dotNetFlixDbContext.SaveChangesAsync();
+        }
+
+        return theater;
     }
 }
