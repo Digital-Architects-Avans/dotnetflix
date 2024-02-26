@@ -3,6 +3,7 @@ using dotnetflix.Api.Repositories.Movies;
 using dotnetflix.Api.Repositories.Shows;
 using dotnetflix.Api.Repositories.Theaters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+app.UseCors(policy =>
+    policy.WithOrigins("http://localhost:5106", "https://localhost:7257")
+        .AllowAnyMethod()
+        .WithHeaders(HeaderNames.ContentType)
+);
 
 app.UseHttpsRedirection();
 
