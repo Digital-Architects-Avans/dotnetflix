@@ -1,8 +1,8 @@
-using dotnetflix.Models.Dtos.Show;
+// using dotnetflix.Models.Dtos;
 
 namespace dotnetflix.Web.Services.Contracts;
 
 public interface IShowService
 {
-    Task<IEnumerable<ShowDto>?> GetShows();
+    // Task<IEnumerable<ShowDto>> GetShows();
 }
