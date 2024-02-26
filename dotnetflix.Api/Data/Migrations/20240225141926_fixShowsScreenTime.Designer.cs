@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetflix.Api.Data;
 
@@ -11,9 +12,11 @@ using dotnetflix.Api.Data;
 namespace dotnetflix.Api.Data.Migrations
 {
     [DbContext(typeof(DotNetFlixDbContext))]
-    partial class DotNetFlixDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240225141926_fixShowsScreenTime")]
+    partial class fixShowsScreenTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,7 +151,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 1,
-                            BasePrice = 12m,
+                            BasePrice = 12.00m,
                             Date = new DateTime(2024, 2, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 1,
                             ScreenTime = 90,
@@ -158,7 +161,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 2,
-                            BasePrice = 12m,
+                            BasePrice = 12.00m,
                             Date = new DateTime(2024, 2, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 1,
                             ScreenTime = 90,
@@ -168,7 +171,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 3,
-                            BasePrice = 12m,
+                            BasePrice = 12.00m,
                             Date = new DateTime(2024, 2, 28, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 1,
                             ScreenTime = 90,
@@ -178,7 +181,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 4,
-                            BasePrice = 12m,
+                            BasePrice = 12.00m,
                             Date = new DateTime(2024, 2, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 1,
                             ScreenTime = 90,
@@ -188,7 +191,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 5,
-                            BasePrice = 12m,
+                            BasePrice = 12.00m,
                             Date = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 1,
                             ScreenTime = 90,
@@ -198,7 +201,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 6,
-                            BasePrice = 12m,
+                            BasePrice = 12.00m,
                             Date = new DateTime(2024, 3, 2, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 1,
                             ScreenTime = 90,
@@ -208,7 +211,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 7,
-                            BasePrice = 12m,
+                            BasePrice = 14.00m,
                             Date = new DateTime(2024, 2, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 2,
                             ScreenTime = 90,
@@ -218,7 +221,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 8,
-                            BasePrice = 12m,
+                            BasePrice = 14.00m,
                             Date = new DateTime(2024, 2, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 2,
                             ScreenTime = 90,
@@ -228,7 +231,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 9,
-                            BasePrice = 12m,
+                            BasePrice = 14.00m,
                             Date = new DateTime(2024, 2, 28, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 2,
                             ScreenTime = 90,
@@ -238,7 +241,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 10,
-                            BasePrice = 12m,
+                            BasePrice = 14.00m,
                             Date = new DateTime(2024, 2, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 2,
                             ScreenTime = 90,
@@ -248,7 +251,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 11,
-                            BasePrice = 12m,
+                            BasePrice = 14.00m,
                             Date = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 2,
                             ScreenTime = 90,
@@ -258,7 +261,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 12,
-                            BasePrice = 12m,
+                            BasePrice = 14.00m,
                             Date = new DateTime(2024, 3, 2, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 2,
                             ScreenTime = 90,
@@ -268,7 +271,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 13,
-                            BasePrice = 12m,
+                            BasePrice = 16.00m,
                             Date = new DateTime(2024, 2, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 3,
                             ScreenTime = 90,
@@ -278,7 +281,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 14,
-                            BasePrice = 12m,
+                            BasePrice = 16.00m,
                             Date = new DateTime(2024, 2, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 3,
                             ScreenTime = 90,
@@ -288,7 +291,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 15,
-                            BasePrice = 12m,
+                            BasePrice = 16.00m,
                             Date = new DateTime(2024, 2, 28, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 3,
                             ScreenTime = 90,
@@ -298,7 +301,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 16,
-                            BasePrice = 12m,
+                            BasePrice = 16.00m,
                             Date = new DateTime(2024, 2, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 3,
                             ScreenTime = 90,
@@ -308,7 +311,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 17,
-                            BasePrice = 12m,
+                            BasePrice = 16.00m,
                             Date = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 3,
                             ScreenTime = 90,
@@ -318,7 +321,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 18,
-                            BasePrice = 12m,
+                            BasePrice = 16.00m,
                             Date = new DateTime(2024, 3, 2, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 3,
                             ScreenTime = 90,
@@ -328,7 +331,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 19,
-                            BasePrice = 12m,
+                            BasePrice = 18.00m,
                             Date = new DateTime(2024, 2, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 4,
                             ScreenTime = 90,
@@ -338,7 +341,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 20,
-                            BasePrice = 12m,
+                            BasePrice = 18.00m,
                             Date = new DateTime(2024, 2, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 4,
                             ScreenTime = 90,
@@ -348,7 +351,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 21,
-                            BasePrice = 12m,
+                            BasePrice = 18.00m,
                             Date = new DateTime(2024, 2, 28, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 4,
                             ScreenTime = 90,
@@ -358,7 +361,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 22,
-                            BasePrice = 12m,
+                            BasePrice = 18.00m,
                             Date = new DateTime(2024, 2, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 4,
                             ScreenTime = 90,
@@ -368,7 +371,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 23,
-                            BasePrice = 12m,
+                            BasePrice = 18.00m,
                             Date = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 4,
                             ScreenTime = 90,
@@ -378,7 +381,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 24,
-                            BasePrice = 12m,
+                            BasePrice = 18.00m,
                             Date = new DateTime(2024, 3, 2, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 4,
                             ScreenTime = 90,
@@ -388,7 +391,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 25,
-                            BasePrice = 12m,
+                            BasePrice = 20.00m,
                             Date = new DateTime(2024, 2, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 5,
                             ScreenTime = 90,
@@ -398,7 +401,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 26,
-                            BasePrice = 12m,
+                            BasePrice = 20.00m,
                             Date = new DateTime(2024, 2, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 5,
                             ScreenTime = 90,
@@ -408,7 +411,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 27,
-                            BasePrice = 12m,
+                            BasePrice = 20.00m,
                             Date = new DateTime(2024, 2, 28, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 5,
                             ScreenTime = 90,
@@ -418,7 +421,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 28,
-                            BasePrice = 12m,
+                            BasePrice = 20.00m,
                             Date = new DateTime(2024, 2, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 5,
                             ScreenTime = 90,
@@ -428,7 +431,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 29,
-                            BasePrice = 12m,
+                            BasePrice = 20.00m,
                             Date = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 5,
                             ScreenTime = 90,
@@ -438,7 +441,7 @@ namespace dotnetflix.Api.Data.Migrations
                         new
                         {
                             Id = 30,
-                            BasePrice = 12m,
+                            BasePrice = 20.00m,
                             Date = new DateTime(2024, 3, 2, 0, 0, 0, 0, DateTimeKind.Local),
                             MovieId = 5,
                             ScreenTime = 90,
