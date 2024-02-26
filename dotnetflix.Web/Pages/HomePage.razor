@@ -1,0 +1,50 @@
+@page "/"
+@using dotnetflix.Web.Services.Contracts
+@using dotnetflix.Models.Dtos.Show
+
+<h3>Nu in de bioscoop</h3>
+
+<p>Found shows: @Shows.Count()</p>
+
+@* @if (Shows.Any()) *@
+@* { *@
+@*     var showCount = Shows.Count(); *@
+@* *@
+@*     if (showCount > 0) *@
+@*     { *@
+@*         // var shows = new List<ShowDto>(); *@
+@*         // var shows = Shows.ToList(); *@
+@* *@
+@*         @foreach (var show in Shows) *@
+@*         { *@
+@*             <ul> *@
+@*                 <li>@show.MovieTitle</li> *@
+@*                 <li>@show.Date</li> *@
+@*             </ul> *@
+@*         } *@
+@*     } *@
+@*     else *@
+@*     { *@
+@*         <h3>Geen films gevonden</h3> *@
+@*     } *@
+@* } *@
+@* else *@
+@* { *@
+@*     <h3>Loading</h3> *@
+@* } *@
+
+@code {
+    // 1) Set properties te facilitate dependency injection
+    // 2) Public properties to expose to the view
+    // 3) Method to be called when the component is initialized
+
+    [Inject] public IShowService ShowService { get; set; }
+
+    public IEnumerable<ShowDto> Shows { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Shows = await ShowService.GetShows();
+    }
+
+}
