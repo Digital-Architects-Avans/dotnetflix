@@ -1,24 +1,255 @@
 @page "/manager/shows"
 @using System.Net.Http
 @using System.Net.Http.Json
+@using dotnetflix.Models.Dtos.Movie
 @using dotnetflix.Models.Dtos.Show
+@using dotnetflix.Models.Dtos.Theater
 @inject HttpClient Http
 <h3>Manager: Shows</h3>
 
 <NavigationHeader />
 
-@foreach (var show in Shows)
-{
-    <p>@show.MovieId, @show.TheaterId, @show.Date</p>
-}
+<div class="row">
+    <div class="col-md-6">
+       <table class="table">
+                   <thead>
+                       <tr>
+                           <th>Show details</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       @foreach (var show in Shows)
+                              {
+                                  <tr @onclick="() => SelectShow(show)" class="@(SelectedShow.Id == show.Id ? "selected-show" : "new-show")">
+                                      <td>@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</td>
+                                  </tr>
+                              }
+                       <tr @onclick="() => SelectShow()" class="new-show">
+                           <td>Add New Show</td>
+                            </tr>
+                   </tbody>
+               </table>
+    </div>
+    <div class="col-md-6">
+        @if (SelectedShow.Id < 1)
+        {
+            <h4>Add New Show</h4>
+            <EditForm Model="NewShow" OnValidSubmit="HandleAddNewShowSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+        
+                <div class="form-group">
+                            <label for="movieTitle">Movie Title</label>
+                            <InputSelect id="movieTitle" class="form-control" @bind-Value="NewShow.MovieTitle" @onchange="UpdateMovieId">
+                                @foreach (var movie in Movies)
+                                {
+                                    <option value="@movie.Title">@movie.Title</option>
+                                }
+                            </InputSelect>
+                        </div>
+                <div class="form-group">
+                    <label for="theaterName">Theater Name</label>
+                    <InputSelect id="theaterName" class="form-control" @bind-Value="NewShow.TheaterName" @onchange="UpdateTheaterId">
+                        @foreach (var theater in Theaters)
+                        {
+                            <option value="@theater.Name">@theater.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="screenTime">Screen Time</label>
+                    <InputNumber id="screenTime" class="form-control" @bind-Value="NewShow.ScreenTime"/>
+                </div>
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <InputSelect id="type" class="form-control" @bind-Value="NewShow.Type">
+                        <option value="Regular">Regular</option>
+                        <option value="ThreeD">3D</option>
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="showDate">Show Date</label>
+                    <InputDate id="showDate" class="form-control" @bind-Value="NewShow.Date"/>
+                </div>
+                <div class="form-group">
+                    <label for="basePrice">Base Price</label>
+                    <InputNumber id="basePrice" class="form-control" @bind-Value="NewShow.BasePrice" step="0.01"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </EditForm>
+        }
+        else
+        {
+            <h4>Update Show</h4>
+            <EditForm Model="SelectedShow" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+        
+                <div class="form-group">
+                            <label for="movieTitle">Movie Title</label>
+                            <InputSelect id="movieTitle" class="form-control" @bind-Value="SelectedShow.MovieTitle" @onchange="UpdateMovieId">
+                                @foreach (var movie in Movies)
+                                {
+                                    <option value="@movie.Title">@movie.Title</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label for="theaterName">Theater Name</label>
+                            <InputSelect id="theaterName" class="form-control" @bind-Value="SelectedShow.TheaterName" @onchange="UpdateTheaterId">
+                                @foreach (var theater in Theaters)
+                                {
+                                    <option value="@theater.Name">@theater.Name</option>
+                                }
+                            </InputSelect>
+                        </div>
+                <div class="form-group">
+                    <label for="screenTime">Screen Time</label>
+                    <InputNumber id="screenTime" class="form-control" @bind-Value="SelectedShow.ScreenTime"/>
+                </div>
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <InputSelect id="type" class="form-control" @bind-Value="SelectedShow.Type">
+                        <option value="Regular">Regular</option>
+                        <option value="ThreeD">3D</option>
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="showDate">Show Date</label>
+                    <InputDate id="showDate" class="form-control" @bind-Value="SelectedShow.Date"/>
+                </div>
+                <div class="form-group">
+                    <label for="basePrice">Base Price</label>
+                    <InputNumber id="basePrice" class="form-control" @bind-Value="SelectedShow.BasePrice" step="0.01"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </EditForm>
+            <button class="btn btn-danger" @onclick="HandleDeleteSubmit">Delete</button>
+        }
+    </div>
+</div>
 
 @code {
-
-    
     List<ShowDto> Shows = new List<ShowDto>();
+    List<MovieDto> Movies = new List<MovieDto>();
+    List<TheaterDto> Theaters = new List<TheaterDto>();
+    ShowDto SelectedShow = new ShowDto();
+    AddShowDto NewShow = new AddShowDto();
+
+    private async Task HandleAddNewShowSubmit()
+    {
+        // Update the MovieId and TheaterId based on the selected MovieTitle and TheaterName
+        UpdateMovieId(new ChangeEventArgs { Value = NewShow.MovieTitle });
+        UpdateTheaterId(new ChangeEventArgs { Value = NewShow.TheaterName });
+
+        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/show", NewShow);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Handle success here
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
         Shows = await Http.GetFromJsonAsync<List<ShowDto>>("http://localhost:5247/api/show");
+        Movies = await Http.GetFromJsonAsync<List<MovieDto>>("http://localhost:5247/api/movie");
+        Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
+        SelectedShow = new ShowDto();
+        NewShow = new AddShowDto();
+    }
+
+    private void SelectShow(ShowDto show)
+    {
+        // Create a copy of the selected show
+        SelectedShow = new ShowDto
+        {
+            Id = show.Id,
+            MovieId = show.MovieId,
+            MovieTitle = show.MovieTitle,
+            TheaterId = show.TheaterId,
+            TheaterName = show.TheaterName,
+            Date = show.Date,
+            BasePrice = show.BasePrice,
+            ScreenTime = show.ScreenTime
+        };
+    }
+
+    private void SelectShow()
+    {
+        SelectedShow = new ShowDto();
+    }
+
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/show/{SelectedShow.Id}", SelectedShow);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Find the updated show in the list and replace it with the updated show
+            var index = Shows.FindIndex(s => s.Id == SelectedShow.Id);
+            if (index != -1)
+            {
+                Shows[index] = SelectedShow;
+            }
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
+    }
+    
+    
+
+    private async Task HandleDeleteSubmit()
+    {
+        var response = await Http.DeleteAsync($"http://localhost:5247/api/show/{SelectedShow.Id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Remove the deleted show from the list
+            Shows.RemoveAll(s => s.Id == SelectedShow.Id);
+            // Reset the selected show
+            SelectedShow = new ShowDto();
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
+    }
+    
+    private void UpdateMovieId(ChangeEventArgs e)
+    {
+        var selectedMovieTitle = e.Value.ToString();
+        var selectedMovie = Movies.FirstOrDefault(m => m.Title == selectedMovieTitle);
+        if (selectedMovie != null)
+        {
+            NewShow.MovieId = selectedMovie.Id;
+            NewShow.MovieTitle = selectedMovie.Title; 
+        }
+    }
+
+    private void UpdateTheaterId(ChangeEventArgs e)
+    {
+        var selectedTheaterName = e.Value.ToString();
+        var selectedTheater = Theaters.FirstOrDefault(t => t.Name == selectedTheaterName);
+        if (selectedTheater != null)
+        {
+            NewShow.TheaterId = selectedTheater.Id;
+            NewShow.MovieTitle = selectedTheater.Name;
+
+        }
     }
 }
+
+<style>
+    .selected-show {
+            background-color: #007bff;
+            color: white;
+        }
+</style>

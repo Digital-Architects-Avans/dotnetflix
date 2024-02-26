@@ -7,19 +7,153 @@
 
 <NavigationHeader />
 
-@foreach (var theater in TheaterRooms)
+<div class="row">
+    <div class="col-md-6">
+       <table class="table">
+                   <thead>
+                       <tr>
+                           <th>Theater names</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       @foreach (var theater in Theaters)
+                              {
+                                  <tr @onclick="() => SelectTheater(theater)" class="@(SelectedTheater.Id == theater.Id ? "selected-theater" : "new-theater")">
+                                      <td>@theater.Name</td>
+                                  </tr>
+                              }
+                       <tr @onclick="() => SelectTheater()" class="new-theater">
+                           <td>Add New Theater</td>
+                            </tr>
+                   </tbody>
+               </table>
+    </div>
+    <div class="col-md-6">
+        @if (SelectedTheater.Id < 1)
+        {
+            <h4>Add New Theater</h4>
+            <EditForm Model="NewTheater" OnValidSubmit="HandleAddNewTheaterSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <InputText id="name" class="form-control" @bind-Value="NewTheater.Name"/>
+                </div>
+                <div class="form-group">
+                    <label for="seats">Seats</label>
+                    <InputNumber id="seats" class="form-control" @bind-Value="NewTheater.Seats"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </EditForm>
+        }
+else
 {
-    <p>@theater.Name</p>
+    <h4>Update Theater</h4>
+    <EditForm Model="SelectedTheater" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText id="name" class="form-control" @bind-Value="SelectedTheater.Name"/>
+        </div>
+        <div class="form-group">
+            <label for="seats">Seats</label>
+            <InputNumber id="seats" class="form-control" @bind-Value="SelectedTheater.Seats"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </EditForm>
+    <button class="btn btn-danger" @onclick="HandleDeleteSubmit">Delete</button>
+
 }
+    </div>
+</div>
 
 @code {
-    
+    List<TheaterDto> Theaters = new List<TheaterDto>();
+    TheaterDto SelectedTheater = new TheaterDto();
+    AddTheaterDto NewTheater = new AddTheaterDto();
 
-    
-    List<TheaterDto> TheaterRooms = new List<TheaterDto>();
+    private async Task HandleAddNewTheaterSubmit()
+    {
+        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/theater", NewTheater);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Refresh the theater list from the database
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        TheaterRooms = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
+        Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
+        SelectedTheater = new TheaterDto();
+        NewTheater = new AddTheaterDto();
+    }
+
+    private void SelectTheater(TheaterDto theater)
+    {
+        // Create a copy of the selected theater
+        SelectedTheater = new TheaterDto
+        {
+            Id = theater.Id,
+            Name = theater.Name,
+            Seats = theater.Seats
+        };
+    }
+
+    private void SelectTheater()
+    {
+        SelectedTheater = new TheaterDto();
+    }
+
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/theater/{SelectedTheater.Id}", SelectedTheater);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Find the updated theater in the list and replace it with the updated theater
+            var index = Theaters.FindIndex(t => t.Id == SelectedTheater.Id);
+            if (index != -1)
+            {
+                Theaters[index] = SelectedTheater;
+            }
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
+    }
+
+    private async Task HandleDeleteSubmit()
+    {
+        var response = await Http.DeleteAsync($"http://localhost:5247/api/theater/{SelectedTheater.Id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Remove the deleted theater from the list
+            Theaters.RemoveAll(t => t.Id == SelectedTheater.Id);
+            // Reset the selected theater
+            SelectedTheater = new TheaterDto();
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
     }
 }
+
+<style>
+    .selected-theater {
+            background-color: #007bff;
+            color: white;
+        }
+</style>
