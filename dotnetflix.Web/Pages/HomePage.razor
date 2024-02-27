@@ -2,7 +2,7 @@
 @using dotnetflix.Web.Services.Contracts
 @using dotnetflix.Models.Dtos.Show
 
-<h3>Nu in de bioscoop</h3>
+<h3>Nu in de bioscoop!</h3>
 
 @if (Shows != null)
 {
@@ -10,12 +10,27 @@
 
     if (showCount > 0)
     {
-        @foreach (var show in Shows)
+        var groupedShowsByMovie = from show in Shows
+            group show by show.MovieId
+            into showGroup
+            orderby showGroup.Key
+            select showGroup;
+
+        @foreach (var showGroup in groupedShowsByMovie)
         {
-            <ul>
-                <li>@show.MovieTitle</li>
-                <li>@show.Date</li>
-            </ul>
+            var movie = showGroup.First().MovieTitle;
+            var movieShows = showGroup.ToList();
+
+            <h4>@movie</h4>
+
+            @foreach (var show in movieShows)
+            {
+                // only select shows that are today
+                if (show.Date.Date == DateTime.Today)
+                {
+                    <p>@show.Date</p>
+                }
+            }
         }
     }
     else
@@ -44,6 +59,4 @@ else
             Shows = await ShowService.GetShows();
         }
     }
-
-
 }
