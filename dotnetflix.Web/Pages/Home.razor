@@ -22,6 +22,16 @@
         {
             var shows = showGroup.ToList();
 
+            // Get and show movie details
+            var movieDetails = Movies?.Where(movie => movie.Id == showGroup.First().MovieId).First();
+
+            if (movieDetails != null)
+            {
+                <img src="@movieDetails.Image" alt="Movie cover"/>
+                <h2>@movieDetails.Title</h2>
+            }
+
+            // Show timings
             @foreach (var show in shows)
             {
                 // Convert date to time in 24-hour format
@@ -30,7 +40,8 @@
 
                 // Show start and end times and the theater name
                 <p>@startTime - @endTime</p>
-                <p>@show.TheaterName</p>
+                <p>@show.TheaterName (@show.Type)</p>
+                <br/>
             }
         }
     }
