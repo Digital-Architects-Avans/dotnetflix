@@ -3,35 +3,32 @@
 @using dotnetflix.Models.Dtos.Show
 @using dotnetflix.Models.Dtos.Movie
 
-<h1>Nu in de bioscoop!</h1>
+<h1>What's on</h1>
 
 @if (Shows != null)
 {
-    // Show movies and their showtimes when there are shows today
+    // Show movies and times
     if (Shows.Count() != 0)
     {
-        // Group shows by movie
+        // Group timings by movie
         var groupedShowsByMovie = from show in Shows
             group show by show.MovieId
             into showGroup
             orderby showGroup.Key
             select showGroup;
 
-        // Loop through the grouped shows
+        // Loop through the grouped timings
         @foreach (var showGroup in groupedShowsByMovie)
         {
-            var movie = showGroup.First().MovieTitle;
             var shows = showGroup.ToList();
-
-            <h2>@movie</h2>
 
             @foreach (var show in shows)
             {
-                // Convert the date to time
+                // Convert date to time in 24-hour format
                 var startTime = show.Date.ToString("HH:mm");
                 var endTime = show.Date.AddMinutes(show.ScreenTime).ToString("HH:mm");
 
-                // Show start and end time and the theater name
+                // Show start and end times and the theater name
                 <p>@startTime - @endTime</p>
                 <p>@show.TheaterName</p>
             }
@@ -39,12 +36,12 @@
     }
     else
     {
-        <p>Geen films gevonden.</p>
+        <p>No screenings found.</p>
     }
 }
 else
 {
-    <p>Voorstellingen ophalen...</p>
+    <p>Gathering screenings...</p>
 }
 
 @code {
@@ -55,8 +52,8 @@ else
     [Inject] public IShowService? ShowService { get; set; }
     [Inject] public IMovieService? MovieService { get; set; }
 
-    public IEnumerable<ShowDto>? Shows { get; set; }
-    public IEnumerable<MovieDto>? Movies { get; set; }
+    private IEnumerable<ShowDto>? Shows { get; set; }
+    private IEnumerable<MovieDto>? Movies { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -65,10 +62,11 @@ else
             // TODO: Add error handling
             // TODO: Add GetShowsByDate method
 
-            // Get shows and filter only today's shows
+            // Get show and filter only today's timings
             Shows = await ShowService.GetShows();
             Shows = Shows?.Where(s => s.Date.Date == DateTime.Today);
 
+            // Get movies for the available timings
             if (Shows != null && MovieService != null)
             {
                 Movies ??= new List<MovieDto>();
