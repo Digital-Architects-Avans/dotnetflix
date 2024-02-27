@@ -29,8 +29,13 @@
             if (movieDetails != null)
             {
                 <img src="@movieDetails.Image" alt="Movie cover"/>
-                <h2>@movieDetails.Title</h2>
+                <h2>@movieDetails.Title (@movieDetails.Year)</h2>
+                <p>@movieDetails.Description</p>
+                <p>Rating: @movieDetails.Rating</p>
+                <p>Run time: @movieDetails.Runtime</p>
             }
+            
+            <p>Today</p>
 
             // Show timings
             @foreach (var show in shows)
