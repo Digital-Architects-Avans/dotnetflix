@@ -13,11 +13,11 @@ public class MovieService : IMovieService
         _httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<MovieDto>?> GetMovie(int id)
+    public async Task<MovieDto> GetMovie(int id)
     {
         try
         {
-            var movie = await this._httpClient.GetFromJsonAsync<IEnumerable<MovieDto>>($"api/Movie/{id}");
+            var movie = await this._httpClient.GetFromJsonAsync<MovieDto>($"api/Movie/{id}");
             return movie;
         }
         catch (Exception e)
