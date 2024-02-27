@@ -2,7 +2,7 @@
 @using dotnetflix.Web.Services.Contracts
 @using dotnetflix.Models.Dtos.Show
 @using dotnetflix.Models.Dtos.Movie
-@using System.Globalization
+@using dotnetflix.Web.Components
 
 <h1>What's on</h1>
 
@@ -28,11 +28,7 @@
 
             if (movieDetails != null)
             {
-                <img src="/images/@movieDetails.Image" alt="Movie cover"/>
-                <h2>@movieDetails.Title (@movieDetails.Year)</h2>
-                <p>@movieDetails.Description</p>
-                <p>Rating: @movieDetails.Rating</p>
-                <p>Run time: @movieDetails.Runtime</p>
+                <MovieDetails Movie="movieDetails"/>
             }
             
             <p>Today</p>
@@ -40,16 +36,7 @@
             // Show timings
             @foreach (var show in shows)
             {
-                // Convert date to time in 24-hour format
-                var startTime = show.Date.ToString("HH:mm");
-                var endTime = show.Date.AddMinutes(show.ScreenTime).ToString("HH:mm");
-
-                // Show timing details
-                <p>@startTime - @endTime</p>
-                <p>@show.TheaterName</p>
-                <p>@show.Type</p>
-                <p>From @show.BasePrice.ToString(format:"C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</p>
-                <br/>
+                <ShowTime Show="show"/>
             }
         }
     }

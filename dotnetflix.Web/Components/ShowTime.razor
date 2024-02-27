@@ -1,0 +1,21 @@
+@using dotnetflix.Models.Dtos.Show
+@using System.Globalization
+
+@{
+    // Convert date to time in 24-hour format
+    var startTime = Show.Date.ToString("HH:mm");
+    // Get end time by adding screen time to start time
+    var endTime = Show.Date.AddMinutes(Show.ScreenTime).ToString("HH:mm");
+}
+
+<p>@startTime - @endTime</p>
+<p>@Show.TheaterName</p>
+<p>@Show.Type</p>
+<p>From @Show.BasePrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</p>
+<br/>
+
+@code {
+
+    // Parameter to be passed to the component
+    [Parameter] public ShowDto Show { get; set; }
+}

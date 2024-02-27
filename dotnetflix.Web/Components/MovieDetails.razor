@@ -1,0 +1,13 @@
+@using dotnetflix.Models.Dtos.Movie
+
+<img src="/images/@Movie.Image" alt="@Movie.Title" aria-label=""/>
+<h2>@Movie.Title (@Movie.Year)</h2>
+<p>@Movie.Description</p>
+<p>Rating: @Movie.Rating</p>
+<p>Run time: @Movie.Runtime</p>
+
+@code {
+
+    // Parameter to be passed to the component
+    [Parameter] public MovieDto Movie { get; set; }
+}
