@@ -2,6 +2,7 @@
 @using dotnetflix.Web.Services.Contracts
 @using dotnetflix.Models.Dtos.Show
 @using dotnetflix.Models.Dtos.Movie
+@using System.Globalization
 
 <h1>What's on</h1>
 
@@ -38,9 +39,11 @@
                 var startTime = show.Date.ToString("HH:mm");
                 var endTime = show.Date.AddMinutes(show.ScreenTime).ToString("HH:mm");
 
-                // Show start and end times and the theater name
+                // Show timing details
                 <p>@startTime - @endTime</p>
-                <p>@show.TheaterName (@show.Type)</p>
+                <p>@show.TheaterName</p>
+                <p>@show.Type</p>
+                <p>From @show.BasePrice.ToString(format:"C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</p>
                 <br/>
             }
         }
