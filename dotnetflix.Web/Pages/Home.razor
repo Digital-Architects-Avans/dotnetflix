@@ -2,45 +2,48 @@
 @using dotnetflix.Web.Services.Contracts
 @using dotnetflix.Models.Dtos.Show
 
-<h3>Nu in de bioscoop!</h3>
+<h1>Nu in de bioscoop!</h1>
 
 @if (Shows != null)
 {
-    var showCount = Shows.Count();
-
-    if (showCount > 0)
+    // Show movies and their showtimes when there are shows today
+    if (Shows.Count() != 0)
     {
+        // Group shows by movie
         var groupedShowsByMovie = from show in Shows
             group show by show.MovieId
             into showGroup
             orderby showGroup.Key
             select showGroup;
 
+        // Loop through the grouped shows
         @foreach (var showGroup in groupedShowsByMovie)
         {
             var movie = showGroup.First().MovieTitle;
-            var movieShows = showGroup.ToList();
+            var shows = showGroup.ToList();
 
-            <h4>@movie</h4>
+            <h2>@movie</h2>
 
-            @foreach (var show in movieShows)
+            @foreach (var show in shows)
             {
-                // only select shows that are today
-                if (show.Date.Date == DateTime.Today)
-                {
-                    <p>@show.Date</p>
-                }
+                // Convert the date to time
+                var startTime = show.Date.ToString("HH:mm");
+                var endTime = show.Date.AddMinutes(show.ScreenTime).ToString("HH:mm");
+
+                // Show start and end time and the theater name
+                <p>@startTime - @endTime</p>
+                <p>@show.TheaterName</p>
             }
         }
     }
     else
     {
-        <h3>Geen films gevonden</h3>
+        <p>Geen films gevonden.</p>
     }
 }
 else
 {
-    <h3>Loading</h3>
+    <p>Voorstellingen ophalen...</p>
 }
 
 @code {
@@ -56,7 +59,18 @@ else
     {
         if (ShowService != null)
         {
+            // TODO: Add error handling
+            // TODO: Add GetShowsByDate method
+
+            // Get shows and filter only today's shows
             Shows = await ShowService.GetShows();
+            Shows = Shows?.Where(s => s.Date.Date == DateTime.Today);
+        }
+        else
+        {
+            // Return empty list if ShowService is not available
+            Shows = new List<ShowDto>();
         }
     }
+
 }
