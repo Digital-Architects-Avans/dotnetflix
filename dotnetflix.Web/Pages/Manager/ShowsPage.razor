@@ -39,23 +39,27 @@
                 <ValidationSummary/>
         
                 <div class="form-group">
-                            <label for="movieTitle">Movie Title</label>
-                            <InputSelect id="movieTitle" class="form-control" @bind-Value="NewShow.MovieTitle" @onchange="UpdateMovieId">
-                                @foreach (var movie in Movies)
-                                {
-                                    <option value="@movie.Title">@movie.Title</option>
-                                }
-                            </InputSelect>
-                        </div>
+                    <label for="movieTitle">Movie Title</label>
+                    <InputSelect id="movieTitle" class="form-control" @bind-Value="NewShow.MovieTitle">
+                        @foreach (var movie in Movies)
+                        {
+                            <option value="@movie.Title">@movie.Title</option>
+                        }
+                    </InputSelect>
+                </div>
+                
+                
                 <div class="form-group">
                     <label for="theaterName">Theater Name</label>
-                    <InputSelect id="theaterName" class="form-control" @bind-Value="NewShow.TheaterName" @onchange="UpdateTheaterId">
+                    <InputSelect id="theaterName" class="form-control" @bind-Value="NewShow.TheaterName" >
                         @foreach (var theater in Theaters)
                         {
                             <option value="@theater.Name">@theater.Name</option>
                         }
                     </InputSelect>
                 </div>
+                
+                
                 <div class="form-group">
                     <label for="screenTime">Screen Time</label>
                     <InputNumber id="screenTime" class="form-control" @bind-Value="NewShow.ScreenTime"/>
@@ -87,7 +91,7 @@
         
                 <div class="form-group">
                             <label for="movieTitle">Movie Title</label>
-                            <InputSelect id="movieTitle" class="form-control" @bind-Value="SelectedShow.MovieTitle" @onchange="UpdateMovieId">
+                            <InputSelect id="movieTitle" class="form-control" @bind-Value="SelectedShow.MovieTitle">
                                 @foreach (var movie in Movies)
                                 {
                                     <option value="@movie.Title">@movie.Title</option>
@@ -96,7 +100,7 @@
                         </div>
                         <div class="form-group">
                             <label for="theaterName">Theater Name</label>
-                            <InputSelect id="theaterName" class="form-control" @bind-Value="SelectedShow.TheaterName" @onchange="UpdateTheaterId">
+                            <InputSelect id="theaterName" class="form-control" @bind-Value="SelectedShow.TheaterName">
                                 @foreach (var theater in Theaters)
                                 {
                                     <option value="@theater.Name">@theater.Name</option>
@@ -133,40 +137,22 @@
     List<ShowDto> Shows = new List<ShowDto>();
     List<MovieDto> Movies = new List<MovieDto>();
     List<TheaterDto> Theaters = new List<TheaterDto>();
-    ShowDto SelectedShow = new ShowDto();
+    UpdateShowDto SelectedShow = new UpdateShowDto();
     AddShowDto NewShow = new AddShowDto();
-
-    private async Task HandleAddNewShowSubmit()
-    {
-        // Update the MovieId and TheaterId based on the selected MovieTitle and TheaterName
-        UpdateMovieId(new ChangeEventArgs { Value = NewShow.MovieTitle });
-        UpdateTheaterId(new ChangeEventArgs { Value = NewShow.TheaterName });
-
-        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/show", NewShow);
-
-        if (response.IsSuccessStatusCode)
-        {
-            // Handle success here
-        }
-        else
-        {
-            // Handle error here, e.g., show an error message
-        }
-    }
-
+    
     protected override async Task OnInitializedAsync()
     {
         Shows = await Http.GetFromJsonAsync<List<ShowDto>>("http://localhost:5247/api/show");
         Movies = await Http.GetFromJsonAsync<List<MovieDto>>("http://localhost:5247/api/movie");
         Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
-        SelectedShow = new ShowDto();
+        SelectedShow = new UpdateShowDto();
         NewShow = new AddShowDto();
     }
 
     private void SelectShow(ShowDto show)
     {
         // Create a copy of the selected show
-        SelectedShow = new ShowDto
+        SelectedShow = new UpdateShowDto
         {
             Id = show.Id,
             MovieId = show.MovieId,
@@ -181,25 +167,63 @@
 
     private void SelectShow()
     {
-        SelectedShow = new ShowDto();
+        SelectedShow = new UpdateShowDto();
+    }
+    
+    private async Task HandleAddNewShowSubmit()
+    {
+        var selectedMovie = Movies.FirstOrDefault(m => m.Title == NewShow.MovieTitle);
+        if (selectedMovie != null)
+        {
+            NewShow.MovieId = selectedMovie.Id;
+        }
+
+        var selectedTheater = Theaters.FirstOrDefault(t => t.Name == NewShow.TheaterName);
+        if (selectedTheater != null)
+        {
+            NewShow.TheaterId = selectedTheater.Id;
+        }
+
+        // Make the POST request
+        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/show", NewShow);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Handle success here, e.g., refresh the list of shows
+            Shows = await Http.GetFromJsonAsync<List<ShowDto>>("http://localhost:5247/api/show");
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
     }
 
 
     private async Task HandleValidSubmit()
     {
+        var selectedMovie = Movies.FirstOrDefault(m => m.Title == SelectedShow.MovieTitle);
+        if (selectedMovie != null)
+        {
+            SelectedShow.MovieId = selectedMovie.Id;
+        }
+
+        var selectedTheater = Theaters.FirstOrDefault(t => t.Name == SelectedShow.TheaterName);
+        if (selectedTheater != null)
+        {
+            SelectedShow.TheaterId = selectedTheater.Id;
+        }
+        
         var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/show/{SelectedShow.Id}", SelectedShow);
 
         if (response.IsSuccessStatusCode)
         {
-            // Find the updated show in the list and replace it with the updated show
-            var index = Shows.FindIndex(s => s.Id == SelectedShow.Id);
-            if (index != -1)
-            {
-                Shows[index] = SelectedShow;
-            }
+            Shows = await Http.GetFromJsonAsync<List<ShowDto>>("http://localhost:5247/api/show");
+
         }
         else
         {
+            Shows = await Http.GetFromJsonAsync<List<ShowDto>>("http://localhost:5247/api/show");
+
             // Handle error here, e.g., show an error message
         }
     }
@@ -215,36 +239,15 @@
             // Remove the deleted show from the list
             Shows.RemoveAll(s => s.Id == SelectedShow.Id);
             // Reset the selected show
-            SelectedShow = new ShowDto();
+            SelectedShow = new UpdateShowDto();
         }
         else
         {
             // Handle error here, e.g., show an error message
         }
     }
+
     
-    private void UpdateMovieId(ChangeEventArgs e)
-    {
-        var selectedMovieTitle = e.Value.ToString();
-        var selectedMovie = Movies.FirstOrDefault(m => m.Title == selectedMovieTitle);
-        if (selectedMovie != null)
-        {
-            NewShow.MovieId = selectedMovie.Id;
-            NewShow.MovieTitle = selectedMovie.Title; 
-        }
-    }
-
-    private void UpdateTheaterId(ChangeEventArgs e)
-    {
-        var selectedTheaterName = e.Value.ToString();
-        var selectedTheater = Theaters.FirstOrDefault(t => t.Name == selectedTheaterName);
-        if (selectedTheater != null)
-        {
-            NewShow.TheaterId = selectedTheater.Id;
-            NewShow.MovieTitle = selectedTheater.Name;
-
-        }
-    }
 }
 
 <style>
