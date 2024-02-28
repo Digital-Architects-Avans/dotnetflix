@@ -32,25 +32,25 @@
         @if (SelectedMovie.Id < 1)
         {
             <h4>Add New Movie</h4>
-            <EditForm Model="NewMovie" OnValidSubmit="HandleAddNewMovieSubmit">
+            <EditForm Model="SelectedMovie" OnValidSubmit="NewMovieSubmit">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
 
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <InputText id="title" class="form-control" @bind-Value="NewMovie.Title"/>
+                    <InputText id="title" class="form-control" @bind-Value="SelectedMovie.Title"/>
                 </div>
                 <div class="form-group">
                     <label for="year">Year</label>
-                    <InputNumber id="year" class="form-control" @bind-Value="NewMovie.Year"/>
+                    <InputNumber id="year" class="form-control" @bind-Value="SelectedMovie.Year"/>
                 </div>
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <InputText id="description" class="form-control" @bind-Value="NewMovie.Description"/>
+                    <InputText id="description" class="form-control" @bind-Value="SelectedMovie.Description"/>
                 </div>
                 <div class="form-group">
                     <label for="rating">Rating</label>
-                    <InputSelect id="rating" class="form-control" @bind-Value="NewMovie.Rating">
+                    <InputSelect id="rating" class="form-control" @bind-Value="SelectedMovie.Rating">
                         @foreach (var rating in Enum.GetValues(typeof(Rating)))
                         {
                             <option value="@rating">@rating</option>
@@ -59,11 +59,11 @@
                 </div>
                 <div class="form-group">
                     <label for="runtime">Runtime</label>
-                    <InputNumber id="runtime" class="form-control" @bind-Value="NewMovie.Runtime"/>
+                    <InputNumber id="runtime" class="form-control" @bind-Value="SelectedMovie.Runtime"/>
                 </div>
                 <div class="form-group">
                     <label for="image">Image</label>
-                    <InputText id="image" class="form-control" @bind-Value="NewMovie.Image"/>
+                    <InputText id="image" class="form-control" @bind-Value="SelectedMovie.Image"/>
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </EditForm>
@@ -71,7 +71,7 @@
 else
 {
     <h4>Update Movie</h4>
-    <EditForm Model="SelectedMovie" OnValidSubmit="HandleValidSubmit">
+    <EditForm Model="SelectedMovie" OnValidSubmit="UpdateMovieSubmit">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
 
@@ -106,7 +106,7 @@ else
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </EditForm>
-    <button class="btn btn-danger" @onclick="HandleDeleteSubmit">Delete</button>
+    <button class="btn btn-danger" @onclick="DeleteMovieSubmit">Delete</button>
 
 }
     </div>
@@ -115,28 +115,16 @@ else
 @code {
     List<MovieDto> Movies = new List<MovieDto>();
     MovieDto SelectedMovie = new MovieDto();
+    UpdateMovieDto EditMovie = new UpdateMovieDto();
     AddMovieDto NewMovie = new AddMovieDto();
-
-    private async Task HandleAddNewMovieSubmit()
-    {
-        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/movie", NewMovie);
-
-        if (response.IsSuccessStatusCode)
-        {
-            // Refresh the movie list from the database
-            Movies = await Http.GetFromJsonAsync<List<MovieDto>>("http://localhost:5247/api/movie");
-        }
-        else
-        {
-            // Handle error here, e.g., show an error message
-        }
-    }
+    
 
     protected override async Task OnInitializedAsync()
     {
         Movies = await Http.GetFromJsonAsync<List<MovieDto>>("http://localhost:5247/api/movie");
-        SelectedMovie = new MovieDto();
         NewMovie = new AddMovieDto();
+        EditMovie = new UpdateMovieDto();
+        SelectMovie();
     }
     
     private void SelectMovie(MovieDto movie)
@@ -156,22 +144,69 @@ else
     
     private void SelectMovie()
     {
-        SelectedMovie = new MovieDto();
+        // Create a new movie offering default values
+        SelectedMovie = new MovieDto()
+        {
+            Id = 0,
+            Title = "Barry Pooter",
+            Year = 2001,
+            Description = "Master piece directed by Master Movies.",
+            Rating = Rating.G,
+            Runtime = 4,
+            Image = "ImageString"
+        };
+    }
+    
+    private async Task NewMovieSubmit()
+    {
+        NewMovie = new AddMovieDto()
+        {
+            Title = SelectedMovie.Title,
+            Year = SelectedMovie.Year,
+            Description = SelectedMovie.Description,
+            Rating = SelectedMovie.Rating,
+            Runtime = SelectedMovie.Runtime,
+            Image = SelectedMovie.Image
+        };
+        
+        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/movie", NewMovie);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // refresh movielist from db
+            Movies = await Http.GetFromJsonAsync<List<MovieDto>>("http://localhost:5247/api/movie");
+            // Reset the selected movie
+            SelectMovie();
+            StateHasChanged();
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
     }
 
 
-    private async Task HandleValidSubmit()
+    private async Task UpdateMovieSubmit()
     {
+        EditMovie = new UpdateMovieDto()
+        {
+            Title = SelectedMovie.Title,
+            Year = SelectedMovie.Year,
+            Description = SelectedMovie.Description,
+            Rating = SelectedMovie.Rating,
+            Runtime = SelectedMovie.Runtime,
+            Image = SelectedMovie.Image
+        };
+        
         var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/movie/{SelectedMovie.Id}", SelectedMovie);
 
         if (response.IsSuccessStatusCode)
         {
-            // Find the updated movie in the list and replace it with the updated movie
-            var index = Movies.FindIndex(m => m.Id == SelectedMovie.Id);
-            if (index != -1)
-            {
-                Movies[index] = SelectedMovie;
-            }
+            //refresh movielist from db
+            Movies = await Http.GetFromJsonAsync<List<MovieDto>>("http://localhost:5247/api/movie");
+            // Reset the selected movie
+            SelectMovie();
+            StateHasChanged();
         }
         else
         {
@@ -179,16 +214,17 @@ else
         }
     }
     
-    private async Task HandleDeleteSubmit()
+    private async Task DeleteMovieSubmit()
     {
         var response = await Http.DeleteAsync($"http://localhost:5247/api/movie/{SelectedMovie.Id}");
 
         if (response.IsSuccessStatusCode)
         {
-            // Remove the deleted movie from the list
-            Movies.RemoveAll(m => m.Id == SelectedMovie.Id);
+            //refresh movielist from db
+            Movies = await Http.GetFromJsonAsync<List<MovieDto>>("http://localhost:5247/api/movie");
             // Reset the selected movie
-            SelectedMovie = new MovieDto();
+            SelectMovie();
+            StateHasChanged();
         }
         else
         {
@@ -198,9 +234,6 @@ else
 }
 
 <style>
-    /*.table tbody tr:nth-child(odd) {*/
-    /*    background-color: rgba(242, 242, 242, 0.5);*/
-    /*}*/
     .selected-movie {
             background-color: #007bff;
             color: white;
