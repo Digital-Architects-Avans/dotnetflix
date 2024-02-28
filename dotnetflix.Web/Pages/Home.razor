@@ -53,7 +53,7 @@ else
     // 2) Public properties to expose to the view
     private IEnumerable<ShowDto>? Shows { get; set; }
     private IOrderedEnumerable<IGrouping<int, ShowDto>>? GroupedShowsByMovie { get; set; }
-    private IEnumerable<MovieDto>? Movies { get; set; }
+    private IEnumerable<MovieDto> Movies { get; set; } = new List<MovieDto>();
     private int? FoundShows { get; set; }
     private int FoundMovies { get; set; }
 
@@ -85,15 +85,12 @@ else
                 // Get movies for grouped shows
                 if (MovieService != null)
                 {
-                    Movies ??= new List<MovieDto>();
-
                     foreach (var showGroup in GroupedShowsByMovie)
                     {
                         var movie = await MovieService.GetMovie(showGroup.First().MovieId);
                         Movies = Movies.Append(movie);
                     }
-
-                    FoundMovies = Movies?.Count() ?? 0;
+                    FoundMovies = Movies.Count();
                 }
             }
         }

@@ -18,7 +18,7 @@ public class MovieService : IMovieService
         try
         {
             var movie = await this._httpClient.GetFromJsonAsync<MovieDto>($"api/Movie/{id}");
-            return movie;
+            return movie ?? new MovieDto();
         }
         catch (Exception e)
         {
