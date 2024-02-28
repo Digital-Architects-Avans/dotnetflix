@@ -6,31 +6,25 @@
 
 <h1>What's on</h1>
 
-@if (Shows != null)
+@if (FoundShows != null)
 {
     // Show movies and times
-    if (Shows.Count() != 0)
+    <p>@FoundShows timings found for @FoundMovies movies</p>
+
+    if (FoundMovies > 0 && GroupedShowsByMovie != null)
     {
-        // Group timings by movie
-        var groupedShowsByMovie = from show in Shows
-            group show by show.MovieId
-            into showGroup
-            orderby showGroup.Key
-            select showGroup;
-
         // Loop through the grouped timings
-        @foreach (var showGroup in groupedShowsByMovie)
+        @foreach (var showGroup in GroupedShowsByMovie)
         {
+            // Create timings list and get movie details
             var shows = showGroup.ToList();
+            var movieDetails = Movies?.Where(movie => movie.Id == shows.First().MovieId).First();
 
-            // Get and show movie details
-            var movieDetails = Movies?.Where(movie => movie.Id == showGroup.First().MovieId).First();
-
+            // Show movie details and timings
             if (movieDetails != null)
             {
                 <MovieDetails Movie="movieDetails"/>
             }
-
 
             <h6>Today</h6>
             <div class="row pb-3">
@@ -44,10 +38,6 @@
             </div>
         }
     }
-    else
-    {
-        <p>No screenings found.</p>
-    }
 }
 else
 {
@@ -55,43 +45,54 @@ else
 }
 
 @code {
-    // 1) Set properties te facilitate dependency injection
-    // 2) Public properties to expose to the view
-    // 3) Method to be called when the component is initialized
 
+    // 1) Set properties te facilitate dependency injection
     [Inject] public IShowService? ShowService { get; set; }
     [Inject] public IMovieService? MovieService { get; set; }
 
+    // 2) Public properties to expose to the view
     private IEnumerable<ShowDto>? Shows { get; set; }
+    private IOrderedEnumerable<IGrouping<int, ShowDto>>? GroupedShowsByMovie { get; set; }
     private IEnumerable<MovieDto>? Movies { get; set; }
+    private int? FoundShows { get; set; }
+    private int FoundMovies { get; set; }
 
+    // 3) Method to be called when the component is initialized
     protected override async Task OnInitializedAsync()
     {
+        // TODO: Add error handling
+
         if (ShowService != null)
         {
-            // TODO: Add error handling
+            // Get shows and filter today's timings
             // TODO: Add GetShowsByDate method
-
-            // Get show and filter only today's timings
             Shows = await ShowService.GetShows();
-            Shows = Shows?.Where(s => s.Date.Date == DateTime.Today);
+            Shows = Shows?.Where(show => show.Date == DateTime.Today);
+            FoundShows = Shows?.Count() ?? null;
 
-            // Get movies for the available timings
-            if (Shows != null && MovieService != null)
+            if (Shows != null)
             {
-                Movies ??= new List<MovieDto>();
+                // Group timings by movie
+                GroupedShowsByMovie = from show in Shows
+                    group show by show.MovieId
+                    into showGroup
+                    orderby showGroup.Key
+                    select showGroup;
 
-                foreach (var show in Shows)
+                // Get movies for grouped shows
+                if (MovieService != null)
                 {
-                    var movie = await MovieService.GetMovie(show.MovieId);
-                    Movies = Movies.Append(movie);
+                    Movies ??= new List<MovieDto>();
+
+                    foreach (var showGroup in GroupedShowsByMovie)
+                    {
+                        var movie = await MovieService.GetMovie(showGroup.First().MovieId);
+                        Movies = Movies.Append(movie);
+                    }
+
+                    FoundMovies = Movies?.Count() ?? 0;
                 }
             }
-        }
-        else
-        {
-            // Return empty list if ShowService is not available
-            Shows = new List<ShowDto>();
         }
     }
 
