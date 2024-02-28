@@ -145,7 +145,7 @@ else
     private void SelectMovie()
     {
         // Create a new movie offering default values
-        SelectedMovie = new MovieDto()
+        SelectedMovie = new MovieDto
         {
             Id = 0,
             Title = "Barry Pooter",
@@ -159,7 +159,7 @@ else
     
     private async Task NewMovieSubmit()
     {
-        NewMovie = new AddMovieDto()
+        NewMovie = new AddMovieDto
         {
             Title = SelectedMovie.Title,
             Year = SelectedMovie.Year,
@@ -188,7 +188,7 @@ else
 
     private async Task UpdateMovieSubmit()
     {
-        EditMovie = new UpdateMovieDto()
+        EditMovie = new UpdateMovieDto
         {
             Title = SelectedMovie.Title,
             Year = SelectedMovie.Year,
@@ -198,7 +198,7 @@ else
             Image = SelectedMovie.Image
         };
         
-        var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/movie/{SelectedMovie.Id}", SelectedMovie);
+        var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/movie/{SelectedMovie.Id}", EditMovie);
 
         if (response.IsSuccessStatusCode)
         {

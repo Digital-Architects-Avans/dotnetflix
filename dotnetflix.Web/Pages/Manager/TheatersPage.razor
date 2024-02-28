@@ -32,17 +32,17 @@
         @if (SelectedTheater.Id < 1)
         {
             <h4>Add New Theater</h4>
-            <EditForm Model="NewTheater" OnValidSubmit="HandleAddNewTheaterSubmit">
+            <EditForm Model="SelectedTheater" OnValidSubmit="NewTheaterSubmit">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
 
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <InputText id="name" class="form-control" @bind-Value="NewTheater.Name"/>
+                    <InputText id="name" class="form-control" @bind-Value="SelectedTheater.Name"/>
                 </div>
                 <div class="form-group">
                     <label for="seats">Seats</label>
-                    <InputNumber id="seats" class="form-control" @bind-Value="NewTheater.Seats"/>
+                    <InputNumber id="seats" class="form-control" @bind-Value="SelectedTheater.Seats"/>
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </EditForm>
@@ -50,7 +50,7 @@
 else
 {
     <h4>Update Theater</h4>
-    <EditForm Model="SelectedTheater" OnValidSubmit="HandleValidSubmit">
+    <EditForm Model="SelectedTheater" OnValidSubmit="UpdateTheaterSubmit">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
 
@@ -64,8 +64,7 @@ else
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </EditForm>
-    <button class="btn btn-danger" @onclick="HandleDeleteSubmit">Delete</button>
-
+    <button class="btn btn-danger" @onclick="DeleteTheaterSubmit">Delete</button>
 }
     </div>
 </div>
@@ -74,27 +73,14 @@ else
     List<TheaterDto> Theaters = new List<TheaterDto>();
     TheaterDto SelectedTheater = new TheaterDto();
     AddTheaterDto NewTheater = new AddTheaterDto();
-
-    private async Task HandleAddNewTheaterSubmit()
-    {
-        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/theater", NewTheater);
-
-        if (response.IsSuccessStatusCode)
-        {
-            // Refresh the theater list from the database
-            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
-        }
-        else
-        {
-            // Handle error here, e.g., show an error message
-        }
-    }
+    UpdateTheaterDto EditTheater = new UpdateTheaterDto();
 
     protected override async Task OnInitializedAsync()
     {
         Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
-        SelectedTheater = new TheaterDto();
         NewTheater = new AddTheaterDto();
+        EditTheater = new UpdateTheaterDto();
+        SelectTheater();
     }
 
     private void SelectTheater(TheaterDto theater)
@@ -110,22 +96,50 @@ else
 
     private void SelectTheater()
     {
-        SelectedTheater = new TheaterDto();
+        // Create a new theater offering default values
+        SelectedTheater = new TheaterDto
+        {
+            Id = 0,
+            Name = "New Theater",
+            Seats = 100
+        };
     }
-
-
-    private async Task HandleValidSubmit()
+    
+    private async Task NewTheaterSubmit()
     {
-        var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/theater/{SelectedTheater.Id}", SelectedTheater);
+        NewTheater = new AddTheaterDto
+        {
+            Name = SelectedTheater.Name,
+            Seats = SelectedTheater.Seats
+        };
+        
+        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/theater", NewTheater);
 
         if (response.IsSuccessStatusCode)
         {
-            // Find the updated theater in the list and replace it with the updated theater
-            var index = Theaters.FindIndex(t => t.Id == SelectedTheater.Id);
-            if (index != -1)
-            {
-                Theaters[index] = SelectedTheater;
-            }
+            // refresh theaterlist from db
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/Theater");
+            // Reset the selected theater
+            SelectTheater();
+            StateHasChanged();
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
+    }
+    
+    private async Task UpdateTheaterSubmit()
+    {
+        var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/theater/{SelectedTheater.Id}", EditTheater);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // refresh theaterlist from db
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/Theater");
+            // Reset the selected theater
+            SelectTheater();
+            StateHasChanged();
         }
         else
         {
@@ -133,16 +147,17 @@ else
         }
     }
 
-    private async Task HandleDeleteSubmit()
+    private async Task DeleteTheaterSubmit()
     {
         var response = await Http.DeleteAsync($"http://localhost:5247/api/theater/{SelectedTheater.Id}");
 
         if (response.IsSuccessStatusCode)
         {
-            // Remove the deleted theater from the list
-            Theaters.RemoveAll(t => t.Id == SelectedTheater.Id);
+            // refresh theaterlist from db
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/Theater");
             // Reset the selected theater
-            SelectedTheater = new TheaterDto();
+            SelectTheater();
+            StateHasChanged();
         }
         else
         {
