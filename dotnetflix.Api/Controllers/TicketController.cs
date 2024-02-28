@@ -37,7 +37,7 @@ public class TicketController : ControllerBase
 	{
 		try
 		{
-			var tickets		= await _ticketRepository.GetTickets();
+			var tickets	= await _ticketRepository.GetTickets();
 			if (tickets == null)
 			{
 				throw new Exception("No tickets found..");

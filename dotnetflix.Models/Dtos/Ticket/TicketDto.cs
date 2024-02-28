@@ -13,7 +13,6 @@ public class TicketDto
 	// SHOW
 	public int ShowId { get; set; }
 	public DateTime ShowDate {  get; set; }
-	// public DateTime ShowTime { get; set; }
 	public decimal BasePrice { get; set; }
 	public Discount Discount { get; set; }
 
@@ -31,7 +30,6 @@ public enum Discount
 	Students = 2,           // Discount: 1.50 (student pass + only valid on mon-thu)
 	Seniors = 3,            // Discount: 1.50 (senior pass + only valid on mon-thu excl. holidays)
 	CinemaPass = 4,         // Discount: varies (MaDiWoDo ticket + only valid on mon-thu excl. holidays)
-	ThreeD = 5,             // Addition: 2.50 for 3D movies
 	None = 0                // Default price: 8.50 or 9.00 if movie runtime > 120
 }
 

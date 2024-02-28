@@ -2,6 +2,7 @@ using dotnetflix.Api.Data.Entities;
 using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.Movie;
+using dotnetflix.Models.Dtos.Order;
 using dotnetflix.Models.Dtos.Show;
 using dotnetflix.Models.Dtos.Theater;
 
@@ -61,10 +62,11 @@ public static class DtoConversions
                     MovieRuntime = movie.Runtime,
 					ShowId = ticket.ShowId,
                     ShowDate = show.Date,
-                    // ShowTime = show.ScreenTime,
                     BasePrice = show.BasePrice,
 					Discount = ticket.Discount,
-					TheaterId = ticket.TheaterId
+					TheaterId = ticket.TheaterId,
+                    SeatId = ticket.SeatId,
+					Row = ticket.Row
 				}).ToList();
 	}
 
@@ -119,6 +121,15 @@ public static class DtoConversions
 			TheaterId = ticket.TheaterId,
 			SeatId = ticket.SeatId,
 			Row = ticket.Row
+		};
+	}
+    
+    public static OrderDto ConvertToDto(this Order order)
+    {
+		return new OrderDto
+        {
+			Id = order.Id,
+			TotalPrice = order.TotalPrice
 		};
 	}
 }
