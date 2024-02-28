@@ -30,14 +30,18 @@
             {
                 <MovieDetails Movie="movieDetails"/>
             }
-            
-            <p>Today</p>
 
-            // Show timings
-            @foreach (var show in shows)
-            {
-                <ShowTime Show="show"/>
-            }
+
+            <h6>Today</h6>
+            <div class="row pb-3">
+
+                @foreach (var show in shows)
+                {
+                    // Show timings
+                    <ShowTime Show="show"/>
+                }
+
+            </div>
         }
     }
     else
@@ -76,7 +80,7 @@ else
             if (Shows != null && MovieService != null)
             {
                 Movies ??= new List<MovieDto>();
-                
+
                 foreach (var show in Shows)
                 {
                     var movie = await MovieService.GetMovie(show.MovieId);
@@ -90,4 +94,5 @@ else
             Shows = new List<ShowDto>();
         }
     }
+
 }
