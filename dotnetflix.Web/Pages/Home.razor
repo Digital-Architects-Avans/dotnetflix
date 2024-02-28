@@ -79,7 +79,7 @@ else
                 GroupedShowsByMovie = from show in Shows
                     group show by show.MovieId
                     into showGroup
-                    orderby showGroup.Key
+                    orderby showGroup.First().Date
                     select showGroup;
 
                 // Get movies for grouped shows
