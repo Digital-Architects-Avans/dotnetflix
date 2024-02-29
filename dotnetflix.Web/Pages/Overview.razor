@@ -1,23 +1,44 @@
 @page "/overview"
+@page "/overview/{OrderCode}"
+
+@inject NavigationManager NavigationManager
 
 <h1>Collect your tickets</h1>
 
 @switch (Status)
 {
     case PageState.Loading:
+
         <p>Loading...</p>
+
         break;
     case PageState.CodeFound:
-        <p>Getting your tickets...</p>
+
+        <p>Getting your tickets... <a href="/overview" @onclick="ResetPage">Try again</a></p>
+
         break;
-    case PageState.CodeNotFound:
-        <p>Input your order number</p>
+    case PageState.EnterCode:
+
+        // Show form to enter order code
+        <label for="orderCode" class="form-label">Your order number</label>
+        <input @onkeydown="CollectTicketsClicked"
+               @bind="_orderCode"
+               id="orderCode"
+               type="number"
+               class="form-control"
+               placeholder="123456"
+               style="max-width: 128px"/>
+        <button type="button" class="btn btn-primary mt-2" @onclick="CollectTicketsClicked">Collect tickets</button>
+
         break;
-    case PageState.TicketsFound:
-        <p>Enjoy the movie!</p>
+    case PageState.OrderFound:
+
+        <p>Tickets for order #@OrderCode.</p>
+
         break;
-    case PageState.TicketsNotFound:
-        <p>Input your order number</p>
+    case PageState.OrderNotFound:
+
+        <p>No order found with #@OrderCode. <a href="/overview" @onclick="ResetPage">Try again</a></p>
         break;
     default:
         throw new ArgumentOutOfRangeException();
@@ -29,22 +50,41 @@
     // TODO: Add the necessary properties to facilitate dependency injection
 
     // 2) Public properties to expose to the view
-    private PageState Status { get; set; } = PageState.Loading;
+    [Parameter] public string? OrderCode { get; set; }
+    private PageState Status { get; set; }
+    private string _orderCode = "";
 
     private enum PageState
     {
         Loading,
         CodeFound,
-        CodeNotFound,
-        TicketsFound,
-        TicketsNotFound
+        EnterCode,
+        OrderFound,
+        OrderNotFound
     }
 
     // 3) Method to be called when the component is initialized
-    /*
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-
+        Status = PageState.Loading;
+        return Task.CompletedTask;
     }
-    */
+
+    protected override void OnParametersSet()
+    {
+        Status = OrderCode != null ? PageState.CodeFound : PageState.EnterCode;
+    }
+
+    // 4) Methods UI events
+    private void CollectTicketsClicked()
+    {
+        NavigationManager.NavigateTo($"/overview/{_orderCode}");
+    }
+
+    private void ResetPage()
+    {
+        _orderCode = "";
+        NavigationManager.NavigateTo("/overview");
+    }
+
 }
