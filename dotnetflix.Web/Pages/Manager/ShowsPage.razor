@@ -1,6 +1,4 @@
 @page "/manager/shows"
-@using System.Net.Http
-@using System.Net.Http.Json
 @using dotnetflix.Models.Dtos.Movie
 @using dotnetflix.Models.Dtos.Show
 @using dotnetflix.Models.Dtos.Theater
@@ -139,9 +137,9 @@
     
     protected override async Task OnInitializedAsync()
     {
-        Shows = await Http.GetFromJsonAsync<List<ShowDto>>("http://localhost:5247/api/show");
-        Movies = await Http.GetFromJsonAsync<List<MovieDto>>("http://localhost:5247/api/movie");
-        Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
+        Shows = await Http.GetFromJsonAsync<List<ShowDto>>("api/show");
+        Movies = await Http.GetFromJsonAsync<List<MovieDto>>("api/movie");
+        Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/theater");
         NewShow = new AddShowDto();
         EditShow = new UpdateShowDto();
         SelectShow();
@@ -206,12 +204,12 @@
             return;
         }
         
-        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/show", NewShow);
+        var response = await Http.PostAsJsonAsync("api/show", NewShow);
 
         if (response.IsSuccessStatusCode)
         {
             // refresh movielist from db
-            Shows = await Http.GetFromJsonAsync<List<ShowDto>>("http://localhost:5247/api/show");
+            Shows = await Http.GetFromJsonAsync<List<ShowDto>>("api/show");
             // Reset the selected movie
             SelectShow();
             StateHasChanged();
@@ -249,12 +247,12 @@
             return;
         }
         
-        var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/show/{SelectedShow.Id}", EditShow);
+        var response = await Http.PutAsJsonAsync($"api/show/{SelectedShow.Id}", EditShow);
 
         if (response.IsSuccessStatusCode)
         {
             // refresh movielist from db
-            Shows = await Http.GetFromJsonAsync<List<ShowDto>>("http://localhost:5247/api/show");
+            Shows = await Http.GetFromJsonAsync<List<ShowDto>>("api/show");
             // Reset the selected movie
             SelectShow();
             StateHasChanged();
@@ -268,12 +266,12 @@
     
     private async Task DeleteShowSubmit()
     {
-        var response = await Http.DeleteAsync($"http://localhost:5247/api/show/{SelectedShow.Id}");
+        var response = await Http.DeleteAsync($"api/show/{SelectedShow.Id}");
 
         if (response.IsSuccessStatusCode)
         {
             // refresh movielist from db
-            Shows = await Http.GetFromJsonAsync<List<ShowDto>>("http://localhost:5247/api/show");
+            Shows = await Http.GetFromJsonAsync<List<ShowDto>>("api/show");
             // Reset the selected movie
             SelectShow();
             StateHasChanged();

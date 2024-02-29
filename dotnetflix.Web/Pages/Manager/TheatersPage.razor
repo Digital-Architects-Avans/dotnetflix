@@ -1,6 +1,4 @@
 @page "/manager/theaters"
-@using System.Net.Http
-@using System.Net.Http.Json
 @using dotnetflix.Models.Dtos.Theater
 @inject HttpClient Http
 <h3>Manager: Theaters</h3>
@@ -77,7 +75,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/theater");
+        Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/theater");
         NewTheater = new AddTheaterDto();
         EditTheater = new UpdateTheaterDto();
         SelectTheater();
@@ -113,12 +111,12 @@ else
             Seats = SelectedTheater.Seats
         };
         
-        var response = await Http.PostAsJsonAsync("http://localhost:5247/api/theater", NewTheater);
+        var response = await Http.PostAsJsonAsync("api/theater", NewTheater);
 
         if (response.IsSuccessStatusCode)
         {
             // refresh theaterlist from db
-            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/Theater");
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/theater");
             // Reset the selected theater
             SelectTheater();
             StateHasChanged();
@@ -131,12 +129,12 @@ else
     
     private async Task UpdateTheaterSubmit()
     {
-        var response = await Http.PutAsJsonAsync($"http://localhost:5247/api/theater/{SelectedTheater.Id}", EditTheater);
+        var response = await Http.PutAsJsonAsync($"api/theater/{SelectedTheater.Id}", EditTheater);
 
         if (response.IsSuccessStatusCode)
         {
             // refresh theaterlist from db
-            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/Theater");
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/theater");
             // Reset the selected theater
             SelectTheater();
             StateHasChanged();
@@ -149,12 +147,12 @@ else
 
     private async Task DeleteTheaterSubmit()
     {
-        var response = await Http.DeleteAsync($"http://localhost:5247/api/theater/{SelectedTheater.Id}");
+        var response = await Http.DeleteAsync($"api/theater/{SelectedTheater.Id}");
 
         if (response.IsSuccessStatusCode)
         {
             // refresh theaterlist from db
-            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("http://localhost:5247/api/Theater");
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/Theater");
             // Reset the selected theater
             SelectTheater();
             StateHasChanged();
