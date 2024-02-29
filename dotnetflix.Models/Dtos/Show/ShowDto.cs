@@ -15,6 +15,6 @@ public class ShowDto
 
 public enum MovieType
 {
-    Regular,
-    ThreeD,
+    Regular = 0,
+    ThreeD = 1,
 }
