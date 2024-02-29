@@ -9,14 +9,12 @@ namespace dotnetflix.Api.Data.Entities
         public int Id { get; set; }
 
         [Required]
-        [ForeignKey("Movie")]
-        public int MovieId { get; set; }
-        public Movie Movie { get; set; }
-
-        [Required]
-        [ForeignKey("Theater")]
+        [ForeignKey(nameof(Theater.Id))]
         public int TheaterId { get; set; }
-        public Theater Theater { get; set; }
+    
+        [Required]
+        [ForeignKey(nameof(Movie.Id))]
+        public int MovieId { get; set; }
 
         [Required]
         public DateTime Date { get; set; }
@@ -29,6 +27,11 @@ namespace dotnetflix.Api.Data.Entities
 
         [Required]
         public decimal BasePrice { get; set; }
+        
+        // Navigation properties
+        public Theater Theater { get; set; }
+        public Movie Movie { get; set; }
+        public ICollection<Ticket> Tickets { get; set; }
     }
     
 }
