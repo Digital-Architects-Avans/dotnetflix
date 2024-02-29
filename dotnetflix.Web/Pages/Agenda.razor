@@ -1,34 +1,36 @@
 ﻿@page "/"
 @inject NavigationManager NavManager
+@inherits AgendaBase
 
-<PageTitle>Movie Overview</PageTitle>
+@if (Shows == null)
+{
+    <h3>Loading shows..</h3>
+} else
+{
+    DateTime today = DateTime.Now;
+    <h3>Agenda</h3>
 
-<h3>Agenda</h3>
+    <div class="d-grid">
+        <div class="row-cols-7">
+            <button class="col-xs-4" onclick="@(() => GetShowByDay(today))">Vandaag</button>
+            <button class="col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(1)))">@today.AddDays(1).ToString("dd MMM")</button>
+            <button class="col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(2)))">@today.AddDays(2).ToString("dd MMM")</button>
+            <button class="col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(3)))">@today.AddDays(3).ToString("dd MMM")</button>
+            <button class="col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(4)))">@today.AddDays(4).ToString("dd MMM")</button>
+        </div>
+    </div>
 
-<QuickGrid Items="@movie">
-    <PropertyColumn Title="" Property="@(m => m.MovieName)" />
-    <TemplateColumn Title="">
-        @for(int i = 0; i < context.PlayTime.Count; i++)
-        {
-            <button onclick="@(() => Redirect(context.MovieId))">@context.PlayTime[i]</button>
-        }
-    </TemplateColumn>
-</QuickGrid>
+    <QuickGrid Items="@MoviesWithDates.AsQueryable()">
+        <PropertyColumn Title="" Property="@(s => s.MovieTitle)" />
+        <TemplateColumn Title="">
+            @for (int i = 0; i < context.Dates.Count; i++)
+            {
+                <button onclick="@(() => Redirect(context.MovieId))">@context.Dates[i].ToString("H:mm")</button>
+            }
+        </TemplateColumn>
+    </QuickGrid>
+}
 
 @code {
-    record Movie(int MovieId, string MovieName, List<string> PlayTime);
-
-    IQueryable<Movie> movie = new[]
-    {
-        new Movie(10895, "Saving Private Henk", ["13:00", "17:00", "19:30", "21:00"]),
-        new Movie(10896, "Titonic", ["13:00", "17:00", "19:30", "21:00"]),
-        new Movie(10897, "Barry Pooter: Deel achttien", ["13:00", "17:00", "19:30", "21:00"]),
-        new Movie(10898, "Nicht Rijder", ["13:00", "17:00", "19:30", "21:00"]),
-        new Movie(10899, "Nicht Rijder", ["13:00", "17:00", "19:30", "21:00"]),
-        new Movie(10900, "Thermometer 4", ["13:00", "17:00", "19:30", "21:00"]), 
-        new Movie(10901, "Matrix Retarded", ["13:00", "17:00", "19:30", "22:00"]), 
-
-    }.AsQueryable();
-
     void Redirect(int movieId) => NavManager.NavigateTo("/details/{movieId}");
 }

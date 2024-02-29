@@ -51,7 +51,6 @@ public class ShowRepository : IShowRepository
                 MovieId = addShowDto.MovieId,
                 Movie = movie,
                 TheaterId = addShowDto.TheaterId,
-                Theater = theater,
                 Date = addShowDto.Date,
                 ScreenTime = addShowDto.ScreenTime,
                 Type = addShowDto.Type,

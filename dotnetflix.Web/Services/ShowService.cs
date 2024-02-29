@@ -17,7 +17,7 @@ public class ShowService : IShowService
     {
         try
         {
-            var shows = await this._httpClient.GetFromJsonAsync<IEnumerable<ShowDto>>("api/Show");
+            var shows = await _httpClient.GetFromJsonAsync<IEnumerable<ShowDto>>("api/Show");
             return shows;
         }
         catch (Exception e)
