@@ -2,7 +2,6 @@ namespace dotnetflix.Models.Dtos.Show;
 
 public class UpdateShowDto
 {
-    public int Id { get; set; } 
     public int MovieId { get; set; }
     public int TheaterId { get; set; }
     public DateTime Date { get; set; }
