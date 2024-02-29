@@ -8,6 +8,9 @@ namespace dotnetflix.Api.Entities
 	{
 		[Required]
 		public int Id { get; set; }
+		
+		[Required]
+		public int Number { get; set; }
 
 		[Required]
 		public int Row {  get; set; }
