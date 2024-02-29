@@ -1,0 +1,35 @@
+@using dotnetflix.Models.Dtos.Show
+@using System.Globalization
+
+<div class="col-xxl-2 col-xl-3 col-md-4 col-sm-6 pb-4 pt-2">
+    <div class="card">
+        <div class="card-body">
+            <a href="/tickets/@Show.Id" class="stretched-link text-decoration-none">
+                <h5 class="card-title text-black">@StartTime - @EndTime</h5>
+            </a>
+            <h6 class="card-subtitle mb-2 text-body-secondary">@Show.TheaterName</h6>
+            <p class="card-text">@Show.Type</p>
+            <p class="card-text">
+                <small class="text-body-secondary">From @Show.BasePrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</small>
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    // Parameter to be passed to the component
+    [Parameter] public ShowDto Show { get; set; } = new ShowDto();
+    [Parameter] public string StartTime { get; set; } = "00:00";
+    [Parameter] public string EndTime { get; set; } = "00:00";
+
+    protected override Task OnInitializedAsync()
+    {
+        // Convert date to time in 24-hour format
+        StartTime = Show.Date.ToString("HH:mm");
+        // Get end time by adding screen time to start time
+        EndTime = Show.Date.AddMinutes(Show.ScreenTime).ToString("HH:mm");
+        return Task.CompletedTask;
+    }
+
+}

@@ -1,0 +1,27 @@
+@using dotnetflix.Models.Dtos.Movie
+
+<div class="card mb-3 border-0" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="/images/@Movie.Image" class="img-fluid rounded" alt="..." style="max-height: 250px;">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@Movie.Title (@Movie.Year)</h5>
+                <p class="card-text">@Movie.Description</p>
+                <p class="card-text">
+                    <small class="text-body-secondary">Run time: @Movie.Runtime min</small>
+                </p>
+                <p class="card-text">
+                    <small class="text-body-secondary">Rating: @Movie.Rating</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    // Parameter to be passed to the component
+    [Parameter] public MovieDto Movie { get; set; } = new MovieDto();
+}
