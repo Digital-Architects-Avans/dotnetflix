@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-// using dotnetflix.Models.Dtos;
+using dotnetflix.Models.Dtos.Show;
 using dotnetflix.Web.Services.Contracts;
 
 namespace dotnetflix.Web.Services;
@@ -13,13 +13,12 @@ public class ShowService : IShowService
         _httpClient = httpClient;
     }
 
-    /*
-    public async Task<IEnumerable<ShowDto>> GetShows()
+    public async Task<IEnumerable<ShowDto>?> GetShows()
     {
         try
         {
             var shows = await this._httpClient.GetFromJsonAsync<IEnumerable<ShowDto>>("api/Show");
-            // return shows;
+            return shows;
         }
         catch (Exception e)
         {
@@ -27,5 +26,4 @@ public class ShowService : IShowService
             throw;
         }
     }
-    */
 }
