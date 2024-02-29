@@ -136,10 +136,8 @@ public class ShowController : ControllerBase
             {
                 return NotFound();
             }
-
-            var showDto = show.ConvertToDto();
-
-            return Ok(showDto);
+            
+            return Ok();
         }
         catch (Exception ex)
         {

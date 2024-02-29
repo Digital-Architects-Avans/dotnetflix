@@ -121,9 +121,7 @@ public class TheaterController : ControllerBase
                 return NotFound();
             }
 
-            var theaterDto = theater.ConvertToDto();
-
-            return Ok(theaterDto);
+            return Ok();
         }
         catch (Exception ex)
         {
