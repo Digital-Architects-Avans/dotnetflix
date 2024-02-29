@@ -1,0 +1,50 @@
+@page "/overview"
+
+<h1>Collect your tickets</h1>
+
+@switch (Status)
+{
+    case PageState.Loading:
+        <p>Loading...</p>
+        break;
+    case PageState.CodeFound:
+        <p>Getting your tickets...</p>
+        break;
+    case PageState.CodeNotFound:
+        <p>Input your order number</p>
+        break;
+    case PageState.TicketsFound:
+        <p>Enjoy the movie!</p>
+        break;
+    case PageState.TicketsNotFound:
+        <p>Input your order number</p>
+        break;
+    default:
+        throw new ArgumentOutOfRangeException();
+}
+
+@code {
+
+    // 1) Set properties te facilitate dependency injection
+    // TODO: Add the necessary properties to facilitate dependency injection
+
+    // 2) Public properties to expose to the view
+    private PageState Status { get; set; } = PageState.Loading;
+
+    private enum PageState
+    {
+        Loading,
+        CodeFound,
+        CodeNotFound,
+        TicketsFound,
+        TicketsNotFound
+    }
+
+    // 3) Method to be called when the component is initialized
+    /*
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+    */
+}
