@@ -72,11 +72,15 @@ public class ShowRepository : IShowRepository
     public async Task<Show> UpdateShow(int id, UpdateShowDto updateShowDto)
     {
         var show = await _dotNetFlixDbContext.Shows.FindAsync(id);
-        
-        if (show != null)
+        var movie = await _dotNetFlixDbContext.Movies.FindAsync(updateShowDto.MovieId);
+        var theater = await _dotNetFlixDbContext.Theaters.FindAsync(updateShowDto.TheaterId);
+
+        if (show != null && movie != null && theater != null)
         {
             show.MovieId = updateShowDto.MovieId;
+            show.Movie = movie;
             show.TheaterId = updateShowDto.TheaterId;
+            show.Theater = theater;
             show.Date = updateShowDto.Date;
             show.ScreenTime = updateShowDto.ScreenTime;
             show.Type = updateShowDto.Type;
