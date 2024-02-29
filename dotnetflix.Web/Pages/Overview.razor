@@ -1,5 +1,8 @@
 @page "/overview"
 @page "/overview/{OrderCode}"
+@using dotnetflix.Web.Services.Contracts
+@using dotnetflix.Models.Dtos.Movie
+@using dotnetflix.Models.Dtos.Show
 
 @inject NavigationManager NavigationManager
 
@@ -47,11 +50,19 @@
 @code {
 
     // 1) Set properties te facilitate dependency injection
-    // TODO: Add the necessary properties to facilitate dependency injection
+    // [Inject] public IOrderService? OrderService { get; set; }
+    // [Inject] public ITicketService? TicketService { get; set; }
+    [Inject] public IShowService? ShowService { get; set; }
+    [Inject] public IMovieService? MovieService { get; set; }
 
     // 2) Public properties to expose to the view
-    [Parameter] public string? OrderCode { get; set; }
+    // private OrderDto Order { get; set; } = new OrderDto();
+    // private List<TicketDto> Tickets { get; set; } = new List<TicketDto>();
+    private ShowDto Show { get; set; } = new ShowDto();
+    private MovieDto Movie { get; set; } = new MovieDto();
+    
     private PageState Status { get; set; }
+    [Parameter] public string? OrderCode { get; set; }
     private string _orderCode = "";
 
     private enum PageState
@@ -72,7 +83,26 @@
 
     protected override void OnParametersSet()
     {
-        Status = OrderCode != null ? PageState.CodeFound : PageState.EnterCode;
+        if (OrderCode != null)
+        {
+            Status = PageState.CodeFound;
+            
+            // 1) Get order details from the API with OrderCode
+            // Order = OrderService.GetOrder(OrderCode);
+            
+            // Optional: Get tickets details from the API with OrderId
+            // Tickets = TicketService.GetTickets(OrderId);
+            
+            // 2) Get show details from the API with ShowId
+            // Show = await ShowService.GetShow(ShowId);
+            
+            // Optional: Get movie details from the API with MovieId
+            // Movie = await MovieService.GetMovie(MovieId);
+        }
+        else
+        {
+            Status = PageState.EnterCode;
+        }
     }
 
     // 4) Methods UI events
