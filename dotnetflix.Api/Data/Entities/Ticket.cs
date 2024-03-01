@@ -1,41 +1,33 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos;
 
-namespace dotnetflix.Api.Data.Entities;
-
-public class Ticket
+namespace dotnetflix.Api.Data.Entities
 {
-    // TICKET
-    [Required]
-    public int Id { get; set; }
-	
-    // MOVIE
-    [Required]
-	[ForeignKey(nameof(Movie.Id))]
-	public int MovieId { get; set; }
-    public string MovieName { get; set; }
-	public int MovieRuntime { get; set; }
+    public class Ticket
+    {
+	    [Required]
+	    public int Id { get; set; }
+	    
+	    [Required]
+	    [ForeignKey(nameof(Order.Id))]
+	    public int OrderId { get; set; }
 
-	// SHOW
-	[Required]
-	[ForeignKey(nameof(Show.Id))]
-	public int ShowId { get; set; }
-	public DateTime ShowDate { get; set; }
-	public DateTime ShowTime { get; set; }
-    [Required]
-    public float BasePrice { get; set; }
-	public Discount Discount { get; set; }
+	    [Required]
+	    [ForeignKey(nameof(Show.Id))]
+	    public int ShowId { get; set; }
 
-	// THEATER
-	[Required]
-	[ForeignKey(nameof(Theater.Id))]
-	public int TheaterId { get; set; }
+	    [Required]
+	    [ForeignKey(nameof(Seat.Id))]
+	    public int SeatId { get; set; }
 
-    // SEAT
-    [Required]
-	[ForeignKey(nameof(SeatId))]
-	public int SeatId { get; set; }
-	[Required]
-	public int Row { get; set; }
+	    [Required]
+	    public DateTime ShowTime { get; set; }
+		
+		
+		// Navigation properties to link to the Seat and Show
+		public Seat Seat { get; set; }
+		public Show Show { get; set; }
+    }
 }
