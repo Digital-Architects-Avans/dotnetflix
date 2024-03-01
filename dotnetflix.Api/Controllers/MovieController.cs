@@ -116,9 +116,7 @@ public class MovieController : ControllerBase
                 return NotFound();
             }
 
-            var movieDto = movie.ConvertToDto();
-
-            return Ok(movieDto);
+            return Ok();
         }
         catch (Exception ex)
         {
