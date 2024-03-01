@@ -32,8 +32,7 @@ public static class DtoConversions
                 TheaterName = theater.Name,
                 Date = show.Date,
                 ScreenTime = show.ScreenTime,
-                Type = show.Type.ToString(),
-                BasePrice = show.BasePrice
+                Type = show.Type,
             }).ToList();
     }
 
@@ -63,8 +62,7 @@ public static class DtoConversions
             TheaterName = show.Theater.Name,
             Date = show.Date,
             ScreenTime = show.ScreenTime,
-            Type = show.Type.ToString(),
-            BasePrice = show.BasePrice
+            Type = show.Type,
         };
     }
 

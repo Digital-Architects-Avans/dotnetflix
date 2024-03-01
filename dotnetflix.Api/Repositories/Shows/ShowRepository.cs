@@ -36,7 +36,6 @@ public class ShowRepository : IShowRepository
                 Date = show.Date,
                 ScreenTime = show.ScreenTime,
                 Type = show.Type,
-                BasePrice = show.BasePrice
             }).SingleOrDefaultAsync();
     }
 
@@ -54,7 +53,6 @@ public class ShowRepository : IShowRepository
                 Date = addShowDto.Date,
                 ScreenTime = addShowDto.ScreenTime,
                 Type = addShowDto.Type,
-                BasePrice = addShowDto.BasePrice
             }).SingleOrDefaultAsync();
 
         if (show != null)
@@ -79,7 +77,6 @@ public class ShowRepository : IShowRepository
             show.Date = updateShowDto.Date;
             show.ScreenTime = updateShowDto.ScreenTime;
             show.Type = updateShowDto.Type;
-            show.BasePrice = updateShowDto.BasePrice;
             await _dotNetFlixDbContext.SaveChangesAsync();
             return show;
         }

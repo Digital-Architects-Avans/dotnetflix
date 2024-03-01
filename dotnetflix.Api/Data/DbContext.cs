@@ -80,7 +80,6 @@ namespace dotnetflix.Api.Data
                             Date = DateTime.Today.AddDays(theaterId),
                             ScreenTime = 90,
                             Type = MovieType.Regular,
-                            BasePrice = 12
                         }
                     );
                 }

@@ -27,8 +27,5 @@ namespace dotnetflix.Api.Data.Entities
         [Required]
         public MovieType Type { get; set; }
 
-        [Required]
-        public decimal BasePrice { get; set; }
-    }
-    
+    }    
 }

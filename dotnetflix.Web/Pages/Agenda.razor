@@ -12,20 +12,23 @@
 
     <div class="d-grid">
         <div class="row-cols-7">
-            <button class="col-xs-4" onclick="@(() => GetShowByDay(today))">Vandaag</button>
-            <button class="col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(1)))">@today.AddDays(1).ToString("dd MMM")</button>
-            <button class="col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(2)))">@today.AddDays(2).ToString("dd MMM")</button>
-            <button class="col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(3)))">@today.AddDays(3).ToString("dd MMM")</button>
-            <button class="col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(4)))">@today.AddDays(4).ToString("dd MMM")</button>
+            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today))">Vandaag</button>
+            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(1)))">@today.AddDays(1).ToString("dd MMM")</button>
+            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(2)))">@today.AddDays(2).ToString("dd MMM")</button>
+            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(3)))">@today.AddDays(3).ToString("dd MMM")</button>
+            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(4)))">@today.AddDays(4).ToString("dd MMM")</button>
         </div>
     </div>
 
     <QuickGrid Items="@MoviesWithDates.AsQueryable()">
         <PropertyColumn Title="" Property="@(s => s.MovieTitle)" />
+            <TemplateColumn>
+            <button style="width: 30px; height: 30px;" class="border-0 btn-primary m-2 rounded">i</button>
+            </TemplateColumn>
         <TemplateColumn Title="">
             @for (int i = 0; i < context.Dates.Count; i++)
             {
-                <button onclick="@(() => Redirect(context.MovieId))">@context.Dates[i].ToString("H:mm")</button>
+                <button class="btn btn-light p-2 m-2" onclick="@(() => Redirect(context.MovieId))">@context.Dates[i].ToString("H:mm")</button>
             }
         </TemplateColumn>
     </QuickGrid>
