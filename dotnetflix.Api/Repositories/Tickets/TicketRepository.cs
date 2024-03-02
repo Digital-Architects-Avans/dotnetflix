@@ -87,6 +87,13 @@ public class TicketRepository: ITicketRepository
         {
             throw new KeyNotFoundException("The Show or Seat was not found.");
         }
+        
+        // Check for existing ticket for the same show and seat
+        bool ticketExists = await _dotNetFlixDbContext.Tickets.AnyAsync(t => t.ShowId == updateTicketDto.ShowId && t.SeatId == updateTicketDto.SeatId);
+        if (ticketExists)
+        {
+            throw new InvalidOperationException("A ticket for this seat and show already exists.");
+        }
 
         if (ticket != null)
         {
