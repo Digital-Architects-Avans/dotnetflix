@@ -13,16 +13,15 @@ public class TicketService : ITicketService
         _httpClient = httpClient;
     }
     
-    public async Task<IEnumerable<TicketDto>> GetItems()
+    public async Task<IEnumerable<TicketDto>?> GetTickets()
     {
         try
         {
             var tickets = await _httpClient.GetFromJsonAsync<IEnumerable<TicketDto>>("api/Ticket");
             return tickets;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-
             throw;
         }
     }
