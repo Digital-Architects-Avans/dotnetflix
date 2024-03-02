@@ -6,20 +6,16 @@ namespace dotnetflix.Api.Entities
 {
 	public class Seat
 	{
-		[Required]
 		public int Id { get; set; }
-    
+		
 		[Required]
-		public int Number { get; set; }
-
-		[Required]
+		[ForeignKey(nameof(TheaterRow.Id))]
 		public int TheaterRowId { get; set; }
     
-		// Navigation property to TheaterRow
-		[ForeignKey(nameof(TheaterRowId))]
+		[Required]
+		public int SeatNumber { get; set; }
+		
 		public TheaterRow TheaterRow { get; set; }
-    
-		// Navigation property to Tickets
-		public ICollection<Ticket> Tickets { get; set; }
+		
 	}
 }
