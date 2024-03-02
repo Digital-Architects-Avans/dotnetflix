@@ -8,5 +8,5 @@ namespace dotnetflix.Models.Dtos.Order;
 
 public class AddOrderDto
 {
-	public int ShowId { get; set; }
+	public ICollection<int> TicketIds { get; set; }
 }
