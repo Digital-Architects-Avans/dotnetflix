@@ -10,4 +10,5 @@ public class OrderDto
 {
 	public int Id { get; set; }
 	public decimal TotalPrice { get; set; }
+	public ICollection<int> TicketIds { get; set; }
 }
