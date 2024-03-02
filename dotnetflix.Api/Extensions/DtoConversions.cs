@@ -1,10 +1,10 @@
 using dotnetflix.Api.Data.Entities;
-using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Order;
 using dotnetflix.Models.Dtos.Show;
 using dotnetflix.Models.Dtos.Theater;
+using dotnetflix.Models.Dtos.TheaterRow;
 
 namespace dotnetflix.Api.Extensions;
 
@@ -20,57 +20,26 @@ public static class DtoConversions
         return theaters.Select(theater => theater.ConvertToDto());
     }
 
-    public static IEnumerable<ShowDto> ConvertToDto(this IEnumerable<Show> shows, IEnumerable<Movie> movies,
-        IEnumerable<Theater> theaters)
+    public static IEnumerable<ShowDto> ConvertToDto(this IEnumerable<Show> shows)
     {
-        return (from show in shows
-            join movie in movies on show.MovieId equals movie.Id
-            join theater in theaters on show.TheaterId equals theater.Id
-            select new ShowDto
-            {
-                Id = show.Id,
-                MovieId = show.MovieId,
-                MovieTitle = movie.Title,
-                TheaterId = show.TheaterId,
-                TheaterName = theater.Name,
-                Date = show.Date,
-                ScreenTime = show.ScreenTime,
-                Type = show.Type,
-                BasePrice = show.BasePrice
-            }).ToList();
+	    return shows.Select(show => show.ConvertToDto());
     }
-
-	public static IEnumerable<TicketDto> ConvertToDto
-    (this
-		IEnumerable<Ticket> tickets,
-		IEnumerable<Movie> movies,
-		IEnumerable<Show> shows,
-		IEnumerable<Theater> theaters,
-		IEnumerable<Seat> seats
-    )
+    
+	public static IEnumerable<TicketDto> ConvertToDto(this IEnumerable<Ticket> tickets)
 	{
-		return (from ticket in tickets
-				join movie in movies on ticket.MovieId equals movie.Id
-				join show in shows on ticket.ShowId equals show.Id
-				join theater in theaters on ticket.TheaterId equals theater.Id
-                join seat in seats on ticket.SeatId equals seat.Id
-				select new TicketDto
-				{
-					Id = ticket.Id,
-					MovieId = ticket.MovieId,
-                    MovieTitle = movie.Title,
-                    MovieRuntime = movie.Runtime,
-					ShowId = ticket.ShowId,
-                    ShowDate = show.Date,
-                    BasePrice = show.BasePrice,
-					Discount = ticket.Discount,
-					TheaterId = ticket.TheaterId,
-                    SeatId = ticket.SeatId,
-					Row = ticket.Row
-				}).ToList();
+		return tickets.Select(ticket => ticket.ConvertToDto()).ToList();
 	}
-
-
+	
+	public static IEnumerable<OrderDto> ConvertToDto(this IEnumerable<Order> orders)
+	{
+		return orders.Select(order => order.ConvertToDto()).ToList();
+	}
+	
+	public static IEnumerable<TheaterRowDto> ConvertToDto(this IEnumerable<TheaterRow> theaterRows)
+	{
+		return theaterRows.Select(theaterRow => theaterRow.ConvertToDto()).ToList();
+	}
+	
 	public static MovieDto ConvertToDto(this Movie movie)
     {
         return new MovieDto
@@ -97,7 +66,8 @@ public static class DtoConversions
             Date = show.Date,
             ScreenTime = show.ScreenTime,
             Type = show.Type,
-            BasePrice = show.BasePrice
+            BasePrice = show.BasePrice,
+            TicketIds = show.Tickets.Select(t => t.Id).ToList()
         };
     }
 
@@ -113,14 +83,19 @@ public static class DtoConversions
 
 	public static TicketDto ConvertToDto(this Ticket ticket)
 	{
+		
 		return new TicketDto
         {
 			Id = ticket.Id,
-			MovieId = ticket.MovieId,
 			ShowId = ticket.ShowId,
-			TheaterId = ticket.TheaterId,
+			Movie = ticket.Movie,
+			TheaterName = ticket.TheaterName,
+			RowNumber = ticket.RowNumber,
 			SeatId = ticket.SeatId,
-			Row = ticket.Row
+			SeatNumber = ticket.SeatNumber,
+			ShowTime = ticket.ShowTime,
+			Discount = ticket.Discount,
+			TicketPrice = ticket.TicketPrice
 		};
 	}
     
@@ -129,7 +104,19 @@ public static class DtoConversions
 		return new OrderDto
         {
 			Id = order.Id,
-			TotalPrice = order.TotalPrice
+			TotalPrice = order.TotalPrice,
+			TicketIds = order.Tickets.Select(t => t.Id).ToList()
 		};
 	}
+    
+    public static TheaterRowDto ConvertToDto(this TheaterRow theaterRow)
+    {
+	    return new TheaterRowDto
+	    {
+		    Id = theaterRow.Id,
+		    TheaterId = theaterRow.TheaterId,
+		    RowNumber = theaterRow.RowNumber,
+		    NumberOfSeats = theaterRow.NumberOfSeats
+	    };
+    }
 }
