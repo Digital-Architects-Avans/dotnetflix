@@ -236,6 +236,21 @@
             return;
         }
         
+        // get all shows in the same theater
+        var theaterShows = Shows.Where(s => s.TheaterId == SelectedShow.TheaterId ).ToList();
+
+        // Check if there are time conflicts
+        foreach (var show in theaterShows)
+        {
+            var movie = Movies.FirstOrDefault(m => m.Id == show.MovieId);
+            var showEndTime = show.Date.AddMinutes(movie.Runtime);
+            if (SelectedShow.Date >= show.Date && SelectedShow.Date < showEndTime)
+            {
+                // Handle error here, e.g., show an error message
+                return;
+            }
+        }
+        
         var response = await Http.PostAsJsonAsync("api/show", NewShow);
 
         if (response.IsSuccessStatusCode)
@@ -278,6 +293,21 @@
         {
             // Handle error here, e.g., show an error message
             return;
+        }
+        
+        // Get shows in same theater excluding the current show
+        var theaterShows = Shows.Where(s => s.TheaterId == SelectedShow.TheaterId && s.Id != SelectedShow.Id).ToList();
+
+        // Check for time conflicts
+        foreach (var show in theaterShows)
+        {
+            var movie = Movies.FirstOrDefault(m => m.Id == show.MovieId);
+            var showEndTime = show.Date.AddMinutes(movie.Runtime);
+            if (SelectedShow.Date >= show.Date && SelectedShow.Date < showEndTime)
+            {
+                // Handle error here, e.g., show an error message
+                return;
+            }
         }
         
         var response = await Http.PutAsJsonAsync($"api/show/{SelectedShow.Id}", EditShow);
