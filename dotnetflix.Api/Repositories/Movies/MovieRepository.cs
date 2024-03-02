@@ -20,7 +20,7 @@ public class MovieRepository: IMovieRepository
         return movies;
     }
 
-    public async Task<Movie> GetMovie(int id)
+    public async Task<Movie?> GetMovie(int id)
     {
         var movie = await _dotNetFlixDbContext.Movies.SingleOrDefaultAsync(m => m.Id == id);
         return movie;
@@ -43,7 +43,7 @@ public class MovieRepository: IMovieRepository
         return result.Entity;
     }
 
-    public async Task<Movie> UpdateMovie(int id, UpdateMovieDto updateMovieDto)
+    public async Task<Movie?> UpdateMovie(int id, UpdateMovieDto updateMovieDto)
     {
         var movie = await _dotNetFlixDbContext.Movies.FindAsync(id);
 
@@ -62,16 +62,18 @@ public class MovieRepository: IMovieRepository
         return null;
     }
 
-    public async Task<Movie> DeleteMovie(int id)
+    public async Task<bool> DeleteMovie(int id)
     {
         var movie = await _dotNetFlixDbContext.Movies.FindAsync(id);
-
-        if (movie != null)
+        
+        if (movie == null)
         {
-            _dotNetFlixDbContext.Movies.Remove(movie);
-            await _dotNetFlixDbContext.SaveChangesAsync();
+            return false;
         }
 
-        return movie;
+        _dotNetFlixDbContext.Movies.Remove(movie);
+        await _dotNetFlixDbContext.SaveChangesAsync();
+        
+        return true;
     }
 }
