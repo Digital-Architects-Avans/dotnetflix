@@ -1,4 +1,5 @@
 ﻿using dotnetflix.Api.Data.Entities;
+using dotnetflix.Models.Dtos.Order;
 
 namespace dotnetflix.Api.Repositories.Orders;
 
@@ -9,10 +10,8 @@ namespace dotnetflix.Api.Repositories.Orders;
 public interface IOrderRepository
 {
 	Task<IEnumerable<Order>> GetOrders();
-	Task<Order> GetOrder(int id);
-	Task<Order> AddOrder(Show show);
-	Task<Order> UpdateOrder(int id);
-	Task<Order> DeleteOrder(int id);
-	Task<Order> CalculatePrice(Ticket ticket);
-	Task<Order> GetShowAvailability(Show show);
+	Task<Order?> GetOrder(int id);
+	Task<Order> AddOrder(AddOrderDto addOrderDto);
+	Task<Order?> UpdateOrder(int id, UpdateOrderDto updateOrderDto);
+	Task<bool> DeleteOrder(int id);
 }
