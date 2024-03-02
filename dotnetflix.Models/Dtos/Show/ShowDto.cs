@@ -11,6 +11,8 @@ public class ShowDto
     public int ScreenTime { get; set; }
     public MovieType Type { get; set; }
     public decimal BasePrice { get; set; }
+    public ICollection<int> TicketIds { get; set; }
+
 }
 
 public enum MovieType
