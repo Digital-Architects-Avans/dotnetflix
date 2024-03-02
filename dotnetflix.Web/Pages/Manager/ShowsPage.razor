@@ -71,15 +71,19 @@
                 </div>
                 
                 
-                <div class="form-group">
+                <div class="form-group time-inputs">
                     <label for="showTime">Show Time</label>
-                    <TelerikTimePicker Min="@Min" Max="@Max" Format="HH:mm" @bind-Value="@SelectedTime"></TelerikTimePicker>
+                    <div class="time-fields">
+                        <InputNumber id="timeHour" step="1" max="23" min="8" class="form-control time-field" @bind-Value="@timeHour"></InputNumber> hours
+                        <InputNumber id="timeMinute" step="5" max="55" min="0" class="form-control time-field" @bind-Value="@timeMinute"></InputNumber> minutes
+                    </div>
                 </div>
+                
                 
                 
                 <div class="form-group">
                     <label for="basePrice">Base Price</label>
-                    <InputNumber id="basePrice" class="form-control" @bind-Value="SelectedShow.BasePrice" step="0.01"/>
+                    <InputNumber id="basePrice" class="form-control" @bind-Value="SelectedShow.BasePrice" step="0.10"/>
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </EditForm>
@@ -125,10 +129,14 @@
                     <InputDate id="showDate" class="form-control" @bind-Value="SelectedShow.Date"/>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group time-inputs">
                     <label for="showTime">Show Time</label>
-                    <TelerikTimePicker Min="@Min" Max="@Max" Format="HH:mm" @bind-Value="@SelectedTime"></TelerikTimePicker>
+                    <div class="time-fields">
+                        <InputNumber id="timeHour" step="1" max="23" min="8" class="form-control time-field" @bind-Value="@timeHour"></InputNumber> hours :
+                        <InputNumber id="timeMinute" step="5" max="55" min="0" class="form-control time-field" @bind-Value="@timeMinute"></InputNumber> minutes
+                    </div>
                 </div>
+                
                 
                 <div class="form-group">
                     <label for="basePrice">Base Price</label>
@@ -148,10 +156,9 @@
     ShowDto SelectedShow = new ShowDto();
     UpdateShowDto EditShow = new UpdateShowDto();
     AddShowDto NewShow = new AddShowDto();
-    
     TimeSpan SelectedTime { get; set; }= DateTime.Now.TimeOfDay;
-    // public DateTime Min = new DateTime(1900, 1, 1, 08, 30, 0);
-    // public DateTime Max = new DateTime(1900, 1, 1, 23, 59, 0);
+    int timeHour = 0;
+    int timeMinute = 0;
     
     protected override async Task OnInitializedAsync()
     {
@@ -179,6 +186,8 @@
             Type = show.Type
         };
         SelectedTime = SelectedShow.Date.TimeOfDay;
+        timeHour = SelectedShow.Date.Hour;
+        timeMinute = SelectedShow.Date.Minute;
     }
 
     private void SelectShow()
@@ -196,6 +205,8 @@
             Type = MovieType.Regular
         };
         SelectedTime = SelectedShow.Date.TimeOfDay;
+        timeHour = 0;
+        timeMinute = 0;
     }
     
     private async Task NewShowSubmit()
@@ -208,6 +219,7 @@
         
         if ( SelectedShow.MovieId > 0 && SelectedShow.TheaterId > 0 )
         {
+            SelectedTime = new TimeSpan(timeHour, timeMinute, 0);
             NewShow = new AddShowDto
             {
                 MovieId = SelectedShow.MovieId,
@@ -251,6 +263,7 @@
         
         if ( SelectedShow.MovieId > 0 && SelectedShow.TheaterId > 0 )
         {
+            SelectedTime = new TimeSpan(timeHour, timeMinute, 0);
             EditShow = new UpdateShowDto
             {
                 MovieId = SelectedShow.MovieId,
