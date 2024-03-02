@@ -1,7 +1,12 @@
 using dotnetflix.Api.Data;
+using dotnetflix.Api.Repositories.Contracts;
 using dotnetflix.Api.Repositories.Movies;
+using dotnetflix.Api.Repositories.Orders;
 using dotnetflix.Api.Repositories.Shows;
+using dotnetflix.Api.Repositories.TheaterRows;
 using dotnetflix.Api.Repositories.Theaters;
+using dotnetflix.Api.Repositories.Tickets;
+using dotnetflix.Web.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 
@@ -17,8 +22,11 @@ builder.Services.AddDbContext<DotNetFlixDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-builder.Services.AddScoped<ITheaterRepository, TheaterRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShowRepository, ShowRepository>();
+builder.Services.AddScoped<ITheaterRowRepository, TheaterRowRepository>();
+builder.Services.AddScoped<ITheaterRepository, TheaterRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
 // Add CORS services
 builder.Services.AddCors(options =>
