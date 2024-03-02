@@ -8,14 +8,20 @@ namespace dotnetflix.Api.Data
 {
     public class DotNetFlixDbContext : DbContext
     {
-        public DotNetFlixDbContext(DbContextOptions<DotNetFlixDbContext> options)
-            : base(options)
-        {
-        }
+        public DotNetFlixDbContext(DbContextOptions<DotNetFlixDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
+            // Set the precision and scale for the TotalPrice and BasePrice properties
+            modelBuilder.Entity<Order>()
+                .Property(o => o.TotalPrice)
+                .HasPrecision(6, 2);
+            
+            modelBuilder.Entity<Ticket>()
+                .Property(t => t.TicketPrice)
+                .HasPrecision(6, 2);
 
             // Seed data for Movie
             modelBuilder.Entity<Movie>().HasData(
@@ -125,20 +131,20 @@ namespace dotnetflix.Api.Data
 
             // Seed data for Seats
             // Use a list of tuples to hold the TheaterRowId and the number of seats in that row
-            var theaterRows = new List<(int TheaterRowId, int NumberOfSeats)>
+            var theaterRows = new List<(int TheaterRowId, int RowNumber, int NumberOfSeats)>
             {
                 // Theater 1 Rows
-                (1, 15), (2, 15), (3, 15), (4, 15), (5, 15), (6, 15), (7, 15), (8, 15),
+                (1, 1, 15), (2, 2, 15), (3, 3, 15), (4, 4, 15), (5, 5, 15), (6, 6, 15), (7, 7, 15), (8, 8, 15),
                 // Theater 2 Rows
-                (9, 15), (10, 15), (11, 15), (12, 15), (13, 15), (14, 15), (15, 15), (16, 15),
+                (9, 1, 15), (10, 2, 15), (11, 3, 15), (12, 4, 15), (13, 5, 15), (14, 6, 15), (15, 7, 15), (16, 8, 15),
                 // Theater 3 Rows
-                (17, 15), (18, 15), (19, 15), (20, 15), (21, 15), (22, 15), (23, 15), (24, 15),
+                (17, 1, 15), (18, 2, 15), (19, 3, 15), (20, 4, 15), (21, 5, 15), (22, 6, 15), (23, 7, 15), (24, 8, 15),
                 // Theater 4 Rows
-                (25, 10), (26, 10), (27, 10), (28, 10), (29, 10), (30, 10),
+                (25, 1, 10), (26, 2, 10), (27, 3, 10), (28, 4, 10), (29, 5, 10), (30, 6, 10),
                 // Theater 5 Rows
-                (31, 10), (32, 10), (33, 15), (34, 15),
+                (31, 1, 10), (32, 2, 10), (33, 3, 15), (34, 4, 15),
                 // Theater 6 Rows
-                (35, 10), (36, 10), (37, 15), (38, 15),
+                (35, 1, 10), (36, 2, 10), (37, 3, 15), (38, 4, 15),
             };
 
             // Loop through the list of tuples to create the seats for each row
@@ -149,7 +155,7 @@ namespace dotnetflix.Api.Data
                     seats.Add(new Seat
                     {
                         Id = seatId++,
-                        Number = seatNumber,
+                        SeatNumber = seatNumber,
                         TheaterRowId = row.TheaterRowId
                     });
                 }
@@ -167,12 +173,11 @@ namespace dotnetflix.Api.Data
                         new Show
                         {
                             Id = showId++,
-                            TheaterId = theaterId,
                             MovieId = movieId,
+                            TheaterId = theaterId,
                             Date = DateTime.Now.AddHours(3),
                             ScreenTime = 90,
-                            Type = MovieType.Regular,
-                            BasePrice = 12
+                            Type = MovieType.Regular
                         }
                     );
                 }
