@@ -14,8 +14,9 @@ namespace dotnetflix.Api.Data.Entities
         [Required]
         [Range(1, 500)]
         public int Seats { get; set; }
-
-        public ICollection<TheaterRow> Rows { get; set; }
+        
+        public ICollection<TheaterRow> TheaterRows { get; set; }
+        public ICollection<Show> Shows { get; set; }
     }
 
 }
