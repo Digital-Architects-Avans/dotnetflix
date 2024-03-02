@@ -1,14 +1,14 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace dotnetflix.Api.Data.Entities;
 
 public class Order
 {
-    [Required]
     public int Id { get; set; }
     
-    // Add this property if you have a Customer/User entity during later sprints
+    public decimal TotalPrice { get; set; }
+    
+    // Add this property if we have a Customer/User entity during later sprints
     // [ForeignKey(nameof(Customer.Id))]
     // public int CustomerId { get; set; }
     
@@ -16,5 +16,6 @@ public class Order
     // public Customer Customer { get; set; }
 
     // Navigation property to Tickets
+    // The Order entity has a one-to-many relationship with the Ticket entity
     public ICollection<Ticket> Tickets { get; set; }
 }
