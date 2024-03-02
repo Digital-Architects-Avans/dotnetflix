@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dotnetflix.Models.Dtos.Order;
 
-public class UpdateOrder
+public class UpdateOrderDto
 {
-	public int Id { get; set; }
+	public ICollection<int> TicketIds { get; set; }
 }
