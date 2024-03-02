@@ -4,5 +4,5 @@ namespace dotnetflix.Web.Services.Contracts;
 
 public interface ITicketService
 {
-    Task<IEnumerable<TicketDto>> GetItems();
+    Task<IEnumerable<TicketDto>?> GetTickets();
 }
