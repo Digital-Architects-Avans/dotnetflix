@@ -1,10 +1,7 @@
 ﻿using dotnetflix.Api.Extensions;
 using dotnetflix.Api.Repositories.Contracts;
-using dotnetflix.Api.Repositories.Movies;
-using dotnetflix.Api.Repositories.Shows;
-using dotnetflix.Api.Repositories.Theaters;
 using dotnetflix.Models.Dtos;
-using Microsoft.AspNetCore.Http;
+using dotnetflix.Models.Dtos.Ticket;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnetflix.Api.Controllers;
@@ -14,69 +11,27 @@ namespace dotnetflix.Api.Controllers;
 public class TicketController : ControllerBase
 {
 	private readonly ITicketRepository _ticketRepository;
-	private readonly IShowRepository _showRepository;
-	private readonly IMovieRepository _movieRepository;
-	private readonly ITheaterRepository _theaterRepository;
+	private readonly ILogger<TicketController> _logger;
 
-	public TicketController
-		(
-			ITicketRepository ticketRepository, 
-			IShowRepository showRepository, 
-			IMovieRepository movieRepository,
-			ITheaterRepository theaterRepository
-		)
+	public TicketController(ITicketRepository ticketRepository, ILogger<TicketController> logger)
 	{
-		_ticketRepository	= ticketRepository;
-		_showRepository		= showRepository;
-		_movieRepository	= movieRepository;
-		_theaterRepository	= theaterRepository;
+		_ticketRepository = ticketRepository;
+		_logger = logger;
 	}
-
+	
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<TicketDto>>> GetTickets()
 	{
 		try
 		{
-			var tickets	= await _ticketRepository.GetTickets();
-			if (tickets == null)
-			{
-				throw new Exception("No tickets found..");
-			}
-			
-			var movies = await _movieRepository.GetMovies();
-			if (movies == null)
-			{
-				throw new Exception("No movies found..");
-			}
-
-			var shows = await _showRepository.GetShows();
-			if (shows == null)
-			{
-				throw new Exception("No shows found..");
-			}
-
-			var theaters = await _theaterRepository.GetTheaters();
-			if (theaters == null)
-			{
-				throw new Exception("No theaters found..");
-			}
-
-			var seats = await _ticketRepository.GetSeats();
-			if (seats == null)
-			{
-				throw new Exception("No seats found..");
-			}
-
-			var ticketDtos = tickets.ConvertToDto(movies, shows, theaters, seats);
+			var tickets = await _ticketRepository.GetTickets();
+			var ticketDtos = tickets.ConvertToDto();
 			return Ok(ticketDtos);
-
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
-			return StatusCode(
-				StatusCodes.Status500InternalServerError,
-				"Error retrieving data from the database.."
-			);
+			_logger.LogError(ex, "Error processing request for GetTickets");
+			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 		}
 	}
 
@@ -86,6 +41,7 @@ public class TicketController : ControllerBase
 		try
 		{
 			var ticket = await _ticketRepository.GetTicket(id);
+			
 			if (ticket == null)
 			{
 				return NotFound();
@@ -97,10 +53,69 @@ public class TicketController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			return StatusCode(
-				StatusCodes.Status500InternalServerError,
-				ex.Message
-			);
+			_logger.LogError(ex, "Error processing request for GetTicket with ID: {Id}", id);
+			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+		}
+	}
+	
+	[HttpPost]
+	public async Task<ActionResult<TicketDto>> AddTicket([FromBody] AddTicketDto addTicketDto)
+	{
+		try
+		{
+			var newTicket = await _ticketRepository.AddTicket(addTicketDto);
+			var newTicketDto = newTicket.ConvertToDto();
+
+			return CreatedAtAction(nameof(GetTicket), new { id = newTicketDto.Id }, newTicketDto);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error processing request for AddTicket");
+			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+		}
+	}
+	
+	[HttpPut("{id:int}")]
+	public async Task<ActionResult<TicketDto>> UpdateTicket(int id, UpdateTicketDto updateTicketDto)
+	{
+		try
+		{
+			var updatedTicket = await _ticketRepository.UpdateTicket(id, updateTicketDto);
+
+			if (updatedTicket == null)
+			{
+				return NoContent();
+			}
+
+			var updatedTicketDto = updatedTicket.ConvertToDto();
+
+			return Ok(updatedTicketDto);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error processing request for UpdateTicket with ID: {Id}", id);
+			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+		}
+	}
+
+	[HttpDelete("{id}")]
+	public async Task<IActionResult> DeleteTicket(int id)
+	{
+		try
+		{
+			bool deleted = await _ticketRepository.DeleteTicket(id);
+
+			if (!deleted)
+			{
+				return NotFound();
+			}
+
+			return NoContent();
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error processing request for DeleteTicket with ID: {Id}", id);
+			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 		}
 	}
 }
