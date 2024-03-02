@@ -4,11 +4,15 @@ public class TicketDto
 {
 	public int Id { get; set; }
 	public int ShowId { get; set; }
-	public int OrderId { get; set; }
-	public int Row { get; set; }
+	public string Movie { get; set; }
+	public string TheaterName { get; set; }
+
 	public int SeatId { get; set; }
+	public int RowNumber { get; set; }
+	public int SeatNumber { get; set; }
+	public DateTime ShowTime { get; set; }
 	public Discount Discount { get; set; }
-	public decimal BasePrice { get; set; }
+	public decimal TicketPrice { get; set; }
 }
 
 public enum Discount
