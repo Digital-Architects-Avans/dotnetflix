@@ -7,17 +7,15 @@ namespace dotnetflix.Api.Data.Entities
     public class Show
     {
         public int Id { get; set; }
-
+    
         [Required]
-        [ForeignKey("Movie")]
+        [ForeignKey(nameof(Movie.Id))]
         public int MovieId { get; set; }
-        public Movie Movie { get; set; }
-
+        
         [Required]
-        [ForeignKey("Theater")]
+        [ForeignKey(nameof(Theater.Id))]
         public int TheaterId { get; set; }
-        public Theater Theater { get; set; }
-
+        
         [Required]
         public DateTime Date { get; set; }
 
@@ -26,9 +24,18 @@ namespace dotnetflix.Api.Data.Entities
 
         [Required]
         public MovieType Type { get; set; }
-
+        
         [Required]
         public decimal BasePrice { get; set; }
+        
+        // Navigation properties
+        // The Show entity has a one-to-many relationship with the Ticket entity
+        // The Show entity has a many-to-one relationship with the Movie entity
+        public Movie Movie { get; set; }
+        
+        public Theater Theater { get; set; }
+        
+        public ICollection<Ticket> Tickets { get; set; }
     }
     
 }

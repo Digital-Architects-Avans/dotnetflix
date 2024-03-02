@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\dotnetflix.Models\dotnetflix.Models.csproj" />
+    <ProjectReference Include="..\dotnetflix.Web\dotnetflix.Web.csproj" />
   </ItemGroup>
   
 </Project>

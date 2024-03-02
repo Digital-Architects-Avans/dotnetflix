@@ -27,5 +27,7 @@ namespace dotnetflix.Api.Data.Entities
         public int Runtime { get; set; }
 
         public string Image { get; set; }
+        
+        public ICollection<Show> Shows { get; set; }
     }
 }
