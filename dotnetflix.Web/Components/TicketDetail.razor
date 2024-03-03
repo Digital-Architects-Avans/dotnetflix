@@ -1,0 +1,54 @@
+@using dotnetflix.Models.Dtos
+@using dotnetflix.Models.Dtos.Movie
+@using dotnetflix.Models.Dtos.Show
+@if (Ticket == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>
+        <div>
+            <hr />
+            <h4>@Movie.Title (@Movie.Year) @StartTime - @EndTime</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2">Theater:</dt>
+                <dd class="col-sm-10">@Ticket.TheaterName - @Show.Type</dd>
+
+                <dt class="col-sm-2">Show Time:</dt>
+                <dd class="col-sm-10">@Ticket.ShowTime</dd>
+
+                <dt class="col-sm-2">Seat:</dt>
+                <dd class="col-sm-10">Row @Ticket.RowNumber, Seat @Ticket.SeatNumber</dd>
+
+                <dt class="col-sm-2">Ticket Type:</dt>
+                <dd class="col-sm-10">@Ticket.TicketTypeId</dd>
+
+                <dt class="col-sm-2">Price:</dt>
+                <dd class="col-sm-10">@Ticket.TicketPrice</dd>
+            </dl>
+        </div>
+    </div>
+    
+    
+}
+
+@code {
+    // Parameter to be passed to the component
+    [Parameter] public TicketDto Ticket { get; set; } = new TicketDto();
+    [Parameter] public MovieDto Movie { get; set; } = new MovieDto();
+    // Parameter to be passed to the component
+    [Parameter] public ShowDto Show { get; set; } = new ShowDto();
+    [Parameter] public string StartTime { get; set; } = "00:00";
+    [Parameter] public string EndTime { get; set; } = "00:00";
+
+    protected override Task OnInitializedAsync()
+    {
+        // Convert date to time in 24-hour format
+        StartTime = Show.Date.ToString("HH:mm");
+        // Get end time by adding screen time to start time
+        EndTime = Show.Date.AddMinutes(Show.ScreenTime).ToString("HH:mm");
+        return Task.CompletedTask;
+    }
+}
