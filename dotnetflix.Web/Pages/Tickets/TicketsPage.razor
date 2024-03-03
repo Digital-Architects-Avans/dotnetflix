@@ -1,60 +1,64 @@
-@* @page "/tickets/{Id:int}" *@
-@* @using dotnetflix.Web.Services.Contracts *@
-@* @using dotnetflix.Models.Dtos.Movie *@
-@* @using dotnetflix.Models.Dtos.Show *@
-@* @using dotnetflix.Models.Dtos.TicketType *@
-@* @using dotnetflix.Web.Services *@
-@* *@
-@* <h3>Tickets</h3> *@
-@* *@
-@* <h3>Order Tickets for @SelectedShow?.MovieTitle</h3> *@
-@* *@
-@* @if (TicketTypes != null) *@
-@* { *@
-@*     <EditForm Model="@orderRequest" OnValidSubmit="@ConfirmOrder"> *@
-@*         @foreach (var ticketType in TicketTypes) *@
-@*         { *@
-@*             <div class="form-group"> *@
-@*                 <label>@ticketType.Name</label> *@
-@*                 <InputNumber @bind-Value="ticketType.Quantity" min="0" class="form-control" /> *@
-@*             </div> *@
-@*         } *@
-@* *@
-@*         <button type="submit" class="btn btn-primary">Confirm Selection</button> *@
-@*     </EditForm> *@
-@* } *@
-@* else *@
-@* { *@
-@*     <p>Loading ticket options...</p> *@
-@* } *@
-@* *@
-@* @code { *@
-@*     [Parameter] public int Id { get; set; } *@
-@*      *@
-@*     [Inject] public IShowService? ShowService { get; set; } *@
-@*     [Inject] public ITicketService? TicketService { get; set; } *@
-@*      *@
-@*     public ShowDto? SelectedShow { get; set; } *@
-@*      *@
-@*     public string? ErrorMessage { get; set; } *@
-@*      *@
-@*     private IEnumerable<TicketTypeDto> TicketTypes; *@
-@* *@
-@*      *@
-@*     protected override async Task OnInitializedAsync() *@
-@*     { *@
-@*         try *@
-@*         { *@
-@*             if (ShowService != null && TicketService != null) *@
-@*             { *@
-@*                 SelectedShow = await ShowService.GetShow(Id); *@
-@*                 TicketTypes = await TicketService.GetTicketTypes(); *@
-@* *@
-@*             } *@
-@*         } *@
-@*         catch (Exception ex) *@
-@*         { *@
-@*             ErrorMessage = ex.Message; *@
-@*         } *@
-@*     } *@
-@* } *@
+@page "/tickets/{Id:int}"
+@using dotnetflix.Web.Services.Contracts
+@using dotnetflix.Models.Dtos.Show
+@using dotnetflix.Models.Dtos.TicketType
+@using dotnetflix.Models.Dtos.OrderRequestDtos
+@using dotnetflix.Models.Dtos.TicketOrderDtos
+@using dotnetflix.Web.Services
+
+<h3>Order Tickets for @SelectedShow?.MovieTitle</h3>
+
+@if (TicketTypes != null && OrderRequest.TicketOrders.Any())
+{
+    <EditForm Model="@OrderRequest" OnValidSubmit="SummariseOrder">
+        @foreach (var ticketOrder in OrderRequest.TicketOrders)
+        {
+            var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
+            if (ticketType != null)
+            {
+                <div class="form-group">
+                    <label>@ticketType.Name</label>
+                    <InputNumber @bind-Value="ticketOrder.Quantity" min="0" class="form-control" />
+                </div>
+            }
+        }
+
+        <button type="submit" class="btn btn-primary">Confirm Selection</button>
+    </EditForm>
+}
+else
+{
+    <p>Loading ticket options...</p>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    [Inject] public IShowService? ShowService { get; set; }
+    [Inject] public ITicketService? TicketService { get; set; }
+
+    public ShowDto? SelectedShow { get; set; }
+    public IEnumerable<TicketTypeDto> TicketTypes { get; set; }
+    public OrderRequestDto OrderRequest { get; set; } = new OrderRequestDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ShowService != null && TicketService != null)
+        {
+            SelectedShow = await ShowService.GetShow(Id);
+            TicketTypes = await TicketService.GetTicketTypes();
+            InitializeOrderRequest();
+        }
+    }
+
+    private void InitializeOrderRequest()
+    {
+        OrderRequest.TicketOrders = TicketTypes.Select(tt => new TicketOrderDto { TicketTypeId = tt.Id, Quantity = 0 }).ToList();
+    }
+
+    private async Task SummariseOrder()
+    {
+        // Implement the logic to send the OrderRequestDto to your backend and handle the response.
+        // This could involve calling a method on TicketService to submit the order, then navigating
+        // to a confirmation page or displaying a confirmation message.
+    }
+}
