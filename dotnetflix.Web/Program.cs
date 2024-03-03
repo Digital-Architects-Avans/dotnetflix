@@ -12,6 +12,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7000/") });
 
 builder.Services.AddScoped<IShowService, ShowService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 builder.Services.AddFluentUIComponents();
 builder.Services.AddDataGridEntityFrameworkAdapter();

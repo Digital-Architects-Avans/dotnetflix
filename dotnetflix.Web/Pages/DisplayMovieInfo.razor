@@ -1,0 +1,32 @@
+﻿@implements IDialogContentComponent<MovieDto>
+
+    <FluentDialogHeader>
+        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+            <FluentIcon Value="@(new Icons.Regular.Size24.MoviesAndTv())" />
+            <FluentLabel Typo="Typography.PaneHeader">@Content.Title</FluentLabel>
+        </FluentStack>
+    </FluentDialogHeader>
+
+    <FluentDialogBody Style="padding: 20px;">
+    <FluentStack Orientation="Orientation.Vertical">
+            <FluentLabel Style="font-size: 20px;">Duur: @(Content.Runtime)min</FluentLabel>
+            <FluentLabel Style="font-size: 20px;">Samenvatting:</FluentLabel>
+            <FluentLabel Style="font-size: 20px;">@Content.Description</FluentLabel>
+        </FluentStack>
+    </FluentDialogBody>
+
+
+
+@code {
+    [Parameter]
+    public MovieDto Content { get; set; } = default;
+
+    [CascadingParameter]
+    public FluentDialog? Dialog { get; set; }
+
+    private async Task CancelAsync()
+    {
+        await Dialog.CancelAsync();
+    }
+
+}

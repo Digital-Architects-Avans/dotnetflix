@@ -1,5 +1,10 @@
 ﻿@page "/"
+@using dotnetflix.Models.Dtos.Show
+@using dotnetflix.Web.Services.Contracts
+
 @inject NavigationManager NavManager
+@inject IDialogService DialogService
+
 @inherits AgendaBase
 
 @if (Shows == null)
@@ -10,30 +15,123 @@
     DateTime today = DateTime.Now;
     <h3>Agenda</h3>
 
+    // Days buttons
     <div class="d-grid">
         <div class="row-cols-7">
-            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today))">Vandaag</button>
-            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(1)))">@today.AddDays(1).ToString("dd MMM")</button>
-            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(2)))">@today.AddDays(2).ToString("dd MMM")</button>
-            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(3)))">@today.AddDays(3).ToString("dd MMM")</button>
-            <button class="btn btn-outline-primary p-2 m-2 col-xs-4" onclick="@(() => GetShowByDay(today.AddDays(4)))">@today.AddDays(4).ToString("dd MMM")</button>
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today))">Vandaag</FluentButton>
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(1)))">@today.AddDays(1).ToString("dd MMM")</FluentButton>
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(2)))">@today.AddDays(2).ToString("dd MMM")</FluentButton>
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(3)))">@today.AddDays(3).ToString("dd MMM")</FluentButton>
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(4)))">@today.AddDays(4).ToString("dd MMM")</FluentButton>
         </div>
     </div>
 
-    <QuickGrid Items="@MoviesWithDates.AsQueryable()">
-        <PropertyColumn Title="" Property="@(s => s.MovieTitle)" />
+    // Show grid
+    <FluentDataGrid Virtualize="true" ItemSize="54" GridTemplateColumns="1fr 1fr 2fr" Items="@MoviesWithDates.AsQueryable()">
+            
+            @* Title Column *@
+            <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)" ></PropertyColumn>
+
+            @* Movie info Column *@
             <TemplateColumn>
-            <button style="width: 30px; height: 30px;" class="border-0 btn-primary m-2 rounded">i</button>
+                <FluentButton IconStart="@(new Icons.Regular.Size16.Info())" Appearance="Appearance.Accent" style="width: 30px; height: 30px;" OnClick="@(() => GetMovieDetails(context.MovieId))">
+                </FluentButton>
             </TemplateColumn>
-        <TemplateColumn Title="">
-            @for (int i = 0; i < context.Dates.Count; i++)
-            {
-                <button class="btn btn-light p-2 m-2" onclick="@(() => Redirect(context.MovieId))">@context.Dates[i].ToString("H:mm")</button>
-            }
-        </TemplateColumn>
-    </QuickGrid>
+
+            @* Dates Column *@
+            <TemplateColumn Title="">
+                @for (int i = 0; i < context.Dates.Count; i++)
+                {
+                    <button class="btn btn-light p-2 m-2" onclick="@(() => Redirect(context.MovieId))">
+                        <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
+                        @context.Dates[i].ToString("H:mm")
+                    </button>
+                }
+            </TemplateColumn>
+    </FluentDataGrid>
 }
 
 @code {
+
+    [Inject]
+    public IMovieService? MovieService { get; set; }
+    public MovieDto? Movie { get; set; }
+
+
+    // Getting movies
+    private async void GetMovieDetails(int movieId)
+    {
+        Movie = await MovieService.GetMovie(movieId);
+
+        if (Movie != null)
+            await OpenDialogAsync(Movie);
+    }
+
+    // Open movie details dialog
+    private async Task OpenDialogAsync(MovieDto movie)
+    {
+        DialogParameters parameters = new()
+        {
+            PrimaryAction = "Close",
+            PrimaryActionEnabled = true,
+            SecondaryAction = null,
+            Width = "500px",
+            PreventScroll = true,
+            ShowDismiss = false,
+        };
+
+        IDialogReference dialog = await DialogService.ShowDialogAsync<DisplayMovieInfo>(movie, parameters);
+        DialogResult? result = await dialog.Result;
+
+    }
+
+    [Inject]
+    public IShowService? ShowService { get; set; }
+    public IEnumerable<ShowDto>? Shows { get; set; }
+    public IQueryable<MovieWithDates>? MoviesWithDates { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Shows = await ShowService.GetShows();
+        await GetShowByDay(DateTime.Now);
+    }
+
+    // Group shows by movie and dates
+    protected Task GetShowByDay(DateTime date)
+    {
+        if (Shows != null)
+        {
+            var groupedShows = Shows.GroupBy(s => s.MovieId);
+
+            var moviesWithDatesList = new List<MovieWithDates>();
+
+            foreach (var group in groupedShows)
+            {
+                ShowDto show = group.First();
+
+                MovieWithDates movieWithDates = new MovieWithDates
+                    {
+                        MovieId = show.MovieId,
+                        MovieTitle = show.MovieTitle,
+                        Dates = group.Select(s => s.Date).Where(d => d.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).ToList()
+                    };
+
+                moviesWithDatesList.Add(movieWithDates);
+            }
+
+            MoviesWithDates = moviesWithDatesList.AsQueryable();
+        }
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
     void Redirect(int movieId) => NavManager.NavigateTo("/details/{movieId}");
+
+
+    public class MovieWithDates
+    {
+        public int MovieId { get; set; }
+        public string? MovieTitle { get; set; }
+        public List<DateTime>? Dates { get; set; }
+    }
 }
