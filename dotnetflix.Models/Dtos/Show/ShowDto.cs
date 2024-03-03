@@ -9,12 +9,14 @@ public class ShowDto
     public string TheaterName { get; set; }
     public DateTime Date { get; set; }
     public int ScreenTime { get; set; }
-    public string Type { get; set; }
+    public MovieType Type { get; set; }
     public decimal BasePrice { get; set; }
+    public ICollection<int> TicketIds { get; set; }
+
 }
 
 public enum MovieType
 {
-    Regular,
-    ThreeD,
+    Regular = 0,
+    ThreeD = 1,
 }

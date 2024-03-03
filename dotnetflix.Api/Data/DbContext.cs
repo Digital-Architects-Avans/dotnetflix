@@ -1,4 +1,5 @@
-using dotnetflix.Api.Data.Entities;
+﻿using dotnetflix.Api.Data.Entities;
+using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Show;
 using Microsoft.EntityFrameworkCore;
@@ -7,14 +8,27 @@ namespace dotnetflix.Api.Data
 {
     public class DotNetFlixDbContext : DbContext
     {
-        public DotNetFlixDbContext(DbContextOptions<DotNetFlixDbContext> options)
-            : base(options) 
-        { }
-        
+        public DotNetFlixDbContext(DbContextOptions<DotNetFlixDbContext> options) : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-        
+
+            // Set the precision and scale for the TotalPrice and BasePrice properties
+            modelBuilder.Entity<Order>()
+                .Property(o => o.TotalPrice)
+                .HasPrecision(6, 2);
+
+            modelBuilder.Entity<Ticket>()
+                .Property(t => t.TicketPrice)
+                .HasPrecision(6, 2);
+
+            modelBuilder.Entity<TicketType>()
+                .Property(t => t.Discount)
+                .HasPrecision(6, 2);
+
             // Seed data for Movie
             modelBuilder.Entity<Movie>().HasData(
                 new Movie
@@ -53,7 +67,7 @@ namespace dotnetflix.Api.Data
                     Rating = Rating.PG13, Runtime = 181, Image = "avengersendgame.jpg"
                 }
             );
-        
+
             // Seed data for Theater
             modelBuilder.Entity<Theater>().HasData(
                 new Theater { Id = 1, Name = "Theater 1", Seats = 120 },
@@ -63,7 +77,98 @@ namespace dotnetflix.Api.Data
                 new Theater { Id = 5, Name = "Theater 5", Seats = 50 },
                 new Theater { Id = 6, Name = "Theater 6", Seats = 50 }
             );
-        
+
+            // Seed data for TheaterRow
+            modelBuilder.Entity<TheaterRow>().HasData(
+                // Theater 1
+                new TheaterRow { Id = 1, TheaterId = 1, RowNumber = 1, NumberOfSeats = 15 },
+                new TheaterRow { Id = 2, TheaterId = 1, RowNumber = 2, NumberOfSeats = 15 },
+                new TheaterRow { Id = 3, TheaterId = 1, RowNumber = 3, NumberOfSeats = 15 },
+                new TheaterRow { Id = 4, TheaterId = 1, RowNumber = 4, NumberOfSeats = 15 },
+                new TheaterRow { Id = 5, TheaterId = 1, RowNumber = 5, NumberOfSeats = 15 },
+                new TheaterRow { Id = 6, TheaterId = 1, RowNumber = 6, NumberOfSeats = 15 },
+                new TheaterRow { Id = 7, TheaterId = 1, RowNumber = 7, NumberOfSeats = 15 },
+                new TheaterRow { Id = 8, TheaterId = 1, RowNumber = 8, NumberOfSeats = 15 },
+
+                // Theater 2
+                new TheaterRow { Id = 9, TheaterId = 2, RowNumber = 1, NumberOfSeats = 15 },
+                new TheaterRow { Id = 10, TheaterId = 2, RowNumber = 2, NumberOfSeats = 15 },
+                new TheaterRow { Id = 11, TheaterId = 2, RowNumber = 3, NumberOfSeats = 15 },
+                new TheaterRow { Id = 12, TheaterId = 2, RowNumber = 4, NumberOfSeats = 15 },
+                new TheaterRow { Id = 13, TheaterId = 2, RowNumber = 5, NumberOfSeats = 15 },
+                new TheaterRow { Id = 14, TheaterId = 2, RowNumber = 6, NumberOfSeats = 15 },
+                new TheaterRow { Id = 15, TheaterId = 2, RowNumber = 7, NumberOfSeats = 15 },
+                new TheaterRow { Id = 16, TheaterId = 2, RowNumber = 8, NumberOfSeats = 15 },
+
+                // Theater 3
+                new TheaterRow { Id = 17, TheaterId = 3, RowNumber = 1, NumberOfSeats = 15 },
+                new TheaterRow { Id = 18, TheaterId = 3, RowNumber = 2, NumberOfSeats = 15 },
+                new TheaterRow { Id = 19, TheaterId = 3, RowNumber = 3, NumberOfSeats = 15 },
+                new TheaterRow { Id = 20, TheaterId = 3, RowNumber = 4, NumberOfSeats = 15 },
+                new TheaterRow { Id = 21, TheaterId = 3, RowNumber = 5, NumberOfSeats = 15 },
+                new TheaterRow { Id = 22, TheaterId = 3, RowNumber = 6, NumberOfSeats = 15 },
+                new TheaterRow { Id = 23, TheaterId = 3, RowNumber = 7, NumberOfSeats = 15 },
+                new TheaterRow { Id = 24, TheaterId = 3, RowNumber = 8, NumberOfSeats = 15 },
+
+                // Theater 4
+                new TheaterRow { Id = 25, TheaterId = 4, RowNumber = 1, NumberOfSeats = 10 },
+                new TheaterRow { Id = 26, TheaterId = 4, RowNumber = 2, NumberOfSeats = 10 },
+                new TheaterRow { Id = 27, TheaterId = 4, RowNumber = 3, NumberOfSeats = 10 },
+                new TheaterRow { Id = 28, TheaterId = 4, RowNumber = 4, NumberOfSeats = 10 },
+                new TheaterRow { Id = 29, TheaterId = 4, RowNumber = 5, NumberOfSeats = 10 },
+                new TheaterRow { Id = 30, TheaterId = 4, RowNumber = 6, NumberOfSeats = 10 },
+
+                // Theater 5
+                new TheaterRow { Id = 31, TheaterId = 5, RowNumber = 1, NumberOfSeats = 10 },
+                new TheaterRow { Id = 32, TheaterId = 5, RowNumber = 2, NumberOfSeats = 10 },
+                new TheaterRow { Id = 33, TheaterId = 5, RowNumber = 3, NumberOfSeats = 15 },
+                new TheaterRow { Id = 34, TheaterId = 5, RowNumber = 4, NumberOfSeats = 15 },
+
+                // Theater 6
+                new TheaterRow { Id = 35, TheaterId = 6, RowNumber = 1, NumberOfSeats = 10 },
+                new TheaterRow { Id = 36, TheaterId = 6, RowNumber = 2, NumberOfSeats = 10 },
+                new TheaterRow { Id = 37, TheaterId = 6, RowNumber = 3, NumberOfSeats = 15 },
+                new TheaterRow { Id = 38, TheaterId = 6, RowNumber = 4, NumberOfSeats = 15 }
+            );
+
+            // Initialize a list to hold Seat seed data
+            var seats = new List<Seat>();
+            int seatId = 1; // Starting ID for seats
+
+            // Seed data for Seats
+            // Use a list of tuples to hold the TheaterRowId and the number of seats in that row
+            var theaterRows = new List<(int TheaterRowId, int RowNumber, int NumberOfSeats)>
+            {
+                // Theater 1 Rows
+                (1, 1, 15), (2, 2, 15), (3, 3, 15), (4, 4, 15), (5, 5, 15), (6, 6, 15), (7, 7, 15), (8, 8, 15),
+                // Theater 2 Rows
+                (9, 1, 15), (10, 2, 15), (11, 3, 15), (12, 4, 15), (13, 5, 15), (14, 6, 15), (15, 7, 15), (16, 8, 15),
+                // Theater 3 Rows
+                (17, 1, 15), (18, 2, 15), (19, 3, 15), (20, 4, 15), (21, 5, 15), (22, 6, 15), (23, 7, 15), (24, 8, 15),
+                // Theater 4 Rows
+                (25, 1, 10), (26, 2, 10), (27, 3, 10), (28, 4, 10), (29, 5, 10), (30, 6, 10),
+                // Theater 5 Rows
+                (31, 1, 10), (32, 2, 10), (33, 3, 15), (34, 4, 15),
+                // Theater 6 Rows
+                (35, 1, 10), (36, 2, 10), (37, 3, 15), (38, 4, 15),
+            };
+
+            // Loop through the list of tuples to create the seats for each row
+            foreach (var row in theaterRows)
+            {
+                for (int seatNumber = 1; seatNumber <= row.NumberOfSeats; seatNumber++)
+                {
+                    seats.Add(new Seat
+                    {
+                        Id = seatId++,
+                        SeatNumber = seatNumber,
+                        TheaterRowId = row.TheaterRowId
+                    });
+                }
+            }
+
+            modelBuilder.Entity<Seat>().HasData(seats);
+
             // Seed data for Show
             // Assuming a pattern for shows, adjust as necessary
             int showId = 1;
@@ -77,18 +182,63 @@ namespace dotnetflix.Api.Data
                             Id = showId++,
                             MovieId = movieId,
                             TheaterId = theaterId,
-                            Date = DateTime.Today.AddDays(theaterId),
+                            Date = DateTime.Now.AddHours(3),
                             ScreenTime = 90,
-                            Type = MovieType.Regular,
-                            BasePrice = 12
+                            Type = MovieType.Regular
                         }
                     );
                 }
             }
+            
+            modelBuilder.Entity<TicketType>().HasData(
+
+                new TicketType
+                {
+                    Id = 1,
+                    Name = "Normal",
+                    Discount = 0M
+                },
+                new TicketType
+                {
+                    Id = 2,
+                    Name = "Child",
+                    Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 3,
+                    Name = "Student",
+                    Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 4,
+                    Name = "Senior",
+                    Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 5,
+                    Name = "Cinema Pass",
+                    Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 6,
+                    Name = "3D",
+                    Discount = 0M
+                }
+            );
+            
         }
-        
+
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Show> Shows { get; set; }
         public DbSet<Theater> Theaters { get; set; }
+        public DbSet<TheaterRow> TheaterRows { get; set; }
+        public DbSet<Seat> Seats { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<TicketType> TicketTypes { get; set; }
     }
 }

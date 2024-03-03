@@ -20,7 +20,7 @@ public class TheaterRepository : ITheaterRepository
         return theaters;
     }
 
-    public async Task<Theater> GetTheater(int id)
+    public async Task<Theater?> GetTheater(int id)
     {
         var theater = await _dotNetFlixDbContext.Theaters.SingleOrDefaultAsync(t => t.Id == id);
         return theater;
@@ -39,7 +39,7 @@ public class TheaterRepository : ITheaterRepository
         return result.Entity;
     }
 
-    public async Task<Theater> UpdateTheater(int id, UpdateTheaterDto updateTheaterDto)
+    public async Task<Theater?> UpdateTheater(int id, UpdateTheaterDto updateTheaterDto)
     {
         var theater = await _dotNetFlixDbContext.Theaters.FindAsync(id);
 
@@ -54,16 +54,18 @@ public class TheaterRepository : ITheaterRepository
         return null;
     }
 
-    public async Task<Theater> DeleteTheater(int id)
+    public async Task<bool> DeleteTheater(int id)
     {
         var theater = await _dotNetFlixDbContext.Theaters.FindAsync(id);
-
-        if (theater != null)
+        
+        if (theater == null)
         {
-            _dotNetFlixDbContext.Theaters.Remove(theater);
-            await _dotNetFlixDbContext.SaveChangesAsync();
+            return false;
         }
 
-        return theater;
+        _dotNetFlixDbContext.Theaters.Remove(theater);
+        await _dotNetFlixDbContext.SaveChangesAsync();
+        
+        return true;
     }
 }

@@ -1,7 +1,5 @@
-using dotnetflix.Api.Data.Entities;
 using dotnetflix.Api.Extensions;
 using dotnetflix.Api.Repositories.Theaters;
-using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.Theater;
 
 namespace dotnetflix.Api.Controllers;
@@ -14,10 +12,12 @@ using Microsoft.AspNetCore.Http;
 public class TheaterController : ControllerBase
 {
     private readonly ITheaterRepository _theaterRepository;
+    private readonly ILogger<TheaterController> _logger;
 
-    public TheaterController(ITheaterRepository theaterRepository)
+    public TheaterController(ITheaterRepository theaterRepository, ILogger<TheaterController> logger)
     {
         _theaterRepository = theaterRepository;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -26,24 +26,17 @@ public class TheaterController : ControllerBase
         try
         {
             var theaters = await _theaterRepository.GetTheaters();
-            
-            if (theaters == null)
-            {
-                return NotFound();
-            }
-
             var theaterDtos = theaters.ConvertToDto();
-            
             return Ok(theaterDtos);
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error retrieving data from the database");
+            _logger.LogError(ex, "Error processing request for GetTheaters");
+            return StatusCode(StatusCodes.Status500InternalServerError,  ex.Message);
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<TheaterDto>> GetTheater(int id)
     {
         try
@@ -61,6 +54,7 @@ public class TheaterController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for GetTheater with ID: {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
@@ -71,18 +65,13 @@ public class TheaterController : ControllerBase
         try
         {
             var newTheater = await _theaterRepository.AddTheater(addTheaterDto);
-
-            if (newTheater == null)
-            {
-                return NoContent();
-            }
-
             var newTheaterDto = newTheater.ConvertToDto();
 
-            return Ok(newTheaterDto);
+            return CreatedAtAction(nameof(GetTheater), new { id = newTheaterDto.Id }, newTheaterDto);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for AddTheater");
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
@@ -105,28 +94,28 @@ public class TheaterController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for UpdateTheater with ID: {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<TheaterDto>> DeleteTheater(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteTheater(int id)
     {
         try
         {
             var theater = await _theaterRepository.DeleteTheater(id);
 
-            if (theater == null)
+            if (!theater)
             {
                 return NotFound();
             }
 
-            var theaterDto = theater.ConvertToDto();
-
-            return Ok(theaterDto);
+            return NoContent();
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for DeleteTheater with ID: {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }

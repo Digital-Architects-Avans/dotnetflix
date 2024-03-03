@@ -1,0 +1,165 @@
+@page "/manager/theaters"
+@using dotnetflix.Models.Dtos.Theater
+@inject HttpClient Http
+<h3>Manager: Theaters</h3>
+
+<NavigationHeader />
+
+<div class="row">
+    <div class="col-md-6">
+       <table class="table">
+                   <thead>
+                       <tr>
+                           <th>Theater names</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       @foreach (var theater in Theaters)
+                              {
+                                  <tr @onclick="() => SelectTheater(theater)" class="@(SelectedTheater.Id == theater.Id ? "selected-theater" : "new-theater")">
+                                      <td>@theater.Name</td>
+                                  </tr>
+                              }
+                       <tr @onclick="() => SelectTheater()" class="new-theater">
+                           <td>Add New Theater</td>
+                            </tr>
+                   </tbody>
+               </table>
+    </div>
+    <div class="col-md-6">
+        @if (SelectedTheater.Id < 1)
+        {
+            <h4>Add New Theater</h4>
+            <EditForm Model="SelectedTheater" OnValidSubmit="NewTheaterSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <InputText id="name" class="form-control" @bind-Value="SelectedTheater.Name"/>
+                </div>
+                <div class="form-group">
+                    <label for="seats">Seats</label>
+                    <InputNumber id="seats" class="form-control" @bind-Value="SelectedTheater.Seats"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </EditForm>
+        }
+else
+{
+    <h4>Update Theater</h4>
+    <EditForm Model="SelectedTheater" OnValidSubmit="UpdateTheaterSubmit">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText id="name" class="form-control" @bind-Value="SelectedTheater.Name"/>
+        </div>
+        <div class="form-group">
+            <label for="seats">Seats</label>
+            <InputNumber id="seats" class="form-control" @bind-Value="SelectedTheater.Seats"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </EditForm>
+    <button class="btn btn-danger" @onclick="DeleteTheaterSubmit">Delete</button>
+}
+    </div>
+</div>
+
+@code {
+    List<TheaterDto> Theaters = new List<TheaterDto>();
+    TheaterDto SelectedTheater = new TheaterDto();
+    AddTheaterDto NewTheater = new AddTheaterDto();
+    UpdateTheaterDto EditTheater = new UpdateTheaterDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/theater");
+        NewTheater = new AddTheaterDto();
+        EditTheater = new UpdateTheaterDto();
+        SelectTheater();
+    }
+
+    private void SelectTheater(TheaterDto theater)
+    {
+        // Create a copy of the selected theater
+        SelectedTheater = new TheaterDto
+        {
+            Id = theater.Id,
+            Name = theater.Name,
+            Seats = theater.Seats
+        };
+    }
+
+    private void SelectTheater()
+    {
+        // Create a new theater offering default values
+        SelectedTheater = new TheaterDto
+        {
+            Id = 0,
+            Name = "New Theater",
+            Seats = 100
+        };
+    }
+    
+    private async Task NewTheaterSubmit()
+    {
+        NewTheater = new AddTheaterDto
+        {
+            Name = SelectedTheater.Name,
+            Seats = SelectedTheater.Seats
+        };
+        
+        var response = await Http.PostAsJsonAsync("api/theater", NewTheater);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // refresh theaterlist from db
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/theater");
+            // Reset the selected theater
+            SelectTheater();
+            StateHasChanged();
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
+    }
+    
+    private async Task UpdateTheaterSubmit()
+    {
+        var response = await Http.PutAsJsonAsync($"api/theater/{SelectedTheater.Id}", EditTheater);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // refresh theaterlist from db
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/theater");
+            // Reset the selected theater
+            SelectTheater();
+            StateHasChanged();
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
+    }
+
+    private async Task DeleteTheaterSubmit()
+    {
+        var response = await Http.DeleteAsync($"api/theater/{SelectedTheater.Id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            // refresh theaterlist from db
+            Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/Theater");
+            // Reset the selected theater
+            SelectTheater();
+            StateHasChanged();
+        }
+        else
+        {
+            // Handle error here, e.g., show an error message
+        }
+    }
+}
