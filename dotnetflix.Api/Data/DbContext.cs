@@ -8,19 +8,25 @@ namespace dotnetflix.Api.Data
 {
     public class DotNetFlixDbContext : DbContext
     {
-        public DotNetFlixDbContext(DbContextOptions<DotNetFlixDbContext> options) : base(options) { }
+        public DotNetFlixDbContext(DbContextOptions<DotNetFlixDbContext> options) : base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
+
             // Set the precision and scale for the TotalPrice and BasePrice properties
             modelBuilder.Entity<Order>()
                 .Property(o => o.TotalPrice)
                 .HasPrecision(6, 2);
-            
+
             modelBuilder.Entity<Ticket>()
                 .Property(t => t.TicketPrice)
+                .HasPrecision(6, 2);
+
+            modelBuilder.Entity<TicketType>()
+                .Property(t => t.Discount)
                 .HasPrecision(6, 2);
 
             // Seed data for Movie
@@ -160,8 +166,9 @@ namespace dotnetflix.Api.Data
                     });
                 }
             }
+
             modelBuilder.Entity<Seat>().HasData(seats);
-            
+
             // Seed data for Show
             // Assuming a pattern for shows, adjust as necessary
             int showId = 1;
@@ -182,8 +189,49 @@ namespace dotnetflix.Api.Data
                     );
                 }
             }
+            
+            modelBuilder.Entity<TicketType>().HasData(
+
+                new TicketType
+                {
+                    Id = 1,
+                    Name = "Normal",
+                    Discount = 0M
+                },
+                new TicketType
+                {
+                    Id = 2,
+                    Name = "Child",
+                    Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 3,
+                    Name = "Student",
+                    Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 4,
+                    Name = "Senior",
+                    Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 5,
+                    Name = "Cinema Pass",
+                    Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 6,
+                    Name = "3D",
+                    Discount = 0M
+                }
+            );
+            
         }
-        
+
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Show> Shows { get; set; }
         public DbSet<Theater> Theaters { get; set; }
@@ -191,5 +239,6 @@ namespace dotnetflix.Api.Data
         public DbSet<Seat> Seats { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<TicketType> TicketTypes { get; set; }
     }
 }
