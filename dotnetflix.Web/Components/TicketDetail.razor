@@ -57,53 +57,6 @@ else
         return Task.CompletedTask;
     }
     
-    // private void PrintTicket()
-    // {
-    //     Document.Create(container =>
-    //         {
-    //             container.Page(page =>
-    //             {
-    //                 page.Margin(50);
-    //                 page.Size(PageSizes.A6);
-    //                 page.PageColor(Colors.White);
-    //                 page.DefaultTextStyle(x => x.FontSize(16));
-    //
-    //                 page.Header()
-    //                     .AlignCenter()
-    //                     .Text($"Ticket for {Movie.Title} at {Show.Date}")
-    //                     .SemiBold().FontSize(24).FontColor(Colors.Grey.Darken4);
-    //
-    //                 page.Content()
-    //                     .Table(table =>
-    //                     {
-    //                         table.ColumnsDefinition(columns =>
-    //                         {
-    //                             columns.ConstantColumn(20);
-    //                             columns.RelativeColumn();
-    //                             columns.RelativeColumn();
-    //                         });
-    //
-    //                         table.Header(header =>
-    //                         {
-    //                             header.Cell().Text("Theater");
-    //                             header.Cell().Text("Show Time");
-    //                             header.Cell().Text("Seat");
-    //                             header.Cell().Text("Ticket Type");
-    //                             header.Cell().Text("Price");
-    //                         });
-    //
-    //                             table.Cell().Text(Ticket.Id.ToString());
-    //                             table.Cell().Text(Ticket.ShowTime.ToString());
-    //                             table.Cell().Text($"Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}");
-    //                             table.Cell().Text(Ticket.TicketTypeId);
-    //                             table.Cell().Text(Ticket.TicketPrice.ToString());
-    //
-    //                     });
-    //             });
-    //         })
-    //         .GeneratePdf("ticket.pdf");;
-    // }
-    
     private async Task PrintTicket()
     {
         var jsPdf = await JSRuntime.InvokeAsync<IJSObjectReference>("eval", "new window.jsPDF()");
