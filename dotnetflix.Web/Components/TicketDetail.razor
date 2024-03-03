@@ -109,6 +109,12 @@ else
         var jsPdf = await JSRuntime.InvokeAsync<IJSObjectReference>("eval", "new window.jsPDF()");
 
         await jsPdf.InvokeVoidAsync("text", $"Ticket for {Movie.Title} at {Show.Date}", 10, 10);
+        await jsPdf.InvokeVoidAsync("text", $"Theater: {Ticket.TheaterName} - {Show.Type}", 10, 20);
+        await jsPdf.InvokeVoidAsync("text", $"Show Time: {Ticket.ShowTime}", 10, 30);
+        await jsPdf.InvokeVoidAsync("text", $"Seat: Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}", 10, 40);
+        await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {Ticket.TicketTypeId}", 10, 50);
+        await jsPdf.InvokeVoidAsync("text", $"Price: {Ticket.TicketPrice}", 10, 60);
+
         await jsPdf.InvokeVoidAsync("save", "ticket.pdf");
     }
 }
