@@ -242,12 +242,22 @@
         // Check if there are time conflicts
         foreach (var show in theaterShows)
         {
-            var movie = Movies.FirstOrDefault(m => m.Id == show.MovieId);
-            var showEndTime = show.Date.AddMinutes(movie.Runtime);
+            // If the show is the same as the one we're updating, skip this iteration
+            if (show.Id == SelectedShow.Id)
+            {
+                continue;
+            }
+
+            var showEndTime = show.Date.AddMinutes(show.ScreenTime);
             if (SelectedShow.Date >= show.Date && SelectedShow.Date < showEndTime)
             {
-                // Handle error here, e.g., show an error message
-                return;
+                throw new InvalidOperationException("The show times overlap with another show.");
+
+            }
+            if (SelectedShow.Date.AddMinutes(SelectedShow.ScreenTime) > show.Date && SelectedShow.Date.AddMinutes(SelectedShow.ScreenTime) <= showEndTime)
+            {
+                throw new InvalidOperationException("The show times overlap with another show.");
+
             }
         }
         
@@ -295,18 +305,22 @@
             return;
         }
         
-        // Get shows in same theater excluding the current show
-        var theaterShows = Shows.Where(s => s.TheaterId == SelectedShow.TheaterId && s.Id != SelectedShow.Id).ToList();
+        // get all shows in the same theater
+        var theaterShows = Shows.Where(s => s.TheaterId == SelectedShow.TheaterId ).ToList();
 
-        // Check for time conflicts
+        // Check if there are time conflicts
         foreach (var show in theaterShows)
         {
-            var movie = Movies.FirstOrDefault(m => m.Id == show.MovieId);
-            var showEndTime = show.Date.AddMinutes(movie.Runtime);
+            var showEndTime = show.Date.AddMinutes(show.ScreenTime);
             if (SelectedShow.Date >= show.Date && SelectedShow.Date < showEndTime)
             {
-                // Handle error here, e.g., show an error message
-                return;
+                throw new InvalidOperationException("The show times overlap with another show.");
+
+            }
+            if (SelectedShow.Date.AddMinutes(SelectedShow.ScreenTime) > show.Date && SelectedShow.Date.AddMinutes(SelectedShow.ScreenTime) <= showEndTime)
+            {
+                throw new InvalidOperationException("The show times overlap with another show.");
+
             }
         }
         
