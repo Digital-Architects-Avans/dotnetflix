@@ -60,7 +60,7 @@ public class TicketRepository: ITicketRepository
             RowNumber = seat.TheaterRow.RowNumber,
             SeatNumber = seat.SeatNumber,
             ShowTime = show.Date,
-            Discount = addTicketDto.Discount,
+            TicketTypeId = addTicketDto.TicketTypeId,
             TicketPrice = addTicketDto.TicketPrice,
             Show = show // Assign the loaded show to the ticket
         };
@@ -104,7 +104,7 @@ public class TicketRepository: ITicketRepository
             ticket.RowNumber = seat.TheaterRow.RowNumber;
             ticket.SeatNumber = seat.SeatNumber;
             ticket.ShowTime = show.Date;
-            ticket.Discount = updateTicketDto.Discount;
+            ticket.TicketTypeId = updateTicketDto.TicketTypeId;
             ticket.TicketPrice = updateTicketDto.TicketPrice;
             ticket.Show = show; // Assign the loaded show to the ticket
             await _dotNetFlixDbContext.SaveChangesAsync();
