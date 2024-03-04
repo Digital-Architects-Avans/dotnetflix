@@ -14,62 +14,75 @@ public class ShowRepository : IShowRepository
         _dotNetFlixDbContext = dotNetFlixDbContext;
     }
 
+    // Eagerly load the navigation properties using Include
     public async Task<IEnumerable<Show>> GetShows()
     {
-        var shows = await _dotNetFlixDbContext.Shows.ToListAsync();
+        var shows = await _dotNetFlixDbContext.Shows
+            .Include(s => s.Movie)
+            .Include(s => s.Theater) 
+            .Include(s => s.Tickets)  
+            .ToListAsync();
         return shows;
     }
 
-    public async Task<Show> GetShow(int id)
+    public async Task<Show?> GetShow(int id)
     {
-        return await (from show in _dotNetFlixDbContext.Shows
-            join movie in _dotNetFlixDbContext.Movies on show.MovieId equals movie.Id
-            join theater in _dotNetFlixDbContext.Theaters on show.TheaterId equals theater.Id
-            where show.Id == id
-            select new Show
-            {
-                Id = show.Id,
-                MovieId = show.MovieId,
-                Movie = movie,
-                TheaterId = show.TheaterId,
-                Theater = theater,
-                Date = show.Date,
-                ScreenTime = show.ScreenTime,
-                Type = show.Type,
-            }).SingleOrDefaultAsync();
+        // Using eager loading to simplify the query
+        return await _dotNetFlixDbContext.Shows
+            .Include(s => s.Movie)
+            .Include(s => s.Theater)
+            .Include(s => s.Tickets) 
+            .AsNoTracking() // Added for read-only operation
+            .SingleOrDefaultAsync(s => s.Id == id);
     }
 
     public async Task<Show> AddShow(AddShowDto addShowDto)
     {
-        var show = await (from movie in _dotNetFlixDbContext.Movies
-            where movie.Id == addShowDto.MovieId
-            from theater in _dotNetFlixDbContext.Theaters
-            where theater.Id == addShowDto.TheaterId
-            select new Show
-            {
-                MovieId = addShowDto.MovieId,
-                Movie = movie,
-                TheaterId = addShowDto.TheaterId,
-                Date = addShowDto.Date,
-                ScreenTime = addShowDto.ScreenTime,
-                Type = addShowDto.Type,
-            }).SingleOrDefaultAsync();
-
-        if (show != null)
+        
+        var movie = await _dotNetFlixDbContext.Movies.SingleOrDefaultAsync(m => m.Id == addShowDto.MovieId);
+        var theater = await _dotNetFlixDbContext.Theaters.SingleOrDefaultAsync(t => t.Id == addShowDto.TheaterId);
+        
+        if (movie == null || theater == null)
         {
-            var result = await _dotNetFlixDbContext.Shows.AddAsync(show);
-            await _dotNetFlixDbContext.SaveChangesAsync();
-            return result.Entity;
+            throw new KeyNotFoundException("The Movie or Theater was not found.");
         }
+        
+        var show = new Show
+        {
+            MovieId = addShowDto.MovieId,
+            TheaterId = addShowDto.TheaterId,
+            Date = addShowDto.Date,
+            ScreenTime = addShowDto.ScreenTime,
+            Type = addShowDto.Type,
+            BasePrice = addShowDto.BasePrice,
+            Movie = movie,
+            Theater = theater,
+            Tickets = new List<Ticket>()
+        };
+        
+       var result = await _dotNetFlixDbContext.Shows.AddAsync(show);
+        await _dotNetFlixDbContext.SaveChangesAsync();
+        return result.Entity;
 
-        return null;
     }
 
 
-    public async Task<Show> UpdateShow(int id, UpdateShowDto updateShowDto)
+    public async Task<Show?> UpdateShow(int id, UpdateShowDto updateShowDto)
     {
-        var show = await _dotNetFlixDbContext.Shows.FindAsync(id);
+        var show = await _dotNetFlixDbContext.Shows
+            .Include(s => s.Movie)
+            .Include(s => s.Theater)
+            .Include(s => s.Tickets) // Ensure Tickets are loaded
+            .SingleOrDefaultAsync(s => s.Id == id);
         
+        var movie = await _dotNetFlixDbContext.Movies.SingleOrDefaultAsync(m => m.Id == updateShowDto.MovieId);
+        var theater = await _dotNetFlixDbContext.Theaters.SingleOrDefaultAsync(t => t.Id == updateShowDto.TheaterId);
+
+        if (movie == null || theater == null)
+        {
+            throw new KeyNotFoundException("The Movie or Theater was not found.");
+        }
+
         if (show != null)
         {
             show.MovieId = updateShowDto.MovieId;
@@ -77,6 +90,9 @@ public class ShowRepository : IShowRepository
             show.Date = updateShowDto.Date;
             show.ScreenTime = updateShowDto.ScreenTime;
             show.Type = updateShowDto.Type;
+            show.BasePrice = updateShowDto.BasePrice;
+            show.Movie = movie;
+            show.Theater = theater;
             await _dotNetFlixDbContext.SaveChangesAsync();
             return show;
         }
@@ -84,16 +100,18 @@ public class ShowRepository : IShowRepository
         return null;
     }
 
-    public async Task<Show> DeleteShow(int id)
+    public async Task<bool> DeleteShow(int id)
     {
         var show = await _dotNetFlixDbContext.Shows.FindAsync(id);
-
-        if (show != null)
+        
+        if (show == null)
         {
-            _dotNetFlixDbContext.Shows.Remove(show);
-            await _dotNetFlixDbContext.SaveChangesAsync();
+            return false;
         }
 
-        return show;
+        _dotNetFlixDbContext.Shows.Remove(show);
+        await _dotNetFlixDbContext.SaveChangesAsync();
+        
+        return true;
     }
 }

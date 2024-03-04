@@ -1,4 +1,3 @@
-using dotnetflix.Api.Data.Entities;
 using dotnetflix.Api.Extensions;
 using dotnetflix.Api.Repositories.Movies;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +10,14 @@ namespace dotnetflix.Api.Controllers;
 public class MovieController : ControllerBase
 {
     private readonly IMovieRepository _movieRepository;
+    private readonly ILogger<MovieController> _logger;
 
-    public MovieController(IMovieRepository movieRepository)
+
+    public MovieController(IMovieRepository movieRepository, ILogger<MovieController> logger)
     {
         _movieRepository = movieRepository;
+        _logger = logger;
+
     }
 
     [HttpGet]
@@ -23,18 +26,12 @@ public class MovieController : ControllerBase
         try
         {
             var movies = await _movieRepository.GetMovies();
-            
-            if (movies == null)
-            {
-                return NotFound();
-            }
-
             var movieDtos = movies.ConvertToDto();
-
             return Ok(movieDtos);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for GetMovies");
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
@@ -57,6 +54,7 @@ public class MovieController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for GetMovie with ID: {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
@@ -67,17 +65,14 @@ public class MovieController : ControllerBase
         try
         {
             var newMovie = await _movieRepository.AddMovie(addMovieDto);
-            if (newMovie == null)
-            {
-                return NoContent();
-            }
 
             var newMovieDto = newMovie.ConvertToDto();
 
-            return Ok(newMovieDto);
+            return CreatedAtAction(nameof(GetMovie), new { id = newMovieDto.Id }, newMovieDto);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for AddMovie");
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
@@ -100,28 +95,28 @@ public class MovieController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for UpdateMovie with ID: {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<MovieDto>> DeleteMovie(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteMovie(int id)
     {
         try
         {
             var movie = await _movieRepository.DeleteMovie(id);
 
-            if (movie == null)
+            if (!movie)
             {
                 return NotFound();
             }
 
-            var movieDto = movie.ConvertToDto();
-
-            return Ok(movieDto);
+            return NoContent();
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for DeleteMovie with ID: {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }

@@ -1,11 +1,6 @@
-using dotnetflix.Api.Data.Entities;
 using dotnetflix.Api.Extensions;
-using dotnetflix.Api.Repositories.Movies;
 using dotnetflix.Api.Repositories.Shows;
-using dotnetflix.Api.Repositories.Theaters;
-using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Show;
-using dotnetflix.Models.Dtos.Theater;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnetflix.Api.Controllers;
@@ -15,15 +10,13 @@ namespace dotnetflix.Api.Controllers;
 public class ShowController : ControllerBase
 {
     private readonly IShowRepository _showRepository;
-    private readonly IMovieRepository _movieRepository;
-    private readonly ITheaterRepository _theaterRepository;
-
-    public ShowController(IShowRepository showRepository, IMovieRepository movieRepository,
-        ITheaterRepository theaterRepository)
+    private readonly ILogger<ShowController> _logger;
+    
+    public ShowController(IShowRepository showRepository, ILogger<ShowController> logger)
     {
         _showRepository = showRepository;
-        _movieRepository = movieRepository;
-        _theaterRepository = theaterRepository;
+        _logger = logger;
+
     }
 
     [HttpGet]
@@ -32,31 +25,13 @@ public class ShowController : ControllerBase
         try
         {
             var shows = await _showRepository.GetShows();
-            if (shows == null)
-            {
-                return NotFound();
-            }
-
-            var movies = await _movieRepository.GetMovies();
-            if (movies == null)
-            {
-                throw new Exception("No movies exists in the system");
-            }
-
-            var theaters = await _theaterRepository.GetTheaters();
-            if (theaters == null)
-            {
-                throw new Exception("No theaters exists in the system");
-            }
-
-
-            var showDtos = shows.ConvertToDto(movies, theaters);
+            var showDtos = shows.ConvertToDto();
             return Ok(showDtos);
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error retrieving data from the database");
+            _logger.LogError(ex, "Error processing request for GetShows");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 
@@ -78,6 +53,7 @@ public class ShowController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for GetShow with ID: {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
@@ -88,17 +64,14 @@ public class ShowController : ControllerBase
         try
         {
             var newShow = await _showRepository.AddShow(addShowDto);
-            if (newShow == null)
-            {
-                return NoContent();
-            }
 
             var newShowDto = newShow.ConvertToDto();
             
-            return Ok(newShowDto);
+            return CreatedAtAction(nameof(GetShow), new { id = newShowDto.Id }, newShowDto);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for AddShow");
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
@@ -112,7 +85,7 @@ public class ShowController : ControllerBase
 
             if (updatedShow == null)
             {
-                return NotFound();
+                return NoContent();
             }
 
             var updatedShowDto = updatedShow.ConvertToDto();
@@ -121,28 +94,28 @@ public class ShowController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for UpdateShow with ID: {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<ShowDto>> DeleteShow(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteShow(int id)
     {
         try
         {
             var show = await _showRepository.DeleteShow(id);
 
-            if (show == null)
+            if (!show)
             {
                 return NotFound();
             }
-
-            var showDto = show.ConvertToDto();
-
-            return Ok(showDto);
+            
+            return NoContent();
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error processing request for DeleteShow with ID: {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
