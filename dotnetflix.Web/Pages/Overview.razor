@@ -103,6 +103,7 @@
             {
                 Order = await OrderService.GetOrder(OrderCode);
 
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (Order == null)
                 {
                     Status = PageState.OrderNotFound;
@@ -120,7 +121,7 @@
             // Get show details
             if (ShowService != null)
             {
-                Show = await ShowService.GetShow(Tickets[0].ShowId);
+                Show = await ShowService.GetShow(Tickets[0].ShowId)!;
             }
 
             // Get movie details 
