@@ -26,7 +26,9 @@ namespace dotnetflix.Api.Data.Entities
 	    
 	    public DateTime ShowTime { get; set; }
 	    
-	    public Discount Discount { get; set; }
+	    [Required]
+	    [ForeignKey(nameof(TicketType.Id))]
+	    public int TicketTypeId { get; set; }
 	    
 	    public decimal TicketPrice { get; set; }
 	    

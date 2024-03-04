@@ -34,6 +34,22 @@ public class TicketController : ControllerBase
 			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 		}
 	}
+	
+	[HttpGet("Show/{showId:int}")]
+	public async Task<ActionResult<IEnumerable<TicketDto>>> GetTicketsForShow(int showId)
+	{
+		try
+		{
+			var tickets = await _ticketRepository.GetTicketsForShow(showId);
+			var ticketDtos = tickets.ConvertToDto();
+			return Ok(ticketDtos);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error processing request for GetTicketsForShow");
+			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+		}
+	}
 
 	[HttpGet("{id:int}")]
 	public async Task<ActionResult<IEnumerable<TicketDto>>> GetTicket(int id)

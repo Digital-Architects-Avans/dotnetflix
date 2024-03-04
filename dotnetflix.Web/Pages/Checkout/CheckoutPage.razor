@@ -1,0 +1,177 @@
+@page "/Checkout"
+@using dotnetflix.Web.Services.Contracts
+@using dotnetflix.Models.Dtos.TicketType
+@using dotnetflix.Models.Dtos.OrderRequestDtos
+@using System.Globalization
+@implements IDisposable
+
+<div class="container">
+    <div class="row">
+        <!-- Order Summary Column -->
+        <div class="col-md-8">
+            <h3>Order Summary</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Ticket Type</th>
+                    <th>Quantity</th>
+                    <th>Price per Ticket</th>
+                    <th>Total Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (OrderRequest.TicketOrders.Any())
+                {
+                    decimal grandTotal = 0;
+                    foreach (var ticketOrder in OrderRequest.TicketOrders.Where(to => to.Quantity > 0))
+                    {
+                        var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
+                        if (ticketType != null)
+                        {
+                            decimal pricePerTicket = ticketOrder.FinalPrice / ticketOrder.Quantity;
+                            grandTotal += ticketOrder.FinalPrice;
+
+                            <tr>
+                                <td>@ticketType.Name</td>
+                                <td>@ticketOrder.Quantity</td>
+                                <td>@pricePerTicket.ToString("C")</td>
+                                <td>@ticketOrder.FinalPrice.ToString("C")</td>
+                            </tr>
+                        }
+                    }
+
+                    <tr>
+                        <td colspan="3" class="text-right">
+                            <strong>Grand Total:</strong>
+                        </td>
+                        <td>
+                            <strong>@grandTotal.ToString("C")</strong>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">No tickets selected.</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Payment Method Column -->
+        <div class="col-md-4">
+            <h4 class="mb-2">Payment Method</h4>
+            <div id="smart-button-container">
+                <input type="hidden" name="descriptionInput" id="description" @bind="PaymentDescription"/>
+                <input name="amountInput" type="hidden" id="amount" @bind="FormattedPaymentAmount">
+                <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container"></div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Payment Error Message -->
+        @if (!string.IsNullOrEmpty(PaymentErrorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @PaymentErrorMessage
+            </div>
+        }
+    
+        <div class="row">
+            <!-- Order Summary and Payment Method Columns go here... -->
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Inject] public IJSRuntime Js { get; set; }
+    [Inject] public IOrderStateService OrderStateService { get; set; }
+    [Inject] public IMovieService MovieService { get; set; }
+    [Inject] public ITicketService TicketService { get; set; }
+    [Inject] public IOrderService OrderService { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
+
+    public OrderRequestDto? OrderRequest { get; set; }
+
+    public IEnumerable<TicketTypeDto> TicketTypes { get; set; } = new List<TicketTypeDto>();
+
+    protected int TotalQty { get; set; }
+    protected string? PaymentDescription { get; set; }
+    protected decimal PaymentAmount { get; set; }
+    protected string? FormattedPaymentAmount { get; set; }
+    protected string? PaymentErrorMessage;
+
+    
+    public static event Action<string> OnPaymentProcessed;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (OrderStateService.CurrentOrder.TicketOrders.Any())
+        {
+            OrderRequest = OrderStateService.CurrentOrder;
+            var movieId = OrderRequest.TicketOrders.First().MovieId;
+            TicketTypes = await TicketService.GetTicketTypes();
+
+            Guid orderGuid = Guid.NewGuid();
+
+            PaymentAmount = OrderRequest.TicketOrders.Sum(to => to.FinalPrice);
+            FormattedPaymentAmount = PaymentAmount.ToString(CultureInfo.InvariantCulture);
+
+            TotalQty = OrderRequest.TicketOrders.Sum(to => to.Quantity);
+            PaymentDescription = $"Order {orderGuid} for User"; // TODO: Add user id once implemented 
+            
+            OnPaymentProcessed += VerifyPaymentAndProcessOrder;
+
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                await Js.InvokeVoidAsync("initPayPalButton");
+            }
+        }
+        catch (Exception)
+        {
+            Console.WriteLine();
+            throw;
+        }
+    }
+
+    [JSInvokable]
+    public static void ProcessPayment(string orderId)
+    {
+        OnPaymentProcessed?.Invoke(orderId);
+    }
+    
+    public void Dispose()
+    {
+        // Unsubscribe to prevent memory leaks
+        OnPaymentProcessed -= VerifyPaymentAndProcessOrder;
+    }
+    
+    private async void VerifyPaymentAndProcessOrder(string orderId)
+    {
+        var paymentSuccess = await OrderService.VerifyPaymentSuccess(orderId);
+        if (paymentSuccess)
+        {
+            await OrderService.CreateOrder(OrderRequest);
+
+            NavigationManager.NavigateTo($"/overview/{orderId}");
+            // Todo: Show order with Ticket Details such as seats on a summary page
+        }
+        else
+        {
+            // Update paymentErrorMessage to display an error message
+            PaymentErrorMessage = "Payment failed. Please try again or contact support.";
+            StateHasChanged(); // Notify the component that its state has changed and it needs to re-render
+        }
+    }
+
+}

@@ -1,0 +1,146 @@
+@page "/tickets/{Id:int}"
+@using dotnetflix.Web.Services.Contracts
+@using dotnetflix.Models.Dtos.Show
+@using dotnetflix.Models.Dtos.TicketType
+@using dotnetflix.Models.Dtos.OrderRequestDtos
+@using dotnetflix.Models.Dtos.TicketOrderDtos
+@using dotnetflix.Models.Dtos.Movie
+@using dotnetflix.Web.Components
+@implements IDisposable
+
+<h3>Order Tickets for @SelectedShow?.MovieTitle</h3>
+<div class="container">
+    <div class="row">
+        <!-- Ticket selection form column -->
+        <div class="col-md-8">
+            @if (TicketTypes != null && OrderRequest.TicketOrders.Any())
+            {
+                <EditForm Model="@OrderRequest" OnValidSubmit="SummariseOrder">
+                    @foreach (var ticketOrder in OrderRequest.TicketOrders)
+                    {
+                        var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
+                        if (ticketType != null)
+                        {
+                            var finalPrice = SelectedShow.BasePrice - ticketType.Discount;
+                            
+                            if (SelectedShow.Type == MovieType.ThreeD)
+                            {
+                                finalPrice += 2.5m;
+                            }
+                            
+                            <div class="form-group">
+                                <label>@ticketType.Name - Price: @finalPrice.ToString("C")</label>
+                                <InputNumber @bind-Value="ticketOrder.Quantity" min="0" class="form-control" />
+                            </div>
+                        }
+                    }
+                    <button type="submit" class="btn btn-primary">Confirm Selection</button>
+                </EditForm>
+            }
+            else
+            {
+                <p>Loading ticket options...</p>
+            }
+        </div>
+        
+        <!-- Movie details column -->
+        <div class="col-md-4">
+            @if (Movie != null)
+            {
+                <MovieDetails Movie="Movie"/>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    [Inject] public IShowService? ShowService { get; set; }
+    [Inject] public IMovieService? MovieService { get; set; }
+    [Inject] public ITicketService? TicketService { get; set; }
+    [Inject] public IOrderStateService? OrderStateService { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
+
+    public ShowDto? SelectedShow { get; set; }
+    public MovieDto Movie { get; set; }
+    public IEnumerable<TicketTypeDto> TicketTypes { get; set; }
+    public OrderRequestDto OrderRequest { get; set; } = new OrderRequestDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ShowService != null && TicketService != null)
+        {
+            SelectedShow = await ShowService.GetShow(Id);
+            Movie = await MovieService.GetMovie(SelectedShow.MovieId);
+            TicketTypes = await TicketService.GetTicketTypes();
+
+            InitializeOrderRequest();
+        }
+        
+        // Subscribe to the OrderStateService's OnOrderUpdated event
+        if (OrderStateService != null)
+        {
+            OrderStateService.OnOrderUpdated += OnOrderStateChanged;
+        }
+    }
+    
+    private void OnOrderStateChanged()
+    {
+        StateHasChanged();
+    }
+
+    // Initialize the OrderRequest with the user's selected show and ticket types
+    private void InitializeOrderRequest()
+    {
+        OrderRequest.TicketOrders = TicketTypes.Select(tt => new TicketOrderDto
+        {
+            MovieId = SelectedShow.MovieId,
+            ShowId = SelectedShow.Id,
+            MovieTitle = Movie.Title,
+            TheaterId = SelectedShow.TheaterId,
+            TheaterName = SelectedShow.TheaterName,
+            ShowTime = SelectedShow.Date,
+            TicketTypeId = tt.Id, 
+            Quantity = 0,
+            FinalPrice = 0
+        }).ToList();
+    }
+
+    private void SummariseOrder()
+    {
+        foreach (var ticketOrder in OrderRequest.TicketOrders)
+        {
+            var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
+            if (ticketType != null)
+            {
+                // Calculate the final price per ticket with the discount applied
+                var finalPricePerTicket = SelectedShow.BasePrice - ticketType.Discount;
+                
+                if (SelectedShow.Type == MovieType.ThreeD)
+                {
+                    finalPricePerTicket += 2.5m;
+                }
+                
+                ticketOrder.FinalPrice = finalPricePerTicket;
+
+                // Update the FinalPrice in the TicketOrderDto to reflect the total price for the quantity selected
+                // FinalPrice holds the total price for all tickets of this type
+                ticketOrder.FinalPrice *= ticketOrder.Quantity;
+            }
+        }
+
+        // Update the current order in the OrderStateService with the user's selections
+        OrderStateService.CurrentOrder = OrderRequest;
+
+        // Navigate to the Checkout page
+        NavigationManager.NavigateTo("/Checkout");
+    }
+    
+    public void Dispose()
+    {
+        if (OrderStateService != null)
+        {
+            OrderStateService.OnOrderUpdated -= OnOrderStateChanged;
+        }
+    }
+}

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetflix.Api.Data;
 
@@ -11,9 +12,11 @@ using dotnetflix.Api.Data;
 namespace dotnetflix.Api.Migrations
 {
     [DbContext(typeof(DotNetFlixDbContext))]
-    partial class DotNetFlixDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240303114355_addTicketType")]
+    partial class addTicketType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
