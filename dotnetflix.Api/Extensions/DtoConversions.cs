@@ -86,17 +86,17 @@ public static class DtoConversions
 		
 		return new TicketDto
         {
-			Id = ticket.Id,
-			ShowId = ticket.ShowId,
-			Movie = ticket.Movie,
-			TheaterName = ticket.TheaterName,
-			RowNumber = ticket.RowNumber,
-			SeatId = ticket.SeatId,
-			SeatNumber = ticket.SeatNumber,
-			ShowTime = ticket.ShowTime,
-			Discount = ticket.Discount,
-			TicketPrice = ticket.TicketPrice
-		};
+            Id = ticket.Id,
+            ShowId = ticket.ShowId,
+            Movie = ticket.Movie,
+            TheaterName = ticket.TheaterName,
+            RowNumber = ticket.RowNumber,
+            SeatId = ticket.SeatId,
+            SeatNumber = ticket.SeatNumber,
+            ShowTime = ticket.ShowTime,
+            TicketTypeId = ticket.TicketTypeId,
+            TicketPrice = ticket.TicketPrice
+        };
 	}
     
     public static OrderDto ConvertToDto(this Order order)

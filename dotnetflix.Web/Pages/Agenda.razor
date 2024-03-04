@@ -1,11 +1,7 @@
-﻿@page "/"
-@using dotnetflix.Models.Dtos.Show
-@using dotnetflix.Web.Services.Contracts
+﻿@page "/Agenda"
 
 @inject NavigationManager NavManager
 @inject IDialogService DialogService
-
-@inherits AgendaBase
 
 @if (Shows == null)
 {
@@ -42,7 +38,7 @@
             <TemplateColumn Title="">
                 @for (int i = 0; i < context.Dates.Count; i++)
                 {
-                    <button class="btn btn-light p-2 m-2" onclick="@(() => Redirect(context.MovieId))">
+                    <button class="btn btn-light p-2 m-2" onclick="@(() => Redirect(context.ShowId))">
                         <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
                         @context.Dates[i].ToString("H:mm")
                     </button>
@@ -111,6 +107,7 @@
 
                 MovieWithDates movieWithDates = new MovieWithDates
                     {
+                        ShowId = show.Id,
                         MovieId = show.MovieId,
                         MovieTitle = show.MovieTitle,
                         Dates = group.Select(s => s.Date).Where(d => d.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).ToList()
@@ -125,11 +122,12 @@
         return Task.CompletedTask;
     }
 
-    void Redirect(int movieId) => NavManager.NavigateTo("/details/{movieId}");
+    void Redirect(int showId) => NavManager.NavigateTo("/tickets/" + showId);
 
 
     public class MovieWithDates
     {
+        public int ShowId { get; set; }
         public int MovieId { get; set; }
         public string? MovieTitle { get; set; }
         public List<DateTime>? Dates { get; set; }

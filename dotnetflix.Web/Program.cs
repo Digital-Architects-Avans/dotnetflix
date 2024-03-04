@@ -15,4 +15,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IShowService, ShowService>();
 
+builder.Services.AddFluentUIComponents();
+builder.Services.AddDataGridEntityFrameworkAdapter();
+
 await builder.Build().RunAsync();

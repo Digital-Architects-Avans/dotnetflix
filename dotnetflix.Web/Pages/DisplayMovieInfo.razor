@@ -8,11 +8,7 @@
     </FluentDialogHeader>
 
     <FluentDialogBody Style="padding: 20px;">
-    <FluentStack Orientation="Orientation.Vertical">
-            <FluentLabel Style="font-size: 20px;">Duur: @(Content.Runtime)min</FluentLabel>
-            <FluentLabel Style="font-size: 20px;">Samenvatting:</FluentLabel>
-            <FluentLabel Style="font-size: 20px;">@Content.Description</FluentLabel>
-        </FluentStack>
+        <MovieDetails Movie="Content" />
     </FluentDialogBody>
 
 
