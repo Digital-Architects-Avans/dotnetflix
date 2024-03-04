@@ -1,0 +1,28 @@
+﻿@implements IDialogContentComponent<MovieDto>
+
+    <FluentDialogHeader>
+        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+            <FluentIcon Value="@(new Icons.Regular.Size24.MoviesAndTv())" />
+            <FluentLabel Typo="Typography.PaneHeader">@Content.Title</FluentLabel>
+        </FluentStack>
+    </FluentDialogHeader>
+
+    <FluentDialogBody Style="padding: 20px;">
+        <MovieDetails Movie="Content" />
+    </FluentDialogBody>
+
+
+
+@code {
+    [Parameter]
+    public MovieDto Content { get; set; } = default;
+
+    [CascadingParameter]
+    public FluentDialog? Dialog { get; set; }
+
+    private async Task CancelAsync()
+    {
+        await Dialog.CancelAsync();
+    }
+
+}

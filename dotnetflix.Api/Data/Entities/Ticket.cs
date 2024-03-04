@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.Sockets;
 using System.Runtime.InteropServices.JavaScript;
 using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos;
