@@ -1,0 +1,8 @@
+.ticket-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ticket-details div {
+    flex: 1;
+}

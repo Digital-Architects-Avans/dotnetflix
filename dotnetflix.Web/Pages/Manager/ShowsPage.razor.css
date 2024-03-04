@@ -1,0 +1,14 @@
+.selected-show {
+    background-color: #007bff;
+    color: white;
+}
+
+.time-inputs .time-fields {
+    display: flex;
+    gap: 10px;
+}
+
+.time-inputs .time-field {
+    flex: 1 0 auto;
+    max-width: 30px;
+}

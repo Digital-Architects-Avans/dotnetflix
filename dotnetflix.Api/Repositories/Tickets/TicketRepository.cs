@@ -21,6 +21,14 @@ public class TicketRepository: ITicketRepository
         return tickets;
     }
     
+    public async Task<IEnumerable<Ticket>> GetTicketsForShow(int showId)
+    {
+        var tickets = await _dotNetFlixDbContext.Tickets
+            .Where(t => t.ShowId == showId)
+            .ToListAsync();
+        return tickets;
+    }
+    
     public async Task<Ticket?> GetTicket(int id)
     {
         var ticket = await _dotNetFlixDbContext.Tickets.SingleOrDefaultAsync(t => t.Id == id);

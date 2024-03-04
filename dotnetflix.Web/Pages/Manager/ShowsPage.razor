@@ -69,9 +69,21 @@
                     <label for="showDate">Show Date</label>
                     <InputDate id="showDate" class="form-control" @bind-Value="SelectedShow.Date"/>
                 </div>
+                
+                
+                <div class="form-group time-inputs">
+                    <label for="showTime">Show Time</label>
+                    <div class="time-fields">
+                        <InputNumber id="timeHour" step="1" max="23" min="8" class="form-control time-field" @bind-Value="@timeHour"></InputNumber> hours
+                        <InputNumber id="timeMinute" step="5" max="55" min="0" class="form-control time-field" @bind-Value="@timeMinute"></InputNumber> minutes
+                    </div>
+                </div>
+                
+                
+                
                 <div class="form-group">
                     <label for="basePrice">Base Price</label>
-                    <InputNumber id="basePrice" class="form-control" @bind-Value="SelectedShow.BasePrice" step="0.01"/>
+                    <InputNumber id="basePrice" class="form-control" @bind-Value="SelectedShow.BasePrice" step="0.10"/>
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </EditForm>
@@ -116,6 +128,16 @@
                     <label for="showDate">Show Date</label>
                     <InputDate id="showDate" class="form-control" @bind-Value="SelectedShow.Date"/>
                 </div>
+                
+                <div class="form-group time-inputs">
+                    <label for="showTime">Show Time</label>
+                    <div class="time-fields">
+                        <InputNumber id="timeHour" step="1" max="23" min="8" class="form-control time-field" @bind-Value="@timeHour"></InputNumber> hours :
+                        <InputNumber id="timeMinute" step="5" max="55" min="0" class="form-control time-field" @bind-Value="@timeMinute"></InputNumber> minutes
+                    </div>
+                </div>
+                
+                
                 <div class="form-group">
                     <label for="basePrice">Base Price</label>
                     <InputNumber id="basePrice" class="form-control" @bind-Value="SelectedShow.BasePrice" step="0.01"/>
@@ -134,6 +156,9 @@
     ShowDto SelectedShow = new ShowDto();
     UpdateShowDto EditShow = new UpdateShowDto();
     AddShowDto NewShow = new AddShowDto();
+    TimeSpan SelectedTime { get; set; }= DateTime.Now.TimeOfDay;
+    int timeHour = 0;
+    int timeMinute = 0;
     
     protected override async Task OnInitializedAsync()
     {
@@ -160,6 +185,9 @@
             ScreenTime = show.ScreenTime,
             Type = show.Type
         };
+        SelectedTime = SelectedShow.Date.TimeOfDay;
+        timeHour = SelectedShow.Date.Hour;
+        timeMinute = SelectedShow.Date.Minute;
     }
 
     private void SelectShow()
@@ -176,6 +204,9 @@
             ScreenTime = 120,
             Type = MovieType.Regular
         };
+        SelectedTime = SelectedShow.Date.TimeOfDay;
+        timeHour = 0;
+        timeMinute = 0;
     }
     
     private async Task NewShowSubmit()
@@ -188,11 +219,12 @@
         
         if ( SelectedShow.MovieId > 0 && SelectedShow.TheaterId > 0 )
         {
+            SelectedTime = new TimeSpan(timeHour, timeMinute, 0);
             NewShow = new AddShowDto
             {
                 MovieId = SelectedShow.MovieId,
                 TheaterId = SelectedShow.TheaterId,
-                Date = SelectedShow.Date,
+                Date = SelectedShow.Date.Date+SelectedTime,
                 BasePrice = SelectedShow.BasePrice,
                 ScreenTime = SelectedShow.ScreenTime,
                 Type = SelectedShow.Type
@@ -202,6 +234,25 @@
         {
             // Handle error here, e.g., show an error message
             return;
+        }
+        
+        // get all shows in the same theater
+        var theaterShows = Shows.Where(s => s.TheaterId == NewShow.TheaterId ).ToList();
+
+        // Check if there are time conflicts
+        foreach (var show in theaterShows)
+        {
+            var showEndTime = show.Date.AddMinutes(show.ScreenTime);
+            if (NewShow.Date >= show.Date && NewShow.Date < showEndTime)
+            {
+                throw new InvalidOperationException("The show times overlap with another show.");
+
+            }
+            if (NewShow.Date.AddMinutes(NewShow.ScreenTime) > show.Date && NewShow.Date.AddMinutes(NewShow.ScreenTime) <= showEndTime)
+            {
+                throw new InvalidOperationException("The show times overlap with another show.");
+
+            }
         }
         
         var response = await Http.PostAsJsonAsync("api/show", NewShow);
@@ -231,11 +282,12 @@
         
         if ( SelectedShow.MovieId > 0 && SelectedShow.TheaterId > 0 )
         {
+            SelectedTime = new TimeSpan(timeHour, timeMinute, 0);
             EditShow = new UpdateShowDto
             {
                 MovieId = SelectedShow.MovieId,
                 TheaterId = SelectedShow.TheaterId,
-                Date = SelectedShow.Date,
+                Date = SelectedShow.Date.Date+SelectedTime,
                 BasePrice = SelectedShow.BasePrice,
                 ScreenTime = SelectedShow.ScreenTime,
                 Type = SelectedShow.Type
@@ -245,6 +297,31 @@
         {
             // Handle error here, e.g., show an error message
             return;
+        }
+        
+        // get all shows in the same theater
+        var theaterShows = Shows.Where(s => s.TheaterId == EditShow.TheaterId ).ToList();
+
+        // Check if there are time conflicts
+        foreach (var show in theaterShows)
+        {
+            // If the show is the same as the one we're updating, skip this iteration
+            if (show.Id == SelectedShow.Id)
+            {
+                continue;
+            }
+            
+            var showEndTime = show.Date.AddMinutes(show.ScreenTime);
+            if (EditShow.Date > show.Date && EditShow.Date < showEndTime)
+            {
+                throw new InvalidOperationException("The show times overlap with another show.");
+
+            }
+            if (EditShow.Date.AddMinutes(EditShow.ScreenTime) > show.Date && EditShow.Date.AddMinutes(EditShow.ScreenTime) <= showEndTime)
+            {
+                throw new InvalidOperationException("The show times overlap with another show.");
+
+            }
         }
         
         var response = await Http.PutAsJsonAsync($"api/show/{SelectedShow.Id}", EditShow);
@@ -284,9 +361,3 @@
     
 }
 
-<style>
-    .selected-show {
-            background-color: #007bff;
-            color: white;
-        }
-</style>
