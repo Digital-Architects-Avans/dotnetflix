@@ -103,6 +103,12 @@
             if (OrderService != null)
             {
                 Order = await OrderService.GetOrder(OrderCode);
+
+                if (Order == null)
+                {
+                    Status = PageState.OrderNotFound;
+                    return;
+                }
             }
 
             // Get tickets details

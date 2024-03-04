@@ -22,13 +22,28 @@ public class OrderService : IOrderService
     {
         try
         {
-            var order = await this._httpClient.GetFromJsonAsync<OrderDto>($"api/Order/{id}");
-            return order ?? new OrderDto();
+            var response = await _httpClient.GetAsync($"api/Order/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    return default(OrderDto);
+                }
+
+                return await response.Content.ReadFromJsonAsync<OrderDto>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception(message);
+            }
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // Log Exception
+            Console.WriteLine($"An error occurred: {e.Message}");
+            return null;
         }
     }
 }
