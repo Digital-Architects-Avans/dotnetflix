@@ -24,7 +24,6 @@
     case PageState.CodeFound:
 
         <p>Getting your tickets... <a href="/overview" @onclick="ResetPage">Try again</a></p>
-        
 
         break;
     case PageState.EnterCode:
@@ -44,12 +43,14 @@
     case PageState.OrderFound:
 
         <p>Tickets for order #@OrderCode.</p>
-        @foreach ( var ticket in Tickets)
+
+        <MovieDetails Movie="Movie"/>
+
+        @foreach (var ticket in Tickets)
         {
-            <TicketDetail Ticket="ticket" Movie="Movie" Show="Show" />
+            <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>
         }
-        <MovieDetails  Movie="Movie" />
-        
+
         break;
     case PageState.OrderNotFound:
 
@@ -72,10 +73,10 @@
     // private List<TicketDto> Tickets { get; set; } = new List<TicketDto>();
     private ShowDto Show { get; set; } = new ShowDto();
     private MovieDto Movie { get; set; } = new MovieDto();
-    
+
     private List<TicketDto> Tickets { get; set; } = new List<TicketDto>();
     private OrderDto Order { get; set; } = new OrderDto();
-    
+
     private PageState Status { get; set; }
     [Parameter] public string? OrderCode { get; set; }
     private string _orderCode = "";
@@ -113,9 +114,8 @@
 
             // 3) Get movie details from the API with MovieId
             Movie = await MovieService.GetMovie(Show.MovieId);
-            
-            Status = PageState.OrderFound;
 
+            Status = PageState.OrderFound;
         }
         else
         {
@@ -140,12 +140,14 @@
     private async Task<ShowDto> GetShowDetails(int i)
     {
         var show = new ShowDto();
-        
+
         if (ShowService != null)
         {
             var shows = await ShowService.GetShows();
             if (shows != null) show = shows.FirstOrDefault(showDto => showDto.Id == i);
         }
+
         return show ?? new ShowDto();
     }
+
 }
