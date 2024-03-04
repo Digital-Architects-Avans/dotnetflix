@@ -6,7 +6,6 @@
 @using dotnetflix.Models.Dtos.Order
 @using dotnetflix.Models.Dtos.Show
 @using dotnetflix.Web.Components
-@inject HttpClient Http
 
 @using dotnetflix.Models.Dtos
 
@@ -64,7 +63,7 @@
 
     // 1) Set properties te facilitate dependency injection
     [Inject] public IOrderService? OrderService { get; set; }
-    // [Inject] public ITicketService? TicketService { get; set; }
+    [Inject] public ITicketService? TicketService { get; set; }
     [Inject] public IShowService? ShowService { get; set; }
     [Inject] public IMovieService? MovieService { get; set; }
 
@@ -100,20 +99,30 @@
         {
             Status = PageState.CodeFound;
 
-            // 1) Get order details from the API with OrderCode
+            // 1) Get order details
             if (OrderService != null)
             {
                 Order = await OrderService.GetOrder(OrderCode);
             }
 
-            // Optional: Get tickets details from the API with OrderId
-            Tickets = await Http.GetFromJsonAsync<List<TicketDto>>("api/ticket");
+            // Get tickets details
+            if (TicketService != null)
+            {
+                var tickets = await TicketService.GetTickets();
+                if (tickets != null) Tickets = tickets.Where(ticketDto => Order.TicketIds.Contains(ticketDto.Id)).ToList();
+            }
 
-            // 2) Get show details from the API with ShowId
-            Show = await ShowService.GetShow(Tickets[0].ShowId);
+            // Get show details
+            if (ShowService != null)
+            {
+                Show = await ShowService.GetShow(Tickets[0].ShowId);
+            }
 
-            // 3) Get movie details from the API with MovieId
-            Movie = await MovieService.GetMovie(Show.MovieId);
+            // Get movie details 
+            if (MovieService != null)
+            {
+                Movie = await MovieService.GetMovie(Show.MovieId);
+            }
 
             Status = PageState.OrderFound;
         }
