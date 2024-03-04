@@ -12,7 +12,7 @@
 <div class="container">
     <div class="row">
         <!-- Ticket selection form column -->
-        <div class="col-md-8">
+        <div class="col-md-6">
             @if (TicketTypes != null && OrderRequest.TicketOrders.Any())
             {
                 <EditForm Model="@OrderRequest" OnValidSubmit="SummariseOrder">
@@ -22,15 +22,15 @@
                         if (ticketType != null)
                         {
                             var finalPrice = SelectedShow.BasePrice - ticketType.Discount;
-                            
+
                             if (SelectedShow.Type == MovieType.ThreeD)
                             {
                                 finalPrice += 2.5m;
                             }
-                            
+
                             <div class="form-group">
                                 <label>@ticketType.Name - Price: @finalPrice.ToString("C")</label>
-                                <InputNumber @bind-Value="ticketOrder.Quantity" min="0" class="form-control" />
+                                <InputNumber @bind-Value="ticketOrder.Quantity" min="0" class="form-control"/>
                             </div>
                         }
                     }
@@ -42,12 +42,12 @@
                 <p>Loading ticket options...</p>
             }
         </div>
-        
+
         <!-- Movie details column -->
-        <div class="col-md-4">
+        <div class="col-md-6">
             @if (Movie != null)
             {
-                <MovieDetails Movie="Movie"/>
+                <MovieDetails Movie="Movie" Show="SelectedShow"/>
             }
         </div>
     </div>
@@ -76,14 +76,14 @@
 
             InitializeOrderRequest();
         }
-        
+
         // Subscribe to the OrderStateService's OnOrderUpdated event
         if (OrderStateService != null)
         {
             OrderStateService.OnOrderUpdated += OnOrderStateChanged;
         }
     }
-    
+
     private void OnOrderStateChanged()
     {
         StateHasChanged();
@@ -100,7 +100,7 @@
             TheaterId = SelectedShow.TheaterId,
             TheaterName = SelectedShow.TheaterName,
             ShowTime = SelectedShow.Date,
-            TicketTypeId = tt.Id, 
+            TicketTypeId = tt.Id,
             Quantity = 0,
             FinalPrice = 0
         }).ToList();
@@ -115,12 +115,12 @@
             {
                 // Calculate the final price per ticket with the discount applied
                 var finalPricePerTicket = SelectedShow.BasePrice - ticketType.Discount;
-                
+
                 if (SelectedShow.Type == MovieType.ThreeD)
                 {
                     finalPricePerTicket += 2.5m;
                 }
-                
+
                 ticketOrder.FinalPrice = finalPricePerTicket;
 
                 // Update the FinalPrice in the TicketOrderDto to reflect the total price for the quantity selected
@@ -135,7 +135,7 @@
         // Navigate to the Checkout page
         NavigationManager.NavigateTo("/Checkout");
     }
-    
+
     public void Dispose()
     {
         if (OrderStateService != null)
@@ -143,4 +143,5 @@
             OrderStateService.OnOrderUpdated -= OnOrderStateChanged;
         }
     }
+
 }
