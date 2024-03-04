@@ -11,6 +11,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="8.0.2" />
     <PackageReference Include="Microsoft.NET.Sdk.WebAssembly.Pack" Version="8.0.2" />
+    <PackageReference Include="Select.HtmlToPdf" Version="23.2.0" />
+    <PackageReference Include="Select.Pdf" Version="23.2.0" />
+    <PackageReference Include="Select.Pdf.NetCore" Version="23.2.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,153 @@
+@page "/overview"
+@page "/overview/{OrderCode:int}"
+
+@using dotnetflix.Web.Services.Contracts
+@using dotnetflix.Models.Dtos.Movie
+@using dotnetflix.Models.Dtos.Order
+@using dotnetflix.Models.Dtos.Show
+@using dotnetflix.Web.Components
+
+@using dotnetflix.Models.Dtos
+
+@inject NavigationManager NavigationManager
+
+<h1>Collect your tickets</h1>
+
+@switch (Status)
+{
+    case PageState.Loading:
+
+        <p>Loading...</p>
+
+        break;
+    case PageState.CodeFound:
+
+        <p>Getting your tickets... <a href="/overview" @onclick="ResetPage">Try again</a></p>
+
+        break;
+    case PageState.EnterCode:
+
+        // Show form to enter order code
+        <label for="orderCode" class="form-label">Your order number</label>
+        <input @bind="_orderCode"
+               id="orderCode"
+               type="number"
+               class="form-control"
+               placeholder=""
+               style="max-width: 128px"/>
+        <button type="button" class="btn btn-primary mt-2" @onclick="CollectTicketsClicked">Collect tickets</button>
+
+        break;
+    case PageState.OrderFound:
+
+        <p>Tickets for order #@OrderCode.</p>
+
+        <MovieDetails Movie="Movie"/>
+
+        @foreach (var ticket in Tickets)
+        {
+            <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>
+        }
+
+        break;
+    case PageState.OrderNotFound:
+
+        <p>No order found with #@OrderCode. <a href="/overview" @onclick="ResetPage">Try again</a></p>
+        break;
+    default:
+        throw new ArgumentOutOfRangeException();
+}
+
+@code {
+
+    // 1) Set properties te facilitate dependency injection
+    [Inject] public IOrderService? OrderService { get; set; }
+    [Inject] public ITicketService? TicketService { get; set; }
+    [Inject] public IShowService? ShowService { get; set; }
+    [Inject] public IMovieService? MovieService { get; set; }
+
+    // 2) Public properties to expose to the view
+    private OrderDto Order { get; set; } = new OrderDto();
+    private List<TicketDto> Tickets { get; set; } = new List<TicketDto>();
+    private ShowDto Show { get; set; } = new ShowDto();
+    private MovieDto Movie { get; set; } = new MovieDto();
+
+    private PageState Status { get; set; }
+    [Parameter] public int OrderCode { get; set; }
+    private string _orderCode = "";
+
+    private enum PageState
+    {
+        Loading,
+        CodeFound,
+        EnterCode,
+        OrderFound,
+        OrderNotFound
+    }
+
+    // 3) Method to be called when the component is initialized
+    protected override Task OnInitializedAsync()
+    {
+        Status = PageState.Loading;
+        return Task.CompletedTask;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (OrderCode != 0)
+        {
+            Status = PageState.CodeFound;
+
+            // 1) Get order details
+            if (OrderService != null)
+            {
+                Order = await OrderService.GetOrder(OrderCode);
+
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+                if (Order == null)
+                {
+                    Status = PageState.OrderNotFound;
+                    return;
+                }
+            }
+
+            // Get tickets details
+            if (TicketService != null)
+            {
+                var tickets = await TicketService.GetTickets();
+                if (tickets != null) Tickets = tickets.Where(ticketDto => Order.TicketIds.Contains(ticketDto.Id)).ToList();
+            }
+
+            // Get show details
+            if (ShowService != null)
+            {
+                Show = await ShowService.GetShow(Tickets[0].ShowId)!;
+            }
+
+            // Get movie details 
+            if (MovieService != null)
+            {
+                Movie = await MovieService.GetMovie(Show.MovieId);
+            }
+
+            Status = PageState.OrderFound;
+        }
+        else
+        {
+            Status = PageState.EnterCode;
+        }
+    }
+
+    // 4) Methods UI events
+    private void CollectTicketsClicked()
+    {
+        NavigationManager.NavigateTo($"/overview/{_orderCode}");
+    }
+
+    private void ResetPage()
+    {
+        _orderCode = "";
+        NavigationManager.NavigateTo("/overview");
+    }
+
+}

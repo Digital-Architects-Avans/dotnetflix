@@ -11,11 +11,11 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7100/") });
 
 // Register services
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IShowService, ShowService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderStateService, OrderStateService>();
-
 
 await builder.Build().RunAsync();
