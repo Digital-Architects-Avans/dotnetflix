@@ -24,7 +24,7 @@ else
                 <dt class="col-xl-3 col-sm-4">Seat:</dt>
                 <dd class="col-xl-9 col-sm-8">Row @Ticket.RowNumber, Seat @Ticket.SeatNumber</dd>
                 <dt class="col-xl-3 col-sm-4">Ticket Type:</dt>
-                <dd class="col-xl-9 col-sm-8">@Ticket.TicketTypeId</dd>
+                <dd class="col-xl-9 col-sm-8">@TicketType</dd>
                 <dt class="col-xl-3 col-sm-4">Price:</dt>
                 <dd class="col-xl-9 col-sm-8">@Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</dd>
             </dl>
@@ -35,36 +35,43 @@ else
 
 @code {
 
+    // Set properties te facilitate dependency injection
+    [Inject] public ITicketService? TicketService { get; set; }
+
     // Parameter to be passed to the component
     [Parameter] public TicketDto Ticket { get; set; } = new TicketDto();
-
     [Parameter] public MovieDto Movie { get; set; } = new MovieDto();
 
     // Parameter to be passed to the component
     [Parameter] public ShowDto Show { get; set; } = new ShowDto();
     [Parameter] public string StartTime { get; set; } = "00:00";
     [Parameter] public string EndTime { get; set; } = "00:00";
+    [Parameter] public string? TicketType { get; set; } = "Test";
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         // Convert date to time in 24-hour format
         StartTime = Show.Date.ToString("HH:mm");
         // Get end time by adding screen time to start time
         EndTime = Show.Date.AddMinutes(Show.ScreenTime).ToString("HH:mm");
-        return Task.CompletedTask;
+
+        // Get ticket type
+        if (TicketService != null)
+        {
+            var ticketTypes = await TicketService.GetTicketTypes();
+            TicketType = ticketTypes.FirstOrDefault(t => t.Id == Ticket.TicketTypeId)?.Name;
+        }
     }
 
     private async Task PrintTicket()
     {
         var jsPdf = await JsRuntime.InvokeAsync<IJSObjectReference>("eval", "new window.jsPDF()");
-
         await jsPdf.InvokeVoidAsync("text", $"Ticket for {Movie.Title} at {Show.Date}", 10, 10);
         await jsPdf.InvokeVoidAsync("text", $"Theater: {Ticket.TheaterName} - {Show.Type}", 10, 20);
         await jsPdf.InvokeVoidAsync("text", $"Show Time: {Ticket.ShowTime}", 10, 30);
         await jsPdf.InvokeVoidAsync("text", $"Seat: Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}", 10, 40);
         await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {Ticket.TicketTypeId}", 10, 50);
         await jsPdf.InvokeVoidAsync("text", $"Price: {Ticket.TicketPrice}", 10, 60);
-
         await jsPdf.InvokeVoidAsync("save", "ticket.pdf");
     }
 
