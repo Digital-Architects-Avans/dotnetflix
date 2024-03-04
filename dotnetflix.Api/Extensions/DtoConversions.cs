@@ -1,7 +1,9 @@
 using dotnetflix.Api.Data.Entities;
+using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Order;
+using dotnetflix.Models.Dtos.Seat;
 using dotnetflix.Models.Dtos.Show;
 using dotnetflix.Models.Dtos.Theater;
 using dotnetflix.Models.Dtos.TheaterRow;
@@ -44,6 +46,11 @@ public static class DtoConversions
 	public static IEnumerable<TicketTypeDto> ConvertToDto(this IEnumerable<TicketType> ticketTypes)
 	{
 		return ticketTypes.Select(ticketType => ticketType.ConvertToDto()).ToList();
+	}
+	
+	public static IEnumerable<SeatDto> ConvertToDto(this IEnumerable<Seat> seats)
+	{
+		return seats.Select(seat => seat.ConvertToDto()).ToList();
 	}
 	
 	public static MovieDto ConvertToDto(this Movie movie)
@@ -133,6 +140,16 @@ public static class DtoConversions
 		    Id = ticketType.Id,
 		    Name = ticketType.Name,
 		    Discount = ticketType.Discount
+	    };
+    }
+    
+    public static SeatDto ConvertToDto(this Seat seat)
+    {
+	    return new SeatDto
+	    {
+		    Id = seat.Id,
+		    TheaterRowId = seat.TheaterRowId,
+		    SeatNumber = seat.SeatNumber
 	    };
     }
 }
