@@ -56,6 +56,29 @@ public class TheaterRowController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+    
+    [HttpGet("Theater/{theaterId:int}")]
+    public async Task<ActionResult<TheaterRowDto>> GetTheaterRowsForTheater(int theaterId)
+    {
+        try
+        {
+            var theaterRow = await _theaterRowRepository.GetTheaterRow(theaterId);
+
+            if (theaterRow == null)
+            {
+                return NotFound();
+            }
+
+            var theaterRowDto = theaterRow.ConvertToDto();
+
+            return Ok(theaterRowDto);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing request for GetTheaterRowsForTheater with ID: {theaterId}", theaterId);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
 
     [HttpPost]
     public async Task<ActionResult<TheaterRowDto>> AddTheater(AddTheaterRowDto addTheaterRowDto)
