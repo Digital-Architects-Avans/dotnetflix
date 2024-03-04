@@ -5,4 +5,5 @@ namespace dotnetflix.Web.Services.Contracts;
 public interface IOrderService
 {
 	Task<IEnumerable<OrderDto>> GetItems();
+	Task<OrderDto> GetOrder(int id);
 }
