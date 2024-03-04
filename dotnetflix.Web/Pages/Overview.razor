@@ -103,7 +103,7 @@
             Status = PageState.CodeFound;
 
             // 1) Get order details from the API with OrderCode
-            Order =  await Http.GetFromJsonAsync<OrderDto>($"api/order/{_orderCode}");
+            Order = await Http.GetFromJsonAsync<OrderDto>($"api/order/{OrderCode}");
 
             // Optional: Get tickets details from the API with OrderId
             Tickets = await Http.GetFromJsonAsync<List<TicketDto>>("api/ticket");
