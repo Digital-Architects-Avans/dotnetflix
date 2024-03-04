@@ -150,19 +150,4 @@
         NavigationManager.NavigateTo("/overview");
     }
 
-    // 5) Methods to get data from the API
-
-    private async Task<ShowDto> GetShowDetails(int i)
-    {
-        var show = new ShowDto();
-
-        if (ShowService != null)
-        {
-            var shows = await ShowService.GetShows();
-            if (shows != null) show = shows.FirstOrDefault(showDto => showDto.Id == i);
-        }
-
-        return show ?? new ShowDto();
-    }
-
 }
