@@ -161,9 +161,10 @@
         var paymentSuccess = await OrderService.VerifyPaymentSuccess(orderId);
         if (paymentSuccess)
         {
-            await OrderService.CreateOrder(OrderRequest);
+            var newOrder = await OrderService.CreateOrder(OrderRequest);
+            var newOrderId = newOrder.Id;
 
-            NavigationManager.NavigateTo($"/overview/{orderId}");
+            NavigationManager.NavigateTo($"/overview/{newOrderId}");
             // Todo: Show order with Ticket Details such as seats on a summary page
         }
         else
