@@ -20,6 +20,14 @@ public class TheaterRowRepository : ITheaterRowRepository
         var theaterRows = await _dotNetFlixDbContext.TheaterRows.ToListAsync();
         return theaterRows;
     }
+    
+    public async Task<IEnumerable<TheaterRow>> GetTheaterRowsForTheater(int theaterId)
+    {
+        var theaterRows = await _dotNetFlixDbContext.TheaterRows
+            .Where(t => t.TheaterId == theaterId)
+            .ToListAsync();
+        return theaterRows;
+    }
 
     public async Task<TheaterRow?> GetTheaterRow(int id)
     {
