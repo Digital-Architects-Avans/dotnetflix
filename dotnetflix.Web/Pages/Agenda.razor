@@ -6,7 +6,8 @@
 @if (Shows == null)
 {
     <h3>Loading shows..</h3>
-} else
+}
+else
 {
     DateTime today = DateTime.Now;
     <h3>Agenda</h3>
@@ -24,26 +25,27 @@
 
     // Show grid
     <FluentDataGrid Virtualize="true" ItemSize="54" GridTemplateColumns="1fr 1fr 2fr" Items="@MoviesWithDates.AsQueryable()">
-            
-            @* Title Column *@
-            <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)" ></PropertyColumn>
 
-            @* Movie info Column *@
-            <TemplateColumn>
-                <FluentButton IconStart="@(new Icons.Regular.Size16.Info())" Appearance="Appearance.Accent" style="width: 30px; height: 30px;" OnClick="@(() => GetMovieDetails(context.MovieId))">
-                </FluentButton>
-            </TemplateColumn>
+        @* Title Column *@
+        <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)"></PropertyColumn>
 
-            @* Dates Column *@
-            <TemplateColumn Title="">
-                @for (int i = 0; i < context.Dates.Count; i++)
-                {
-                    <button class="btn btn-light p-2 m-2" onclick="@(() => Redirect(context.ShowId))">
-                        <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
-                        @context.Dates[i].ToString("H:mm")
-                    </button>
-                }
-            </TemplateColumn>
+        @* Movie info Column *@
+        <TemplateColumn>
+            <FluentButton IconStart="@(new Icons.Regular.Size16.Info())" Appearance="Appearance.Accent" style="width: 30px; height: 30px;" OnClick="@(() => GetMovieDetails(context.MovieId))">
+            </FluentButton>
+        </TemplateColumn>
+
+        @* Dates Column *@
+        <TemplateColumn Title="">
+            @for (int i = 0; i < context.ShowIds.Count; i++)
+            {
+                int id = context.ShowIds[i];
+                <button id="@id" class="btn btn-light p-2 m-2" onclick="@(() => Redirect(id))">
+                    <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
+                    @context.Dates[i].ToString("H:mm")
+                </button>
+            }
+        </TemplateColumn>
     </FluentDataGrid>
 }
 
@@ -67,14 +69,14 @@
     private async Task OpenDialogAsync(MovieDto movie)
     {
         DialogParameters parameters = new()
-        {
-            PrimaryAction = "Close",
-            PrimaryActionEnabled = true,
-            SecondaryAction = null,
-            Width = "500px",
-            PreventScroll = true,
-            ShowDismiss = false,
-        };
+            {
+                PrimaryAction = "Close",
+                PrimaryActionEnabled = true,
+                SecondaryAction = null,
+                Width = "500px",
+                PreventScroll = true,
+                ShowDismiss = false,
+            };
 
         IDialogReference dialog = await DialogService.ShowDialogAsync<DisplayMovieInfo>(movie, parameters);
         DialogResult? result = await dialog.Result;
@@ -101,21 +103,22 @@
 
             var moviesWithDatesList = new List<MovieWithDates>();
 
+            var count = 0;
             foreach (var group in groupedShows)
             {
                 ShowDto show = group.First();
 
                 MovieWithDates movieWithDates = new MovieWithDates
                     {
-                        ShowId = show.Id,
+                        ShowIds = group.Where(d => d.Date.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).Select(s => s.Id).ToList(),
                         MovieId = show.MovieId,
                         MovieTitle = show.MovieTitle,
-                        Dates = group.Select(s => s.Date).Where(d => d.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).ToList()
+                        Dates = group.Where(d => d.Date.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).Select(s => s.Date).ToList()
                     };
 
                 moviesWithDatesList.Add(movieWithDates);
+                count++;
             }
-
             MoviesWithDates = moviesWithDatesList.AsQueryable();
         }
         StateHasChanged();
@@ -124,12 +127,11 @@
 
     void Redirect(int showId) => NavManager.NavigateTo("/tickets/" + showId);
 
-
     public class MovieWithDates
     {
-        public int ShowId { get; set; }
         public int MovieId { get; set; }
         public string? MovieTitle { get; set; }
         public List<DateTime>? Dates { get; set; }
+        public List<int>? ShowIds { get; set; }
     }
 }
