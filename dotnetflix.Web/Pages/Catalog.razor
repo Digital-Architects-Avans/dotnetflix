@@ -2,10 +2,53 @@
 @page "/catalog"
 <h3>Catalog</h3>
 
-<input type="text" @bind="SearchTerm" @bind:event="oninput" placeholder="Search..." />
+
+<div class="filter-section">
+    <h4>Looking for a specific movie?</h4>
+    <hr/>
+
+    <div style="display: flex; gap: 60px;">
+        <div>
+            <h5>Search</h5>
+            <input type="text" @bind="SearchTerm" @bind:event="oninput" placeholder="Search..."/>
+
+
+        </div>
+        
+        <div class="year-filter">
+            <h5>Year</h5>
+            <select @bind="StartYear">
+                @for (int year = 2000; year <= DateTime.Now.Year; year++)
+                {
+                    <option value="@year">@year</option>
+                }
+            </select> -
+            <select @bind="EndYear">
+                @for (int year = 2000; year <= DateTime.Now.Year; year++)
+                {
+                    <option value="@year">@year</option>
+                }
+            </select>
+        </div>
+        
+        <div class="rating-filter">
+            <h5>Rating</h5>
+            @foreach (Rating rating in Enum.GetValues(typeof(Rating)))
+            {
+                <div>
+                    <input type="checkbox" value="@rating" @onchange="((e) => UpdateSelectedRatings(rating, (bool)e.Value))" /> @rating - @RatingDescriptions[rating]
+                </div>
+            }
+        </div>
+        
+    </div>
+</div>
+
+    <hr/>
+
 
 <div class="movies-container">
-    @foreach (var movie in Movies.Where(m => m.Title.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)))
+    @foreach (var movie in Movies.Where(m => m.Title.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) && SelectedRatings.Contains(m.Rating) && m.Year >= StartYear && m.Year <= EndYear))
     {
         <div class="col-md-4">
             <img src="/images/@movie.Image" class="img-fluid rounded" alt="..." style="max-height: 250px;">
@@ -17,11 +60,59 @@
 @code {
     List<MovieDto> Movies = new List<MovieDto>();
     string SearchTerm = string.Empty;
+    List<Rating> SelectedRatings = new List<Rating>();
+    int _startYear = 2001;
+    int StartYear
+    {
+        get => _startYear;
+        set
+        {
+            _startYear = value;
+            if (_startYear > EndYear)
+            {
+                EndYear = _startYear;
+            }
+        }
+    }
 
-    
+    int _endYear = DateTime.Now.Year;
+    int EndYear
+    {
+        get => _endYear;
+        set
+        {
+            _endYear = value;
+            if (_endYear < StartYear)
+            {
+                StartYear = _endYear;
+            }
+        }
+    }
+    Dictionary<Rating, string> RatingDescriptions = new Dictionary<Rating, string>
+    {
+        { Rating.G, "All ages" },
+        { Rating.PG, "Parental guidance suggested" },
+        { Rating.PG13, "Inappropriate for ages under 13" },
+        { Rating.R, "Adult material" },
+        { Rating.NC17, "17+ only" },
+        { Rating.NA, "Not Available" }
+    };
+
     protected override async Task OnInitializedAsync()
     {
         Movies = await Http.GetFromJsonAsync<List<MovieDto>>("api/movie");
+        
     }
     
+    void UpdateSelectedRatings(Rating rating, bool isChecked)
+    {
+        if (isChecked && !SelectedRatings.Contains(rating))
+        {
+            SelectedRatings.Add(rating);
+        }
+        else if (!isChecked && SelectedRatings.Contains(rating))
+        {
+            SelectedRatings.Remove(rating);
+        }
+    }
 }
