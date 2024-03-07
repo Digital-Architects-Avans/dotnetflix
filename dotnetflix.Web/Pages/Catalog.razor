@@ -49,18 +49,23 @@
 <div class="movies-container">
     @foreach (var movie in Movies.Where(m => m.Title.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) && SelectedRatings.Contains(m.Rating) && m.Year >= StartYear && m.Year <= EndYear))
     {
-        <div class="col-md-3 d-flex">
-            <img src="/images/@movie.Image" class="img-fluid rounded" alt="..." style="max-height: 250px; margin-right: 10px;">
-            <div style="flex: 1;">
-                @if (Shows.Any(s => s.MovieId == movie.Id))
-                {
-                    var firstShowToday = Shows.Where(s => s.MovieId == movie.Id).OrderBy(s => s.Date).First();
-                    <ShowTime Show="@firstShowToday" />
-                }
-                else
-                {
-                    <p>No available scheduling today</p>
-                }
+        <div class="col-md-3 movie-item">
+            <div class="movie-showtime-container">
+
+                <img src="/images/@movie.Image" class="img-fluid rounded" alt="..." style="max-height: 200px; margin-right: 10px;">
+                <div style="flex: 1;">
+                    @if (Shows.Any(s => s.MovieId == movie.Id))
+                    {
+                        var firstShowToday = Shows.Where(s => s.MovieId == movie.Id).OrderBy(s => s.Date).First();
+                        <ShowTime Show="@firstShowToday"/>
+                    }
+                    else
+                    {
+                        <div class="card">
+                            <p>No available scheduling today</p>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     }
