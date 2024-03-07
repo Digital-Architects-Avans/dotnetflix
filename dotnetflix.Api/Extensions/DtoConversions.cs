@@ -63,6 +63,7 @@ public static class DtoConversions
             Description = movie.Description,
             Rating = movie.Rating,
             Runtime = movie.Runtime,
+            SpokenLanguages = movie.SpokenLanguages,
             Image = movie.Image
         };
     }
