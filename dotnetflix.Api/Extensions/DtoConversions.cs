@@ -80,6 +80,7 @@ public static class DtoConversions
             Date = show.Date,
             ScreenTime = show.ScreenTime,
             Type = show.Type,
+            SneakPreview = show.SneakPreview,
             BasePrice = show.BasePrice,
             TicketIds = show.Tickets.Select(t => t.Id).ToList()
         };
