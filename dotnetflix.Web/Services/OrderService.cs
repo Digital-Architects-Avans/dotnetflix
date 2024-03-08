@@ -85,7 +85,7 @@ public class OrderService : IOrderService
         var addOrderDto = new AddOrderDto
         {
             TicketIds = tickets.Select(t => t.Id).ToList(),
-             UUID= orderCode,
+             Uuid= orderCode,
              CustomerEmail = orderRequest.CustomerEmail,
              CustomerName = orderRequest.CustomerName
         };

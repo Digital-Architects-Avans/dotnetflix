@@ -180,9 +180,9 @@
         {
             var newOrder = await OrderService.CreateOrder(OrderRequest);
             var newOrderId = newOrder.Id;
-            var newOrderUUID = newOrder.UUID;
+            var newOrderUuid = newOrder.Uuid;
 
-            SendEmail(newOrderUUID);
+            await SendEmail(newOrderUuid);
             
             NavigationManager.NavigateTo($"/overview/{newOrderId}");
             // Todo: Show order with Ticket Details such as seats on a summary page
