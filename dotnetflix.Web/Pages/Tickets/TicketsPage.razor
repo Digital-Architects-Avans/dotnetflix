@@ -8,7 +8,7 @@
 @using dotnetflix.Web.Components
 @implements IDisposable
 
-<h3>Order Tickets for @SelectedShow?.MovieTitle</h3>
+<h3>Order Tickets for @MovieTitle</h3>
 <div class="container">
     <div class="row">
         <!-- Ticket selection form column -->
@@ -75,6 +75,7 @@
     public MovieDto Movie { get; set; }
     public IEnumerable<TicketTypeDto> TicketTypes { get; set; }
     public OrderRequestDto OrderRequest { get; set; } = new OrderRequestDto();
+    public string? MovieTitle => SelectedShow?.SneakPreview == true ? "Sneak preview" : SelectedShow?.MovieTitle;
     public bool ChildDiscountAvailable { get; set; }
 
     protected override async Task OnInitializedAsync()
