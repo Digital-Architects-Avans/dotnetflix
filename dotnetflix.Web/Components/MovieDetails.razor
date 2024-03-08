@@ -54,7 +54,7 @@
         if (Show != null)
         {
             // Set sneak preview property
-            IsSneakPreview = true;
+            IsSneakPreview = Show.SneakPreview;
             // Convert date to time in 24-hour format
             StartTime = Show.Date.ToString("HH:mm");
             // Get end time by adding screen time to start time
