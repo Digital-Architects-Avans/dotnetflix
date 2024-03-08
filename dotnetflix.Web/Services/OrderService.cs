@@ -62,11 +62,17 @@ public class OrderService : IOrderService
     {
         // Use TicketService to generate tickets and get their IDs
         var tickets = await _ticketService.GenerateTickets(orderRequest).ConfigureAwait(false);
+        
+        // Generate a random 6 character code
+        string orderCode = Path.GetRandomFileName().Replace(".", "").Substring(0, 6);
 
         // Prepare the data to be sent in the request
         var addOrderDto = new AddOrderDto
         {
-            TicketIds = tickets.Select(t => t.Id).ToList() 
+            TicketIds = tickets.Select(t => t.Id).ToList(),
+             UUID= orderCode,
+             CustomerEmail = orderRequest.CustomerEmail,
+             CustomerName = orderRequest.CustomerName
         };
 
         // Attempt to save the order in the database

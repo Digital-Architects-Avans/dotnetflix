@@ -90,7 +90,17 @@
     </div>
 </div>
 
-<button @onclick="SendEmail">Send Email</button>
+<div class="row">
+    <div class="col-md-6">
+        <label for="customerName" class="form-label">Name</label>
+        <input type="text" class="form-control" id="customerName" @bind="OrderRequest.CustomerName" />
+    </div>
+    <div class="col-md-6">
+        <label for="customerEmail" class="form-label">Email</label>
+        <input type="email" class="form-control" id="customerEmail" @bind="OrderRequest.CustomerEmail" />
+    </div>
+</div>
+
 
 @code {
 
@@ -171,6 +181,8 @@
             var newOrder = await OrderService.CreateOrder(OrderRequest);
             var newOrderId = newOrder.Id;
 
+            SendEmail(newOrder.UUID);
+            
             NavigationManager.NavigateTo($"/overview/{newOrderId}");
             // Todo: Show order with Ticket Details such as seats on a summary page
         }
@@ -182,13 +194,13 @@
         }
     }
 
-    private async Task SendEmail()
+    private async Task SendEmail(string UUID)
     {
         var emailDto = new EmailDto
         {
-            Recipient = "recipient@example.com",
-            Subject = "Test Subject",
-            Message = "Test Message"
+            Recipient = OrderRequest.CustomerEmail,
+            Subject = "Order Confirmation",
+            Message = $"Dear {OrderRequest.CustomerName},\n\nThank you for your order with ordercode: {UUID} .\n\nBest regards,\nYour Team"
         };
         var response = await Http.PostAsJsonAsync("api/Email", emailDto);
 
