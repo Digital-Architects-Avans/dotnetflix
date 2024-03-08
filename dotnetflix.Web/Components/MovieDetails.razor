@@ -1,6 +1,7 @@
 @using dotnetflix.Models.Dtos.Movie
 @using dotnetflix.Models.Dtos.Show
 @using System.Globalization
+@using dotnetflix.Web.Services
 
 <div class="card mb-3 border-0" style="max-width: 540px;">
     <div class="row g-0">
@@ -17,6 +18,7 @@
                 <p class="card-text">
                     <small class="text-body-secondary">Rating: @Movie.Rating</small>
                 </p>
+                <p class="card-text">First shown: @FirstShowDate days ago</p>
             </div>
         </div>
     </div>
@@ -43,7 +45,12 @@
     [Parameter] public string StartTime { get; set; } = "00:00";
     [Parameter] public string EndTime { get; set; } = "00:00";
 
-    protected override Task OnInitializedAsync()
+    [Inject]
+    public IShowService? ShowService { get; set; }
+    public IEnumerable<ShowDto>? Shows { get; set; }
+    public int FirstShowDate { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
         if (Show != null)
         {
@@ -53,7 +60,8 @@
             EndTime = Show.Date.AddMinutes(Show.ScreenTime).ToString("HH:mm");
         }
 
-        return Task.CompletedTask;
+        Shows = await ShowService.GetShows();
+        DateTime FirstShow = Shows.Where(s => s.MovieId == Movie.Id).Select(s => (DateTime)s.Date).Min();
+        FirstShowDate = DateTime.Now.DayOfYear - FirstShow.DayOfYear;
     }
-
 }
