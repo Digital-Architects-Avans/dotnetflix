@@ -1,8 +1,9 @@
 @page "/Checkout"
-@using dotnetflix.Web.Services.Contracts
-@using dotnetflix.Models.Dtos.TicketType
-@using dotnetflix.Models.Dtos.OrderRequestDtos
-@using System.Globalization
+@	using dotnetflix.Web.Services.Contracts
+@	using dotnetflix.Models.Dtos.TicketType
+@	using dotnetflix.Models.Dtos.OrderRequestDtos
+@	using System.Globalization
+@	using dotnetflix.Api.Repositories.Arrangements
 @implements IDisposable
 
 <div class="container">
@@ -12,49 +13,74 @@
             <h3>Order Summary</h3>
             <table class="table">
                 <thead>
-                <tr>
-                    <th>Ticket Type</th>
-                    <th>Quantity</th>
-                    <th>Price per Ticket</th>
-                    <th>Total Price</th>
-                </tr>
+                    <tr>
+                        <th>Ticket Type</th>
+                        <th>Quantity</th>
+                        <th>Price per Ticket</th>
+                        <th>Total Price</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @if (OrderRequest.TicketOrders.Any())
-                {
-                    decimal grandTotal = 0;
-                    foreach (var ticketOrder in OrderRequest.TicketOrders.Where(to => to.Quantity > 0))
+                    @if (OrderRequest.TicketOrders.Any())
                     {
-                        var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
-                        if (ticketType != null)
+                        decimal grandTotal = 0;
+                        foreach (var ticketOrder in OrderRequest.TicketOrders.Where(to => to.Quantity > 0))
                         {
-                            decimal pricePerTicket = ticketOrder.FinalPrice / ticketOrder.Quantity;
-                            grandTotal += ticketOrder.FinalPrice;
+                            var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
+                            if (ticketType != null)
+                            {
+                                decimal pricePerTicket = ticketOrder.FinalPrice / ticketOrder.Quantity;
+                                grandTotal += ticketOrder.FinalPrice;
 
-                            <tr>
-                                <td>@ticketType.Name</td>
-                                <td>@ticketOrder.Quantity</td>
-                                <td>@pricePerTicket.ToString("C")</td>
-                                <td>@ticketOrder.FinalPrice.ToString("C")</td>
-                            </tr>
+                                <tr>
+                                    <td>@ticketType.Name</td>
+                                    <td>@ticketOrder.Quantity</td>
+                                    <td>@pricePerTicket.ToString("C")</td>
+                                    <td>@ticketOrder.FinalPrice.ToString("C")</td>
+                                </tr>
+                                if (OrderOptionsService != null)
+                                {
+                                    if (OrderOptionsService.PopcornArrangement)
+                                    {
+                                        <tr>
+                                            <td>Popcorn Arrangement $3.00</td>
+                                        </tr>
+                                        grandTotal += 3.00M;
+                                    }
+                                    if (OrderOptionsService.DotNetflixAndChillArrangement)
+                                    {
+                                        <tr>
+                                            <td>.NETflix and Chill $25.00</td>
+                                        </tr>
+                                        grandTotal += 25.00M;
+                                    }
+                                    if (OrderOptionsService.MAndMsArrangement)
+                                    {
+                                        <tr>
+                                            <td>M&M's Arrangement $6.50</td>
+                                        </tr>
+                                        grandTotal += 6.50M;
+                                    }
+                                }
+                            }
+
                         }
-                    }
 
-                    <tr>
-                        <td colspan="3" class="text-right">
-                            <strong>Grand Total:</strong>
-                        </td>
-                        <td>
-                            <strong>@grandTotal.ToString("C")</strong>
-                        </td>
-                    </tr>
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4">No tickets selected.</td>
-                    </tr>
-                }
+                        <tr>
+                            <td colspan="3" class="text-right">
+                                <strong>Grand Total:</strong>
+                            </td>
+                            <td>
+                                <strong>@grandTotal.ToString("C")</strong>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">No tickets selected.</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -63,7 +89,7 @@
         <div class="col-md-4">
             <h4 class="mb-2">Payment Method</h4>
             <div id="smart-button-container">
-                <input type="hidden" name="descriptionInput" id="description" @bind="PaymentDescription"/>
+                <input type="hidden" name="descriptionInput" id="description" @bind="PaymentDescription" />
                 <input name="amountInput" type="hidden" id="amount" @bind="FormattedPaymentAmount">
                 <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container"></div>
             </div>
@@ -77,7 +103,7 @@
                 @PaymentErrorMessage
             </div>
         }
-    
+
         <div class="row">
             <!-- Order Summary and Payment Method Columns go here... -->
         </div>
@@ -92,6 +118,7 @@
     [Inject] public ITicketService TicketService { get; set; }
     [Inject] public IOrderService OrderService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
+    [Inject] public IOrderOptionsService OrderOptionsService { get; set; }
 
     public OrderRequestDto? OrderRequest { get; set; }
 
@@ -103,7 +130,7 @@
     protected string? FormattedPaymentAmount { get; set; }
     protected string? PaymentErrorMessage;
 
-    
+
     public static event Action<string> OnPaymentProcessed;
 
 
@@ -121,10 +148,9 @@
             FormattedPaymentAmount = PaymentAmount.ToString(CultureInfo.InvariantCulture);
 
             TotalQty = OrderRequest.TicketOrders.Sum(to => to.Quantity);
-            PaymentDescription = $"Order {orderGuid} for User"; // TODO: Add user id once implemented 
-            
-            OnPaymentProcessed += VerifyPaymentAndProcessOrder;
+            PaymentDescription = $"Order {orderGuid} for User"; // TODO: Add user id once implemented
 
+            OnPaymentProcessed += VerifyPaymentAndProcessOrder;
         }
     }
 
@@ -149,13 +175,13 @@
     {
         OnPaymentProcessed?.Invoke(orderId);
     }
-    
+
     public void Dispose()
     {
         // Unsubscribe to prevent memory leaks
         OnPaymentProcessed -= VerifyPaymentAndProcessOrder;
     }
-    
+
     private async void VerifyPaymentAndProcessOrder(string orderId)
     {
         var paymentSuccess = await OrderService.VerifyPaymentSuccess(orderId);

@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using dotnetflix.Api.Entities;
 
 namespace dotnetflix.Api.Data.Entities
 {

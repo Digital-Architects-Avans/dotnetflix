@@ -1,12 +1,11 @@
 using dotnetflix.Api.Data.Entities;
-using dotnetflix.Api.Entities;
-using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Order;
 using dotnetflix.Models.Dtos.Seat;
 using dotnetflix.Models.Dtos.Show;
 using dotnetflix.Models.Dtos.Theater;
 using dotnetflix.Models.Dtos.TheaterRow;
+using dotnetflix.Models.Dtos.Ticket;
 using dotnetflix.Models.Dtos.TicketType;
 
 namespace dotnetflix.Api.Extensions;

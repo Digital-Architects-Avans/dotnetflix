@@ -1,10 +1,10 @@
-using dotnetflix.Api.Entities;
 using dotnetflix.Api.Extensions;
 using dotnetflix.Api.Repositories.Movies;
 using dotnetflix.Api.Repositories.Seats;
 using Microsoft.AspNetCore.Mvc;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Seat;
+using dotnetflix.Api.Data.Entities;
 
 namespace dotnetflix.Api.Controllers;
 

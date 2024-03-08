@@ -1,5 +1,5 @@
 using dotnetflix.Api.Data;
-using dotnetflix.Api.Entities;
+using dotnetflix.Api.Data.Entities;
 using dotnetflix.Models.Dtos.Seat;
 using Microsoft.EntityFrameworkCore;
 

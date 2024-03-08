@@ -1,5 +1,4 @@
 using dotnetflix.Api.Data.Entities;
-using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Seat;
 

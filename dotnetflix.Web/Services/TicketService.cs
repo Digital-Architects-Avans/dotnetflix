@@ -1,10 +1,10 @@
-﻿using dotnetflix.Models.Dtos;
-using dotnetflix.Web.Services.Contracts;
+﻿using dotnetflix.Web.Services.Contracts;
 using System.Net.Http.Json;
 using dotnetflix.Models.Dtos.OrderRequestDtos;
 using dotnetflix.Models.Dtos.Seat;
 using dotnetflix.Models.Dtos.TheaterRow;
 using dotnetflix.Models.Dtos.TicketType;
+using dotnetflix.Models.Dtos.Ticket;
 
 namespace dotnetflix.Web.Services;
 

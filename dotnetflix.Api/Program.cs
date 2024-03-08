@@ -1,5 +1,4 @@
 using dotnetflix.Api.Data;
-using dotnetflix.Api.Repositories.Contracts;
 using dotnetflix.Api.Repositories.Movies;
 using dotnetflix.Api.Repositories.Orders;
 using dotnetflix.Api.Repositories.Seats;

@@ -30,7 +30,7 @@
 
                             <div class="form-group">
                                 <label>@ticketType.Name - Price: @finalPrice.ToString("C")</label>
-                                <InputNumber @bind-Value="ticketOrder.Quantity" min="0" class="form-control"/>
+                                <InputNumber @bind-Value="ticketOrder.Quantity" min="0" class="form-control" />
                             </div>
                         }
                     }
@@ -47,7 +47,7 @@
         <div class="col-md-6">
             @if (Movie != null)
             {
-                <MovieDetails Movie="Movie" Show="SelectedShow"/>
+                <MovieDetails Movie="Movie" Show="SelectedShow" />
             }
         </div>
     </div>
@@ -65,6 +65,7 @@
     public MovieDto Movie { get; set; }
     public IEnumerable<TicketTypeDto> TicketTypes { get; set; }
     public OrderRequestDto OrderRequest { get; set; } = new OrderRequestDto();
+    public bool ChildDiscountAvailable { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,6 +74,7 @@
             SelectedShow = await ShowService.GetShow(Id);
             Movie = await MovieService.GetMovie(SelectedShow.MovieId);
             TicketTypes = await TicketService.GetTicketTypes();
+            ChildDiscountAvailable = Movie.SpokenLanguages == "NL" && SelectedShow.Date.TimeOfDay.Hours < 18;
 
             InitializeOrderRequest();
         }
@@ -92,18 +94,21 @@
     // Initialize the OrderRequest with the user's selected show and ticket types
     private void InitializeOrderRequest()
     {
-        OrderRequest.TicketOrders = TicketTypes.Select(tt => new TicketOrderDto
-        {
-            MovieId = SelectedShow.MovieId,
-            ShowId = SelectedShow.Id,
-            MovieTitle = Movie.Title,
-            TheaterId = SelectedShow.TheaterId,
-            TheaterName = SelectedShow.TheaterName,
-            ShowTime = SelectedShow.Date,
-            TicketTypeId = tt.Id,
-            Quantity = 0,
-            FinalPrice = 0
-        }).ToList();
+        // Filter out the Child ticket type if the ChildDiscountAvailable is false
+        var applicableTicketTypes = ChildDiscountAvailable ? TicketTypes : TicketTypes.Where(tt => !tt.Name.Contains("Child"));
+
+        OrderRequest.TicketOrders = applicableTicketTypes.Select(tt => new TicketOrderDto
+            {
+                MovieId = SelectedShow.MovieId,
+                ShowId = SelectedShow.Id,
+                MovieTitle = Movie.Title,
+                TheaterId = SelectedShow.TheaterId,
+                TheaterName = SelectedShow.TheaterName,
+                ShowTime = SelectedShow.Date,
+                TicketTypeId = tt.Id,
+                Quantity = 0,
+                FinalPrice = 0
+            }).ToList();
     }
 
     private void SummariseOrder()

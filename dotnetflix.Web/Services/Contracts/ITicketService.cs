@@ -1,5 +1,5 @@
-﻿using dotnetflix.Models.Dtos;
-using dotnetflix.Models.Dtos.OrderRequestDtos;
+﻿using dotnetflix.Models.Dtos.OrderRequestDtos;
+using dotnetflix.Models.Dtos.Ticket;
 using dotnetflix.Models.Dtos.TicketType;
 
 namespace dotnetflix.Web.Services.Contracts;

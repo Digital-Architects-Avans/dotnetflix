@@ -1,6 +1,5 @@
 ﻿using dotnetflix.Api.Extensions;
-using dotnetflix.Api.Repositories.Contracts;
-using dotnetflix.Models.Dtos;
+using dotnetflix.Api.Repositories.Tickets;
 using dotnetflix.Models.Dtos.Ticket;
 using Microsoft.AspNetCore.Mvc;
 

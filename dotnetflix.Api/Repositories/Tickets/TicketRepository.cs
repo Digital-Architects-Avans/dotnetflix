@@ -1,6 +1,5 @@
 ﻿using dotnetflix.Api.Data;
 using dotnetflix.Api.Data.Entities;
-using dotnetflix.Api.Repositories.Contracts;
 using dotnetflix.Models.Dtos.Ticket;
 using Microsoft.EntityFrameworkCore;
 
