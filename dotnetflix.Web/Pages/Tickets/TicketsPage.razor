@@ -65,6 +65,7 @@
     public MovieDto Movie { get; set; }
     public IEnumerable<TicketTypeDto> TicketTypes { get; set; }
     public OrderRequestDto OrderRequest { get; set; } = new OrderRequestDto();
+    public bool ChildDiscountAvailable { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,7 +74,8 @@
             SelectedShow = await ShowService.GetShow(Id);
             Movie = await MovieService.GetMovie(SelectedShow.MovieId);
             TicketTypes = await TicketService.GetTicketTypes();
-
+            ChildDiscountAvailable = Movie.SpokenLanguages == "NL" && SelectedShow.Date.TimeOfDay.Hours < 18;
+            
             InitializeOrderRequest();
         }
 
@@ -92,7 +94,10 @@
     // Initialize the OrderRequest with the user's selected show and ticket types
     private void InitializeOrderRequest()
     {
-        OrderRequest.TicketOrders = TicketTypes.Select(tt => new TicketOrderDto
+        // Filter out the Child ticket type if the ChildDiscountAvailable is false
+        var applicableTicketTypes = ChildDiscountAvailable ? TicketTypes : TicketTypes.Where(tt => !tt.Name.Contains("Child"));
+        
+        OrderRequest.TicketOrders = applicableTicketTypes.Select(tt => new TicketOrderDto
         {
             MovieId = SelectedShow.MovieId,
             ShowId = SelectedShow.Id,
