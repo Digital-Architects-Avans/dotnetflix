@@ -36,7 +36,7 @@
             @foreach (Rating rating in Enum.GetValues(typeof(Rating)))
             {
                 <div>
-                    <input type="checkbox" value="@rating" checked="@SelectedRatings.Contains(rating)" @onchange="((e) => UpdateSelectedRatings(rating, (bool)e.Value))" /> @rating - @RatingDescriptions[rating]
+                    <input type="checkbox" value="@rating" @onchange="((e) => UpdateSelectedRatings(rating, (bool)e.Value))" /> @rating - @RatingDescriptions[rating]
                 </div>
             }
         </div>
@@ -101,7 +101,7 @@
     protected override async Task OnInitializedAsync()
     {
         Movies = await Http.GetFromJsonAsync<List<MovieDto>>("api/movie");
-        SelectedRatings = Enum.GetValues(typeof(Rating)).Cast<Rating>().ToList();
+        
     }
     
     void UpdateSelectedRatings(Rating rating, bool isChecked)
