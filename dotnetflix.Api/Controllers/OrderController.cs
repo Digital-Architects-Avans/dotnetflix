@@ -70,6 +70,12 @@ public class OrderController : ControllerBase
 				return NotFound();
 			}
 
+			if (order.Tickets == null)
+			{
+				_logger.LogError("Order with UUID: {UUID} has null Tickets", uuid);
+				return StatusCode(StatusCodes.Status500InternalServerError, "Order has null Tickets");
+			}
+
 			var orderDto = order.ConvertToDto();
 			return Ok(orderDto);
 		}

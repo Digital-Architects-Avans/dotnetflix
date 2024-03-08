@@ -16,7 +16,9 @@ public class OrderRepository : IOrderRepository
     
     public async Task<Order> GetOrderByUUID(string uuid)
     {
-        return await _dotNetFlixDbContext.Orders.FirstOrDefaultAsync(o => o.UUID == uuid);
+        return await _dotNetFlixDbContext.Orders
+            .Include(o => o.Tickets)
+            .FirstOrDefaultAsync(o => o.UUID == uuid);
     }
 
     public async Task<IEnumerable<Order>> GetOrders()
