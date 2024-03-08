@@ -131,9 +131,16 @@
                 // Calculate the final price per ticket with the discount applied
                 var finalPricePerTicket = SelectedShow.BasePrice - ticketType.Discount;
 
+                // Add 3D surcharge
                 if (SelectedShow.Type == MovieType.ThreeD)
                 {
                     finalPricePerTicket += 2.5m;
+                }
+
+                // Apply sneak preview discount
+                if (SelectedShow.SneakPreview)
+                {
+                    finalPricePerTicket -= 2.5m;
                 }
 
                 ticketOrder.FinalPrice = finalPricePerTicket;
