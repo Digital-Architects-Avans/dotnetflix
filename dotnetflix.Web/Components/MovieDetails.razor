@@ -5,12 +5,12 @@
 <div class="card mb-3 border-0" style="max-width: 540px;">
     <div class="row g-0">
         <div class="col-md-4">
-            <img src="/images/@Movie.Image" class="img-fluid rounded" alt="..." style="max-height: 250px;">
+            <img src="/images/@MovieImage" class="img-fluid rounded" alt="..." style="max-height: 250px;">
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">@Movie.Title (@Movie.Year)</h5>
-                <p class="card-text">@Movie.Description</p>
+                <h5 class="card-title">@MovieTitle (@Movie.Year)</h5>
+                <p class="card-text">@MovieDescription</p>
                 <p class="card-text">
                     <small class="text-body-secondary">Run time: @Movie.Runtime min</small>
                 </p>
@@ -31,6 +31,7 @@
             <p class="card-text">
                 <small class="text-body-secondary">From @Show.BasePrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</small>
             </p>
+            <p>Sneak? > @Show.SneakPreview</p>
         </div>
     </div>
 }
@@ -43,8 +44,29 @@
     [Parameter] public string StartTime { get; set; } = "00:00";
     [Parameter] public string EndTime { get; set; } = "00:00";
 
+    [Parameter] public bool IsSneakPreview { get; set; } = false;
+    [Parameter] public string MovieTitle { get; set; } = "Loading...";
+    [Parameter] public string MovieDescription { get; set; } = "Loading...";
+    [Parameter] public string MovieImage { get; set; } = "no-cover.jpg";
+    
     protected override Task OnInitializedAsync()
     {
+        // If the component is a sneak preview, set title and description
+        if (IsSneakPreview)
+        {
+            MovieImage = "sneak-preview.jpg";
+            MovieTitle = "Sneak preview";
+            MovieDescription = "A sneak preview is a preview of a movie that hasn't been released yet. It's a surprise which movie will be shown.";
+        }
+        else
+        {
+            MovieImage = Movie.Image;
+            MovieTitle = Movie.Title;
+            MovieDescription = Movie.Description;
+        }
+        {
+            
+        }
         if (Show != null)
         {
             // Convert date to time in 24-hour format
