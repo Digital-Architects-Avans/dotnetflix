@@ -10,6 +10,7 @@ public class ShowDto
     public DateTime Date { get; set; }
     public int ScreenTime { get; set; }
     public MovieType Type { get; set; }
+    public bool SneakPreview { get; set; }
     public decimal BasePrice { get; set; }
     public ICollection<int> TicketIds { get; set; }
 
