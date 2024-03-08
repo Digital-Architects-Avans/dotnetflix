@@ -59,7 +59,7 @@ public class OrderRepository : IOrderRepository
             TotalPrice = totalPrice, 
             CustomerName = addOrderDto.CustomerName,
             CustomerEmail = addOrderDto.CustomerEmail,
-            Uuid = addOrderDto.UUID
+            Uuid = addOrderDto.Uuid
         };
 
         tickets.ForEach(t => t.OrderId = order.Id); // Assign the OrderId to each ticket
