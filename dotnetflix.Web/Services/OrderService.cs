@@ -57,7 +57,7 @@ public class OrderService : IOrderService
         return response.IsSuccessStatusCode;
     }
     
-    public async Task<OrderDto> GetOrderByUUID(string uuid)
+    public async Task<OrderDto?> GetOrderByUuid(string uuid)
     {
         var response = await _httpClient.GetAsync($"api/Order/uuid/{uuid}");
 

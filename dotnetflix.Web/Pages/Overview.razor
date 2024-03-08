@@ -1,11 +1,6 @@
 @page "/overview"
 @page "/overview/{OrderCode:int}"
-
-@using dotnetflix.Web.Services.Contracts
-@using dotnetflix.Models.Dtos.Movie
 @using dotnetflix.Models.Dtos.Order
-@using dotnetflix.Models.Dtos.Show
-@using dotnetflix.Web.Components
 
 @using dotnetflix.Models.Dtos
 
@@ -41,7 +36,10 @@
     case PageState.OrderFound:
 
         <p>(Tickets for order #@OrderCode.)</p>
-        <p style="display: inline-block;">Please save this order code. You will need it to collect your tickets:   </p><h3 style="display: inline-block;"><span>@Order.UUID</span></h3>
+        <p style="display: inline-block;">Please save this order code. You will need it to collect your tickets: </p>
+        <h3 style="display: inline-block;">
+            <span>@Order.UUID</span>
+        </h3>
 
         <MovieDetails Movie="Movie"/>
 
@@ -144,7 +142,7 @@
     {
         if (OrderService != null)
         {
-            var order = await OrderService.GetOrderByUUID(_orderCode);
+            var order = await OrderService.GetOrderByUuid(_orderCode);
             if (order != null)
             {
                 NavigationManager.NavigateTo($"/overview/{order.Id}");
