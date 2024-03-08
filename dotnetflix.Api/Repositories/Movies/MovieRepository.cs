@@ -35,6 +35,7 @@ public class MovieRepository: IMovieRepository
             Description = addMovieDto.Description,
             Rating = addMovieDto.Rating,
             Runtime =  addMovieDto.Runtime,
+            SpokenLanguages = addMovieDto.SpokenLanguages,
             Image = addMovieDto.Image
         };
         
@@ -54,6 +55,7 @@ public class MovieRepository: IMovieRepository
             movie.Description = updateMovieDto.Description;
             movie.Rating = updateMovieDto.Rating;
             movie.Runtime = updateMovieDto.Runtime;
+            movie.SpokenLanguages = updateMovieDto.SpokenLanguages;
             movie.Image = updateMovieDto.Image;
             await _dotNetFlixDbContext.SaveChangesAsync();
             return movie;
