@@ -11,7 +11,8 @@
         <div>
             <h5>Search</h5>
             <input type="text" @bind="SearchTerm" @bind:event="oninput" placeholder="Search..."/>
-            
+
+
         </div>
         
         <div class="year-filter">
@@ -49,19 +50,8 @@
 <div class="movies-container">
     @foreach (var movie in Movies.Where(m => m.Title.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) && SelectedRatings.Contains(m.Rating) && m.Year >= StartYear && m.Year <= EndYear))
     {
-        <div class="col-md-3 d-flex">
-            <img src="/images/@movie.Image" class="img-fluid rounded" alt="..." style="max-height: 250px; margin-right: 10px;">
-            <div style="flex: 1;">
-                @if (Shows.Any(s => s.MovieId == movie.Id))
-                {
-                    var firstShowToday = Shows.Where(s => s.MovieId == movie.Id).OrderBy(s => s.Date).First();
-                    <ShowTime Show="@firstShowToday" />
-                }
-                else
-                {
-                    <p>No available scheduling today</p>
-                }
-            </div>
+        <div class="col-md-4">
+            <img src="/images/@movie.Image" class="img-fluid rounded" alt="..." style="max-height: 250px;">
         </div>
     }
 </div>
@@ -69,7 +59,6 @@
 
 @code {
     List<MovieDto> Movies = new List<MovieDto>();
-    List<ShowDto> Shows = new List<ShowDto>();
     string SearchTerm = string.Empty;
     List<Rating> SelectedRatings = new List<Rating>();
     int _startYear = 2001;
@@ -112,10 +101,7 @@
     protected override async Task OnInitializedAsync()
     {
         Movies = await Http.GetFromJsonAsync<List<MovieDto>>("api/movie");
-        Shows = await Http.GetFromJsonAsync<List<ShowDto>>("api/show");
         SelectedRatings = Enum.GetValues(typeof(Rating)).Cast<Rating>().ToList();
-        Shows = Shows.Where(s => s.Date.Date == DateTime.Now.Date).ToList();
-
     }
     
     void UpdateSelectedRatings(Rating rating, bool isChecked)
