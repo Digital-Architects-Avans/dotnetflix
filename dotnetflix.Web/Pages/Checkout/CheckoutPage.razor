@@ -3,6 +3,12 @@
 @using dotnetflix.Models.Dtos.TicketType
 @using dotnetflix.Models.Dtos.OrderRequestDtos
 @using System.Globalization
+@using System.Net
+@using dotnetflix.Models.Dtos.Email
+@inject HttpClient Http
+
+@using MailKit.Net.Smtp;
+@using MimeKit;
 @implements IDisposable
 
 <div class="container">
@@ -84,6 +90,8 @@
     </div>
 </div>
 
+<button @onclick="SendEmail">Send Email</button>
+
 @code {
 
     [Inject] public IJSRuntime Js { get; set; }
@@ -102,7 +110,6 @@
     protected decimal PaymentAmount { get; set; }
     protected string? FormattedPaymentAmount { get; set; }
     protected string? PaymentErrorMessage;
-
     
     public static event Action<string> OnPaymentProcessed;
 
@@ -174,5 +181,30 @@
             StateHasChanged(); // Notify the component that its state has changed and it needs to re-render
         }
     }
+
+    private async Task SendEmail()
+    {
+        var emailDto = new EmailDto
+        {
+            Recipient = "recipient@example.com",
+            Subject = "Test Subject",
+            Message = "Test Message"
+        };
+        var response = await Http.PostAsJsonAsync("api/Email", emailDto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Email sent successfully
+        }
+        else
+        {
+            // Error sending email
+        }
+    }
+
+    // emailcredentials
+    // Name	Elisha McClure
+    // Username	elisha.mcclure@ethereal.email
+    // Password	6uKpb8uc7yDRbNjSnV
 
 }
