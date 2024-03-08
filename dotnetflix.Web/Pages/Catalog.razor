@@ -54,11 +54,12 @@
 
                 <img src="/images/@movie.Image" class="img-fluid rounded" alt="..." style="max-height: 200px; margin-right: 10px;">
                 <div style="flex: 1;">
-                   @if (Shows.Any(s => s.MovieId == movie.Id && s.Date >= DateTime.Now))
-                   {
-                       var firstShowToday = Shows.Where(s => s.MovieId == movie.Id && s.Date >= DateTime.Now).OrderBy(s => s.Date).First();
-                       <ShowTime Show="@firstShowToday" />
-                   }else
+                    @if (Shows.Any(s => s.MovieId == movie.Id))
+                    {
+                        var firstShowToday = Shows.Where(s => s.MovieId == movie.Id).OrderBy(s => s.Date).First();
+                        <ShowTime Show="@firstShowToday"/>
+                    }
+                    else
                     {
                         <div class="card">
                             <p>No available scheduling today</p>
