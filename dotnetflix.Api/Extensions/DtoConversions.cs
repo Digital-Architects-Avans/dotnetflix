@@ -120,7 +120,10 @@ public static class DtoConversions
         {
 			Id = order.Id,
 			TotalPrice = order.TotalPrice,
-			TicketIds = order.Tickets.Select(t => t.Id).ToList()
+			TicketIds = order.Tickets.Select(t => t.Id).ToList(),
+			CustomerName = order.CustomerName,
+			CustomerEmail = order.CustomerEmail,
+			Uuid = order.Uuid
 		};
 	}
     

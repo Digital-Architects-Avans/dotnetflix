@@ -5,7 +5,7 @@ namespace dotnetflix.Web.Services.Contracts;
 
 public interface IOrderService
 {
-
+	Task<OrderDto?> GetOrderByUuid(string uuid);
 	Task<IEnumerable<OrderDto>> GetItems();
 	Task<OrderDto> GetOrder(int id);
 	Task<bool> VerifyPaymentSuccess(string paymentId);

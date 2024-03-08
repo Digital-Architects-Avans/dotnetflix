@@ -57,16 +57,37 @@ public class OrderService : IOrderService
         return response.IsSuccessStatusCode;
     }
     
+    public async Task<OrderDto?> GetOrderByUuid(string uuid)
+    {
+        var response = await _httpClient.GetAsync($"api/Order/uuid/{uuid}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var order = await response.Content.ReadFromJsonAsync<OrderDto>();
+            return order ?? throw new InvalidOperationException("Failed to deserialize the order.");
+        }
+        else
+        {
+            throw new Exception("Failed to retrieve order.");
+        }
+    }
+    
     
     public async Task<OrderDto> CreateOrder(OrderRequestDto orderRequest)
     {
         // Use TicketService to generate tickets and get their IDs
         var tickets = await _ticketService.GenerateTickets(orderRequest).ConfigureAwait(false);
+        
+        // Generate a random 6 character code
+        string orderCode = Path.GetRandomFileName().Replace(".", "").Substring(0, 6);
 
         // Prepare the data to be sent in the request
         var addOrderDto = new AddOrderDto
         {
-            TicketIds = tickets.Select(t => t.Id).ToList() 
+            TicketIds = tickets.Select(t => t.Id).ToList(),
+             Uuid= orderCode,
+             CustomerEmail = orderRequest.CustomerEmail,
+             CustomerName = orderRequest.CustomerName
         };
 
         // Attempt to save the order in the database
