@@ -14,7 +14,7 @@
 else
 {
     <div class="card mb-4 col-xl-6 col-sm-12">
-        <h5 class="card-header">@Movie.Title (@Movie.Year) - @StartTime - @EndTime</h5>
+        <h5 class="card-header">@MovieTitle (@Movie.Year) - @StartTime - @EndTime</h5>
         <div class="card-body">
             <dl class="row">
                 <dt class="col-xl-3 col-sm-4">Theater:</dt>
@@ -44,12 +44,15 @@ else
 
     // Parameter to be passed to the component
     [Parameter] public ShowDto Show { get; set; } = new ShowDto();
+    [Parameter] public string MovieTitle { get; set; } = "Loading...";
     [Parameter] public string StartTime { get; set; } = "00:00";
     [Parameter] public string EndTime { get; set; } = "00:00";
-    [Parameter] public string? TicketType { get; set; } = "Test";
+    [Parameter] public string? TicketType { get; set; } = "Loading...";
 
     protected override async Task OnInitializedAsync()
     {
+        // Set movie title
+        MovieTitle = Show.SneakPreview ? "Sneak preview" : Movie.Title;
         // Convert date to time in 24-hour format
         StartTime = Show.Date.ToString("HH:mm");
         // Get end time by adding screen time to start time
@@ -66,7 +69,7 @@ else
     private async Task PrintTicket()
     {
         var jsPdf = await JsRuntime.InvokeAsync<IJSObjectReference>("eval", "new window.jsPDF()");
-        await jsPdf.InvokeVoidAsync("text", $"Ticket for {Movie.Title} at {Show.Date}", 10, 10);
+        await jsPdf.InvokeVoidAsync("text", $"Ticket for {MovieTitle} at {Show.Date}", 10, 10);
         await jsPdf.InvokeVoidAsync("text", $"Theater: {Ticket.TheaterName} - {Show.Type}", 10, 20);
         await jsPdf.InvokeVoidAsync("text", $"Show Time: {Ticket.ShowTime}", 10, 30);
         await jsPdf.InvokeVoidAsync("text", $"Seat: Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}", 10, 40);
