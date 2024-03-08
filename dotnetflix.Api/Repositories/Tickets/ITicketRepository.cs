@@ -1,5 +1,4 @@
 ﻿using dotnetflix.Api.Data.Entities;
-using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos.Ticket;
 
 namespace dotnetflix.Api.Repositories.Tickets;

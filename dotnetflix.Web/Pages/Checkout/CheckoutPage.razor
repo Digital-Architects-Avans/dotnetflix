@@ -1,9 +1,10 @@
 @page "/Checkout"
-@	using dotnetflix.Web.Services.Contracts
-@	using dotnetflix.Models.Dtos.TicketType
-@	using dotnetflix.Models.Dtos.OrderRequestDtos
-@	using System.Globalization
-@	using dotnetflix.Api.Repositories.Arrangements
+@using dotnetflix.Web.Services.Contracts
+@using dotnetflix.Models.Dtos.TicketType
+@using dotnetflix.Models.Dtos.OrderRequestDtos
+@using System.Globalization
+@inject IOrderOptionsService OrderOptionsService
+
 @implements IDisposable
 
 <div class="container">
@@ -32,6 +33,29 @@
                                 decimal pricePerTicket = ticketOrder.FinalPrice / ticketOrder.Quantity;
                                 grandTotal += ticketOrder.FinalPrice;
 
+                                // Adjust grandTotal based on arrangements
+                                if (OrderOptionsService != null)
+                                {
+                                    if (OrderOptionsService.PopcornArrangement)
+                                    {
+                                        // Calculate total price for Popcorn Arrangement based on quantity
+                                        decimal popcornPrice = 3.00M * ticketOrder.Quantity;
+                                        grandTotal += popcornPrice;
+                                    }
+                                    if (OrderOptionsService.DotNetflixAndChillArrangement)
+                                    {
+                                        // Calculate total price for Netflix & Chill Arrangement based on quantity
+                                        decimal netflixChillPrice = 25.00M * ticketOrder.Quantity;
+                                        grandTotal += netflixChillPrice;
+                                    }
+                                    if (OrderOptionsService.MAndMsArrangement)
+                                    {
+                                        // Calculate total price for M&M's Arrangement based on quantity
+                                        decimal mAndMsPrice = 6.50M * ticketOrder.Quantity;
+                                        grandTotal += mAndMsPrice;
+                                    }
+                                }
+
                                 <tr>
                                     <td>@ticketType.Name</td>
                                     <td>@ticketOrder.Quantity</td>
@@ -43,23 +67,29 @@
                                     if (OrderOptionsService.PopcornArrangement)
                                     {
                                         <tr>
-                                            <td>Popcorn Arrangement $3.00</td>
+                                            <td>Popcorn Arrangement</td>
+                                            <td>@ticketOrder.Quantity</td>
+                                            <td>$3.00</td>
+                                            <td>$@(ticketOrder.Quantity * 3.00M)</td>
                                         </tr>
-                                        grandTotal += 3.00M;
                                     }
                                     if (OrderOptionsService.DotNetflixAndChillArrangement)
                                     {
                                         <tr>
-                                            <td>.NETflix and Chill $25.00</td>
+                                            <td>.NETflix and Chill</td>
+                                            <td>@ticketOrder.Quantity</td>
+                                            <td>$25.00</td>
+                                            <td>$@(ticketOrder.Quantity * 25.00M)</td>
                                         </tr>
-                                        grandTotal += 25.00M;
                                     }
                                     if (OrderOptionsService.MAndMsArrangement)
                                     {
                                         <tr>
-                                            <td>M&M's Arrangement $6.50</td>
+                                            <td>M&M's Arrangement</td>
+                                            <td>@ticketOrder.Quantity</td>
+                                            <td>$6.50</td>
+                                            <td>$@(ticketOrder.Quantity * 6.50M)</td>
                                         </tr>
-                                        grandTotal += 6.50M;
                                     }
                                 }
                             }
@@ -118,7 +148,6 @@
     [Inject] public ITicketService TicketService { get; set; }
     [Inject] public IOrderService OrderService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
-    [Inject] public IOrderOptionsService OrderOptionsService { get; set; }
 
     public OrderRequestDto? OrderRequest { get; set; }
 

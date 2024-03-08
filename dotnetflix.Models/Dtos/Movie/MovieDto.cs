@@ -9,7 +9,6 @@ public class MovieDto
     public Rating Rating { get; set; }
     public int Runtime { get; set; }
     public string Image { get; set; }
-    
 }
 
 public enum Rating

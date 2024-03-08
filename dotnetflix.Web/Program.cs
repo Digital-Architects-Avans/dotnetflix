@@ -18,6 +18,7 @@ builder.Services.AddScoped<IShowService, ShowService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderStateService, OrderStateService>();
+builder.Services.AddScoped<IOrderOptionsService, OrderOptionsService>();
 
 builder.Services.AddFluentUIComponents();
 builder.Services.AddDataGridEntityFrameworkAdapter();

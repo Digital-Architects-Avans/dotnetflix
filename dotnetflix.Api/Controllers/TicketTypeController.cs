@@ -1,5 +1,4 @@
 using dotnetflix.Api.Extensions;
-using dotnetflix.Api.Repositories.Contracts;
 using dotnetflix.Api.Repositories.TicketTypes;
 using dotnetflix.Models.Dtos.Ticket;
 using dotnetflix.Models.Dtos.TicketType;

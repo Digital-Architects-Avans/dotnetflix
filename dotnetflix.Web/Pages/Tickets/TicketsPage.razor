@@ -1,4 +1,5 @@
 @page "/tickets/{Id:int}"
+@using dotnetflix.Web.Services
 @using dotnetflix.Web.Services.Contracts
 @using dotnetflix.Models.Dtos.Show
 @using dotnetflix.Models.Dtos.TicketType
@@ -6,6 +7,12 @@
 @using dotnetflix.Models.Dtos.TicketOrderDtos
 @using dotnetflix.Models.Dtos.Movie
 @using dotnetflix.Web.Components
+@inject IOrderOptionsService OrderOptionsService
+@inject IShowService? ShowService
+@inject IMovieService? MovieService
+@inject ITicketService? TicketService
+@inject IOrderStateService? OrderStateService
+@inject NavigationManager NavigationManager
 @implements IDisposable
 
 <h3>Order Tickets for @SelectedShow?.MovieTitle</h3>
@@ -34,6 +41,11 @@
                             </div>
                         }
                     }
+                    <div>
+                        <input type="checkbox" @bind="OrderOptionsService.PopcornArrangement" /> Popcorn Arrangement ($3.00) <br>
+                        <input type="checkbox" @bind="OrderOptionsService.DotNetflixAndChillArrangement" /> Netflix & Chill Arrangement ($25.00) <br>
+                        <input type="checkbox" @bind="OrderOptionsService.MAndMsArrangement" /> M&M's Arrangement ($6.50) <br>
+                    </div>
                     <button type="submit" class="btn btn-primary">Confirm Selection</button>
                 </EditForm>
             }
@@ -55,11 +67,7 @@
 
 @code {
     [Parameter] public int Id { get; set; }
-    [Inject] public IShowService? ShowService { get; set; }
-    [Inject] public IMovieService? MovieService { get; set; }
-    [Inject] public ITicketService? TicketService { get; set; }
-    [Inject] public IOrderStateService? OrderStateService { get; set; }
-    [Inject] public NavigationManager NavigationManager { get; set; }
+
 
     public ShowDto? SelectedShow { get; set; }
     public MovieDto Movie { get; set; }
@@ -74,7 +82,7 @@
             SelectedShow = await ShowService.GetShow(Id);
             Movie = await MovieService.GetMovie(SelectedShow.MovieId);
             TicketTypes = await TicketService.GetTicketTypes();
-            ChildDiscountAvailable = Movie.SpokenLanguages == "NL" && SelectedShow.Date.TimeOfDay.Hours < 18;
+            //ChildDiscountAvailable = Movie.SpokenLanguages == "NL" && SelectedShow.Date.TimeOfDay.Hours < 18;
 
             InitializeOrderRequest();
         }
@@ -148,5 +156,4 @@
             OrderStateService.OnOrderUpdated -= OnOrderStateChanged;
         }
     }
-
 }
