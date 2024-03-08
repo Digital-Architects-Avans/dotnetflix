@@ -184,7 +184,8 @@ namespace dotnetflix.Api.Data
                             TheaterId = theaterId,
                             Date = DateTime.Now.AddHours(3),
                             ScreenTime = 90,
-                            Type = MovieType.Regular
+                            Type = MovieType.Regular,
+                            SneakPreview = false
                         }
                     );
                 }
