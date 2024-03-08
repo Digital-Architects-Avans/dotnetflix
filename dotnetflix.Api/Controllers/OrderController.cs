@@ -2,6 +2,7 @@
 using dotnetflix.Api.Repositories.Orders;
 using dotnetflix.Models.Dtos.Order;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace dotnetflix.Api.Controllers;
 
@@ -59,18 +60,18 @@ public class OrderController : ControllerBase
 	}
 	
 	[HttpGet("uuid/{uuid}")]
-	public async Task<ActionResult<OrderDto>> GetOrderByUUID(string uuid)
+	public async Task<ActionResult<OrderDto>> GetOrderByUuid(string uuid)
 	{
 		try
 		{
-			var order = await _orderRepository.GetOrderByUUID(uuid);
+			var order = await _orderRepository.GetOrderByUuid(uuid);
 
 			if (order == null)
 			{
 				return NotFound();
 			}
 
-			if (order.Tickets == null)
+			if (order.Tickets.IsNullOrEmpty())
 			{
 				_logger.LogError("Order with UUID: {UUID} has null Tickets", uuid);
 				return StatusCode(StatusCodes.Status500InternalServerError, "Order has null Tickets");

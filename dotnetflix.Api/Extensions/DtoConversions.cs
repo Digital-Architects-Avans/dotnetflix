@@ -123,7 +123,7 @@ public static class DtoConversions
 			TicketIds = order.Tickets.Select(t => t.Id).ToList(),
 			CustomerName = order.CustomerName,
 			CustomerEmail = order.CustomerEmail,
-			UUID = order.UUID
+			UUID = order.Uuid
 		};
 	}
     

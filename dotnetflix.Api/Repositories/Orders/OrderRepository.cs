@@ -14,11 +14,11 @@ public class OrderRepository : IOrderRepository
         _dotNetFlixDbContext = dotNetFlixDbContext;
     }
     
-    public async Task<Order> GetOrderByUUID(string uuid)
+    public async Task<Order?> GetOrderByUuid(string uuid)
     {
         return await _dotNetFlixDbContext.Orders
             .Include(o => o.Tickets)
-            .FirstOrDefaultAsync(o => o.UUID == uuid);
+            .FirstOrDefaultAsync(o => o.Uuid == uuid);
     }
 
     public async Task<IEnumerable<Order>> GetOrders()
@@ -59,7 +59,7 @@ public class OrderRepository : IOrderRepository
             TotalPrice = totalPrice, 
             CustomerName = addOrderDto.CustomerName,
             CustomerEmail = addOrderDto.CustomerEmail,
-            UUID = addOrderDto.UUID
+            Uuid = addOrderDto.UUID
         };
 
         tickets.ForEach(t => t.OrderId = order.Id); // Assign the OrderId to each ticket
