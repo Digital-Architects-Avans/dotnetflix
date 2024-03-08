@@ -21,8 +21,18 @@
                         var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
                         if (ticketType != null)
                         {
-                            var finalPrice = SelectedShow.BasePrice - ticketType.Discount;
+                            var basePrice = SelectedShow.BasePrice;
+                            
+                            // Set discount for sneak preview shows
+                            if (SelectedShow.SneakPreview)
+                            {
+                                basePrice -= 2.5m;
+                            }
+                            
+                            // Apply discount for the ticket type
+                            var finalPrice = basePrice - ticketType.Discount;
 
+                            // Add 3D surcharge
                             if (SelectedShow.Type == MovieType.ThreeD)
                             {
                                 finalPrice += 2.5m;
