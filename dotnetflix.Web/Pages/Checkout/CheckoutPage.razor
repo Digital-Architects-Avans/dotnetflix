@@ -180,8 +180,9 @@
         {
             var newOrder = await OrderService.CreateOrder(OrderRequest);
             var newOrderId = newOrder.Id;
+            var newOrderUUID = newOrder.UUID;
 
-            SendEmail(newOrder.UUID);
+            SendEmail(newOrderUUID);
             
             NavigationManager.NavigateTo($"/overview/{newOrderId}");
             // Todo: Show order with Ticket Details such as seats on a summary page
@@ -196,11 +197,12 @@
 
     private async Task SendEmail(string UUID)
     {
+        var orderCode = UUID;
         var emailDto = new EmailDto
         {
             Recipient = OrderRequest.CustomerEmail,
             Subject = "Order Confirmation",
-            Message = $"Dear {OrderRequest.CustomerName},\n\nThank you for your order with ordercode: {UUID} .\n\nBest regards,\nYour Team"
+            Message = $"Dear {OrderRequest.CustomerName},\n\nThank you for your order with ordercode: {orderCode} .\n\nBest regards,\nYour Team"
         };
         var response = await Http.PostAsJsonAsync("api/Email", emailDto);
 

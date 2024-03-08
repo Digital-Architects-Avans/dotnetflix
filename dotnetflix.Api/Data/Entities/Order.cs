@@ -8,11 +8,11 @@ public class Order
     
     public decimal TotalPrice { get; set; }
     
-    public string UUID { get; set; }
+    public string? UUID { get; set; }
     
-    public string CustomerName { get; set; }
+    public string? CustomerName { get; set; }
     
-    public string CustomerEmail { get; set; }
+    public string? CustomerEmail { get; set; }
     
     // Add this property if we have a Customer/User entity during later sprints
     // [ForeignKey(nameof(Customer.Id))]
