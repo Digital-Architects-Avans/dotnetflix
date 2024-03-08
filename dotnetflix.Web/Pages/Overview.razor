@@ -31,7 +31,7 @@
         <label for="orderCode" class="form-label">Your order number</label>
         <input @bind="_orderCode"
                id="orderCode"
-               type="number"
+               type="text"
                class="form-control"
                placeholder=""
                style="max-width: 128px"/>
@@ -139,9 +139,20 @@
     }
 
     // 4) Methods UI events
-    private void CollectTicketsClicked()
+    private async void CollectTicketsClicked()
     {
-        NavigationManager.NavigateTo($"/overview/{_orderCode}");
+        if (OrderService != null)
+        {
+            var order = await OrderService.GetOrderByUUID(_orderCode);
+            if (order != null)
+            {
+                NavigationManager.NavigateTo($"/overview/{order.Id}");
+            }
+            else
+            {
+                NavigationManager.NavigateTo($"/overview/10");
+            }
+        }
     }
 
     private void ResetPage()

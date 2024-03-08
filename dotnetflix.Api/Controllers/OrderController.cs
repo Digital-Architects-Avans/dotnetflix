@@ -58,6 +58,28 @@ public class OrderController : ControllerBase
 		}
 	}
 	
+	[HttpGet("uuid/{uuid}")]
+	public async Task<ActionResult<OrderDto>> GetOrderByUUID(string uuid)
+	{
+		try
+		{
+			var order = await _orderRepository.GetOrderByUUID(uuid);
+
+			if (order == null)
+			{
+				return NotFound();
+			}
+
+			var orderDto = order.ConvertToDto();
+			return Ok(orderDto);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error processing request for GetOrderByUUID with UUID: {UUID}", uuid);
+			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+		}
+	}
+	
 	[HttpPost]
 	public async Task<ActionResult<OrderDto>> AddOrder([FromBody] AddOrderDto addOrderDto)
 	{

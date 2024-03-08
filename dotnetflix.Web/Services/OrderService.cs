@@ -57,6 +57,21 @@ public class OrderService : IOrderService
         return response.IsSuccessStatusCode;
     }
     
+    public async Task<OrderDto> GetOrderByUUID(string uuid)
+    {
+        var response = await _httpClient.GetAsync($"api/Order/uuid/{uuid}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var order = await response.Content.ReadFromJsonAsync<OrderDto>();
+            return order ?? throw new InvalidOperationException("Failed to deserialize the order.");
+        }
+        else
+        {
+            throw new Exception("Failed to retrieve order.");
+        }
+    }
+    
     
     public async Task<OrderDto> CreateOrder(OrderRequestDto orderRequest)
     {
