@@ -1,0 +1,172 @@
+@page "/manager/seats"
+@using dotnetflix.Web.Services
+@using dotnetflix.Models.Dtos.Seat
+@using dotnetflix.Models.Dtos.TheaterRow
+@inject HttpClient Http
+
+<h3>Seat Management</h3>
+
+<NavigationHeader />
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Seat Number</th>
+                    <th>Theater Row</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr @onclick="() => SelectSeat()" class="new-Seat">
+                <td>Add New Seat</td>
+            </tr>
+            @foreach (var seat in Seats)
+            {
+                <tr @onclick="() => SelectSeat(seat)" class="@(SelectedSeat != null && SelectedSeat.Id == seat.Id ? "selected-seats" : "")">
+                    <td>@seat.SeatNumber</td>
+                    <td>@seat.TheaterRowId</td>
+                </tr>
+            }
+            </tbody>
+            
+        </table>
+    </div>
+    <div class="col-md-6">
+        @if (SelectedSeat.Id < 1)
+        {
+            <h4>Add New Seat</h4>
+            <EditForm Model="SelectedSeat" OnValidSubmit="NewSeatSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <div class="form-group">
+                    <label for="seatNumber">Seat Number</label>
+                    <InputNumber id="seatNumber" class="form-control" @bind-Value="SelectedSeat.SeatNumber"/>
+                </div>
+                <div class="form-group">
+                    <label for="theaterRowId">Theater Row</label>
+                    <InputSelect id="theaterRowId" class="form-control" @bind-Value="SelectedSeat.TheaterRowId">
+                        @foreach (var theaterRow in TheaterRows)
+                        {
+                            <option value="@theaterRow.Id">@theaterRow.Id</option>
+                        }
+                    </InputSelect>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </EditForm>
+        }
+        else
+        {
+            <h4>Update Seat</h4>
+            <EditForm Model="SelectedSeat" OnValidSubmit="UpdateSeatSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <div class="form-group">
+                    <label for="seatNumber">Seat Number</label>
+                    <InputNumber id="seatNumber" class="form-control" @bind-Value="SelectedSeat.SeatNumber"/>
+                </div>
+                <div class="form-group">
+                    <label for="theaterRowId">Theater Row</label>
+                    <InputSelect id="theaterRowId" class="form-control" @bind-Value="SelectedSeat.TheaterRowId">
+                        @foreach (var theaterRow in TheaterRows)
+                        {
+                            <option value="@theaterRow.Id">@theaterRow.Id</option>
+                        }
+                    </InputSelect>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </EditForm>
+            <button class="btn btn-danger" @onclick="DeleteSeatSubmit">Delete</button>
+        }
+    </div>
+</div>
+
+@code {
+    List<SeatDto> Seats = new List<SeatDto>();
+    SeatDto SelectedSeat = new SeatDto();
+    List<TheaterRowDto> TheaterRows = new List<TheaterRowDto>();
+    AddSeatDto NewSeat = new AddSeatDto();
+    UpdateSeatDto EditSeat = new UpdateSeatDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Seats = await Http.GetFromJsonAsync<List<SeatDto>>("api/seat");
+        TheaterRows = await Http.GetFromJsonAsync<List<TheaterRowDto>>("api/theaterrow");
+        NewSeat = new AddSeatDto();
+        EditSeat = new UpdateSeatDto();
+        SelectSeat();
+    }
+
+    private void SelectSeat(SeatDto seat)
+    {
+        if (SelectedSeat != null && SelectedSeat.Id == seat.Id)
+        {
+            // Deselect the current seat if it is clicked again
+            SelectedSeat = null;
+        }
+        else
+        {
+            SelectedSeat = new SeatDto
+            {
+                Id = seat.Id,
+                SeatNumber = seat.SeatNumber,
+                TheaterRowId = seat.TheaterRowId
+            };
+        }
+    }
+
+    private void SelectSeat()
+    {
+        SelectedSeat = new SeatDto
+        {
+            Id = 0,
+            SeatNumber = 1,
+            TheaterRowId = 1
+        };
+    }
+
+    private async Task NewSeatSubmit()
+    {
+        NewSeat = new AddSeatDto
+        {
+            SeatNumber = SelectedSeat.SeatNumber,
+            TheaterRowId = SelectedSeat.TheaterRowId
+        };
+
+        var response = await Http.PostAsJsonAsync("api/seat", NewSeat);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Seats = await Http.GetFromJsonAsync<List<SeatDto>>("api/seat");
+            SelectSeat();
+            StateHasChanged();
+        }
+    }
+
+    private async Task UpdateSeatSubmit()
+    {
+        var response = await Http.PutAsJsonAsync($"api/seat/{SelectedSeat.Id}", EditSeat);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Seats = await Http.GetFromJsonAsync<List<SeatDto>>("api/seat");
+            SelectSeat();
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteSeatSubmit()
+    {
+        var response = await Http.DeleteAsync($"api/seat/{SelectedSeat.Id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            Seats = await Http.GetFromJsonAsync<List<SeatDto>>("api/seat");
+            SelectSeat();
+            StateHasChanged();
+        }
+    }
+}
