@@ -7,6 +7,8 @@
 
 <h3>Theater Row Management</h3>
 
+<NavigationHeader />
+
 <div class="row">
     <div class="col-md-6">
         <table class="table">
@@ -168,6 +170,10 @@
         if (response.IsSuccessStatusCode)
         {
             TheaterRows = await Http.GetFromJsonAsync<List<TheaterRowDto>>("api/theaterrow");
+            foreach (var row in TheaterRows)
+            {
+                row.ActualSeatCount = Seats.Count(seat => seat.TheaterRowId == row.Id);
+            }
             SelectRow();
             StateHasChanged();
         }
@@ -187,6 +193,10 @@
         if (response.IsSuccessStatusCode)
         {
             TheaterRows = await Http.GetFromJsonAsync<List<TheaterRowDto>>("api/theaterrow");
+            foreach (var row in TheaterRows)
+            {
+                row.ActualSeatCount = Seats.Count(seat => seat.TheaterRowId == row.Id);
+            }
             SelectRow();
             StateHasChanged();
         }
@@ -199,6 +209,10 @@
         if (response.IsSuccessStatusCode)
         {
             TheaterRows = await Http.GetFromJsonAsync<List<TheaterRowDto>>("api/theaterrow");
+            foreach (var row in TheaterRows)
+            {
+                row.ActualSeatCount = Seats.Count(seat => seat.TheaterRowId == row.Id);
+            }
             SelectRow();
             StateHasChanged();
         }
