@@ -78,8 +78,9 @@ else
             
                 // Filter and order sneak preview shows for today
                 SneakPreviewShows = showArray.Where(show => show.Date.Date == now.Date && show.Date.TimeOfDay >= now.TimeOfDay && show.SneakPreview);
-                    
-                FoundShows = showArray.Count(show => show.Date.Date == now.Date);
+                
+                // Calculate the number of shows and movies
+                FoundShows = showArray.Count(show => show.Date.Date == now.Date && show.Date.TimeOfDay >= now.TimeOfDay );
 
                 // Group timings by movie
                 GroupedShowsByMovie = from show in Shows
