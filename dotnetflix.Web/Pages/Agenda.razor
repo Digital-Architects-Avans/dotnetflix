@@ -99,7 +99,7 @@ else
     {
         if (Shows != null)
         {
-            var groupedShows = Shows.GroupBy(s => s.MovieId);
+            var groupedShows = Shows.Where(s => s.SneakPreview == false).GroupBy(s => s.MovieId);
 
             var moviesWithDatesList = new List<MovieWithDates>();
 
