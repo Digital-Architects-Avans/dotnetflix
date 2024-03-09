@@ -1,0 +1,251 @@
+@page "/manager/tickets"
+@using dotnetflix.Models.Dtos.Ticket
+@using dotnetflix.Models.Dtos.Show
+@using dotnetflix.Models.Dtos.TheaterRow
+@using dotnetflix.Models.Dtos.Seat
+@using dotnetflix.Models.Dtos.TicketType
+@using dotnetflix.Models.Dtos
+@inject HttpClient Http
+
+<h3>Ticket Management</h3>
+
+<NavigationHeader />
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>ShowId</th>
+                <th>Movie</th>
+                <th>DateTime</th>
+                <th>Theater</th>
+                <th>Row</th>
+                <th>Seat</th>
+                <th>Type</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr @onclick="() => SelectTicket()" class="new-ticket">
+                <td>Add</td>
+                <td>New</td>
+                <td>Ticket</td>
+            </tr>
+            @foreach (var ticket in Tickets)
+            {
+                <tr @onclick="() => SelectTicket(ticket)" class="@(SelectedTicket != null && SelectedTicket.Id == ticket.Id ? "selected-ticket" : "")">
+                    <td>@ticket.Id</td>
+                    <td>@ticket.ShowId</td>
+                    <td>@ticket.Movie</td>
+                    <td>@ticket.ShowTime</td>
+                    <td>@ticket.TheaterName</td>
+                    <td>@ticket.RowNumber</td>
+                    <td>@ticket.SeatNumber</td>
+                    <td>@ticket.TicketTypeId</td>
+                    <td>@ticket.TicketPrice</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        @if (SelectedTicket.Id < 1)
+        {
+            <h4>Add New Ticket</h4>
+            <EditForm Model="SelectedTicket" OnValidSubmit="NewTicketSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <div class="form-group">
+                    <label for="showId">Show</label>
+                    <InputSelect id="showId" class="form-control" @bind-Value="SelectedTicket.ShowId">
+                        <option value="">Select a show</option>
+                        @foreach (var show in Shows)
+                        {
+                            <option value="@show.Id">@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="seatId">Seat</label>
+                    <InputSelect id="seatId" class="form-control" @bind-Value="SelectedTicket.SeatId">
+                        <option value="">Select a seat</option>
+                        @foreach (var seat in Seats)
+                        {
+                            <option value="@seat.Id">@seat.Id, @seat.SeatNumber, @seat.RowNumber</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="ticketTypeId">Ticket Type</label>
+                    <InputSelect id="ticketTypeId" class="form-control" @bind-Value="SelectedTicket.TicketTypeId">
+                        <option value="">Select a ticket type</option>
+                        @foreach (var ticketType in TicketTypes)
+                        {
+                            <option value="@ticketType.Id">@ticketType.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="ticketPrice">TicketPrice</label>
+                    <InputNumber id="ticketPrice" class="form-control" @bind-Value="SelectedTicket.TicketPrice"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </EditForm>
+        }
+        else
+        {
+            <h4>Update Ticket</h4>
+            <EditForm Model="SelectedTicket" OnValidSubmit="UpdateTicketSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <div class="form-group">
+                    <label for="showId">Show</label>
+                    <InputSelect id="showId" class="form-control" @bind-Value="SelectedTicket.ShowId">
+                        <option value="">Select a show</option>
+                        @foreach (var show in Shows)
+                        {
+                            <option value="@show.Id">@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="seatId">Seat</label>
+                    <InputSelect id="seatId" class="form-control" @bind-Value="SelectedTicket.SeatId">
+                        <option value="">Select a seat</option>
+                        @foreach (var seat in Seats)
+                        {
+                            <option value="@seat.Id">@seat.Id, @seat.SeatNumber, @seat.RowNumber</option>
+                        }
+                    </InputSelect>
+                </div>
+               <div class="form-group">
+                   <label for="ticketTypeId">Ticket Type</label>
+                   <InputSelect id="ticketTypeId" class="form-control" @bind-Value="SelectedTicket.TicketTypeId">
+                       <option value="">Select a ticket type</option>
+                       @foreach (var ticketType in TicketTypes)
+                       {
+                           <option value="@ticketType.Id">@ticketType.Name</option>
+                       }
+                   </InputSelect>
+               </div>
+                <div class="form-group">
+                    <label for="ticketPrice">TicketPrice</label>
+                    <InputNumber id="ticketPrice" class="form-control" @bind-Value="SelectedTicket.TicketPrice"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </EditForm>
+            <button class="btn btn-danger" @onclick="DeleteTicketSubmit">Delete</button>
+        }
+    </div>
+</div>
+
+@code {
+    List<TicketDto> Tickets = new List<TicketDto>();
+    TicketDto SelectedTicket = new TicketDto();
+    UpdateTicketDto EditTicket = new UpdateTicketDto();
+    AddTicketDto NewTicket = new AddTicketDto();
+    List<ShowDto> Shows = new List<ShowDto>();
+    List<TicketTypeDto> TicketTypes = new List<TicketTypeDto>();
+    List<SeatDto> Seats = new List<SeatDto>();
+    List<SeatDto> AllSeats = new List<SeatDto>();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Shows = await Http.GetFromJsonAsync<List<ShowDto>>("api/show");
+        TicketTypes = await Http.GetFromJsonAsync<List<TicketTypeDto>>("api/tickettype");
+        Tickets = await Http.GetFromJsonAsync<List<TicketDto>>("api/ticket");
+        AllSeats = await Http.GetFromJsonAsync<List<SeatDto>>("api/seat");
+        SelectTicket();
+    }
+
+    private void SelectTicket(TicketDto ticket)
+    {
+        if (SelectedTicket != null && SelectedTicket.Id == ticket.Id)
+        {
+            SelectedTicket = null;
+        }
+        else
+        {
+            SelectedTicket = new TicketDto
+            {
+                Id = ticket.Id,
+                ShowId = ticket.ShowId,
+                SeatId = ticket.SeatId,
+                TicketTypeId = ticket.TicketTypeId,
+                TicketPrice = ticket.TicketPrice
+            };
+        }
+        Seats = AllSeats.Where(seat => seat.TheaterRowId == SelectedTicket.ShowId).ToList();
+
+    }
+
+    private void SelectTicket()
+    {
+        SelectedTicket = new TicketDto
+        {
+            Id = 0,
+            ShowId = 0,
+            SeatId = 0,
+            TicketTypeId = 0,
+            TicketPrice = 0
+        };
+    }
+
+    private async Task NewTicketSubmit()
+    {
+        NewTicket = new AddTicketDto
+        {
+            ShowId = SelectedTicket.ShowId,
+            SeatId = SelectedTicket.SeatId,
+            TicketTypeId = SelectedTicket.TicketTypeId,
+            TicketPrice = SelectedTicket.TicketPrice
+        };
+
+        var response = await Http.PostAsJsonAsync("api/ticket", NewTicket);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Tickets = await Http.GetFromJsonAsync<List<TicketDto>>("api/ticket");
+            SelectTicket();
+            StateHasChanged();
+        }
+    }
+
+    private async Task UpdateTicketSubmit()
+    {
+        EditTicket = new UpdateTicketDto
+        {
+            ShowId = SelectedTicket.ShowId,
+            SeatId = SelectedTicket.SeatId,
+            TicketTypeId = SelectedTicket.TicketTypeId,
+            TicketPrice = SelectedTicket.TicketPrice
+        };
+
+        var response = await Http.PutAsJsonAsync($"api/ticket/{SelectedTicket.Id}", EditTicket);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Tickets = await Http.GetFromJsonAsync<List<TicketDto>>("api/ticket");
+            SelectTicket();
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteTicketSubmit()
+    {
+        var response = await Http.DeleteAsync($"api/ticket/{SelectedTicket.Id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            Tickets = await Http.GetFromJsonAsync<List<TicketDto>>("api/ticket");
+            SelectTicket();
+            StateHasChanged();
+        }
+    }
+}
