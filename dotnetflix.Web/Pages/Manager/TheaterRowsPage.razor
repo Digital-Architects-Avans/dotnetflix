@@ -1,0 +1,206 @@
+@page "/manager/theaterrows"
+@using dotnetflix.Web.Services
+@using dotnetflix.Models.Dtos.TheaterRow
+@using dotnetflix.Models.Dtos.Seat
+@using dotnetflix.Models.Dtos.Theater
+@inject HttpClient Http
+
+<h3>Theater Row Management</h3>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Row Id</th>
+                <th>Row Number</th>
+                <th>Number of Seats</th>
+                <th>Actual Seat Count</th>
+                <th>Theater</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr @onclick="() => SelectRow()" class="new-theater-row">
+                <td>Add</td>
+                <td>New</td>
+                <td>Row</td>
+            </tr>
+            @foreach (var row in TheaterRows)
+            {
+                <tr @onclick="() => SelectRow(row)" class="@(SelectedRow != null && SelectedRow.Id == row.Id ? "selected-theater-row" : "")">
+                    <td>@row.Id</td>
+                    <td>@row.RowNumber</td>
+                    <td>@row.NumberOfSeats</td>
+                    <td>@row.ActualSeatCount</td>
+                    <td>@row.TheaterId</td>
+
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        @if (SelectedRow.Id < 1)
+        {
+            <h4>Add New Row</h4>
+            <EditForm Model="SelectedRow" OnValidSubmit="NewRowSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <div class="form-group">
+                    <label for="rowNumber">Row Number</label>
+                    <InputNumber id="rowNumber" class="form-control" @bind-Value="SelectedRow.RowNumber"/>
+                </div>
+                <div class="form-group">
+                    <label for="numberOfSeats">Number of Seats</label>
+                    <InputNumber id="numberOfSeats" class="form-control" @bind-Value="SelectedRow.NumberOfSeats"/>
+                </div>
+                <div class="form-group">
+                    <label for="theaterId">Theater</label>
+                    <InputSelect id="theaterId" class="form-control" @bind-Value="SelectedRow.TheaterId">
+                        @foreach (var theater in Theaters)
+                        {
+                            <option value="@theater.Id">@theater.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </EditForm>
+        }
+        else
+        {
+            <h4>Update Row</h4>
+            <EditForm Model="SelectedRow" OnValidSubmit="UpdateRowSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <div class="form-group">
+                    <label for="rowNumber">Row Number</label>
+                    <InputNumber id="rowNumber" class="form-control" @bind-Value="SelectedRow.RowNumber"/>
+                </div>
+                <div class="form-group">
+                    <label for="numberOfSeats">Number of Seats</label>
+                    <InputNumber id="numberOfSeats" class="form-control" @bind-Value="SelectedRow.NumberOfSeats"/>
+                </div>
+                <div class="form-group">
+                    <label for="theaterId">Theater</label>
+                    <InputSelect id="theaterId" class="form-control" @bind-Value="SelectedRow.TheaterId">
+                        @foreach (var theater in Theaters)
+                        {
+                            <option value="@theater.Id">@theater.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </EditForm>
+            <button class="btn btn-danger" @onclick="DeleteRowSubmit">Delete</button>
+        }
+    </div>
+</div>
+
+@code {
+    List<TheaterRowDto> TheaterRows = new List<TheaterRowDto>();
+    TheaterRowDto SelectedRow = new TheaterRowDto();
+    AddTheaterRowDto NewRow = new AddTheaterRowDto();
+    UpdateTheaterRowDto EditRow = new UpdateTheaterRowDto();
+    List<SeatDto> Seats = new List<SeatDto>(); 
+    List<TheaterDto> Theaters = new List<TheaterDto>(); 
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        TheaterRows = await Http.GetFromJsonAsync<List<TheaterRowDto>>("api/theaterrow");
+        Seats = await Http.GetFromJsonAsync<List<SeatDto>>("api/seat"); 
+        Theaters = await Http.GetFromJsonAsync<List<TheaterDto>>("api/theater"); 
+        NewRow = new AddTheaterRowDto();
+        EditRow = new UpdateTheaterRowDto();
+        
+        foreach (var row in TheaterRows)
+        {
+            row.ActualSeatCount = Seats.Count(seat => seat.TheaterRowId == row.Id);
+        }
+        SelectRow();
+    }
+
+    private void SelectRow(TheaterRowDto row)
+    {
+        if (SelectedRow != null && SelectedRow.Id == row.Id)
+        {
+            // Deselect the current row if it is clicked again
+            SelectedRow = null;
+        }
+        else
+        {
+            var selectedTheater = Theaters.FirstOrDefault(t => t.Id == row.TheaterId);
+            SelectedRow = new TheaterRowDto
+            {
+                Id = row.Id,
+                RowNumber = row.RowNumber,
+                NumberOfSeats = row.NumberOfSeats,
+                TheaterId = selectedTheater.Id, 
+                TheaterName = selectedTheater.Name
+            };
+        }
+    }
+
+    private void SelectRow()
+    {
+        SelectedRow = new TheaterRowDto
+        {
+            Id = 0,
+            RowNumber = 1,
+            NumberOfSeats = 1
+        };
+    }
+
+    private async Task NewRowSubmit()
+    {
+        NewRow = new AddTheaterRowDto
+        {
+            RowNumber = SelectedRow.RowNumber,
+            NumberOfSeats = SelectedRow.NumberOfSeats,
+            TheaterId = SelectedRow.TheaterId 
+        };
+
+        var response = await Http.PostAsJsonAsync("api/theaterrow", NewRow);
+
+        if (response.IsSuccessStatusCode)
+        {
+            TheaterRows = await Http.GetFromJsonAsync<List<TheaterRowDto>>("api/theaterrow");
+            SelectRow();
+            StateHasChanged();
+        }
+    }
+
+    private async Task UpdateRowSubmit()
+    {
+        EditRow = new UpdateTheaterRowDto
+        {
+            RowNumber = SelectedRow.RowNumber,
+            NumberOfSeats = SelectedRow.NumberOfSeats,
+            TheaterId = SelectedRow.TheaterId 
+        };
+
+        var response = await Http.PutAsJsonAsync($"api/theaterrow/{SelectedRow.Id}", EditRow);
+
+        if (response.IsSuccessStatusCode)
+        {
+            TheaterRows = await Http.GetFromJsonAsync<List<TheaterRowDto>>("api/theaterrow");
+            SelectRow();
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteRowSubmit()
+    {
+        var response = await Http.DeleteAsync($"api/theaterrow/{SelectedRow.Id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            TheaterRows = await Http.GetFromJsonAsync<List<TheaterRowDto>>("api/theaterrow");
+            SelectRow();
+            StateHasChanged();
+        }
+    }
+}

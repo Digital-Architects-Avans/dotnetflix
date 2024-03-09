@@ -148,6 +148,12 @@
 
     private async Task UpdateSeatSubmit()
     {
+        
+        EditSeat = new UpdateSeatDto
+        {
+            SeatNumber = SelectedSeat.SeatNumber,
+            TheaterRowId = SelectedSeat.TheaterRowId
+        };
         var response = await Http.PutAsJsonAsync($"api/seat/{SelectedSeat.Id}", EditSeat);
 
         if (response.IsSuccessStatusCode)
