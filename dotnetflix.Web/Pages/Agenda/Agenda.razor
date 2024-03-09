@@ -15,7 +15,7 @@ else
     // Days buttons
     <div class="d-grid">
         <div class="row-cols-7">
-            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today))">Vandaag</FluentButton>
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today))">Today</FluentButton>
             <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(1)))">@today.AddDays(1).ToString("dd MMM")</FluentButton>
             <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(2)))">@today.AddDays(2).ToString("dd MMM")</FluentButton>
             <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(3)))">@today.AddDays(3).ToString("dd MMM")</FluentButton>
@@ -24,7 +24,7 @@ else
     </div>
 
     // Show grid
-    <FluentDataGrid Virtualize="true" ItemSize="54" GridTemplateColumns="1fr 1fr 2fr" Items="@MoviesWithDates.AsQueryable()">
+    <FluentDataGrid Virtualize="true" ItemSize="54" GridTemplateColumns="2fr 1fr 6fr" Items="@MoviesWithDates.AsQueryable()">
 
         @* Title Column *@
         <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)"></PropertyColumn>
@@ -40,10 +40,12 @@ else
             @for (int i = 0; i < context.ShowIds.Count; i++)
             {
                 int id = context.ShowIds[i];
-                <button id="@id" class="btn btn-light p-2 m-2" onclick="@(() => Redirect(id))">
+                <button id="@id" class="btn-light btn p2 m-2" onclick="@(() => Redirect(id))">
                     <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
                     @context.Dates[i].ToString("H:mm")
+                    <span class="text-info m-2">Theater @context.TheaterId[i]</span>
                 </button>
+                
             }
         </TemplateColumn>
     </FluentDataGrid>
@@ -111,6 +113,7 @@ else
                 MovieWithDates movieWithDates = new MovieWithDates
                     {
                         ShowIds = group.Where(d => d.Date.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).Select(s => s.Id).ToList(),
+                        TheaterId = group.Where(d => d.Date.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).Select(s => s.TheaterId).ToList(),
                         MovieId = show.MovieId,
                         MovieTitle = show.MovieTitle,
                         Dates = group.Where(d => d.Date.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).Select(s => s.Date).ToList()
@@ -130,6 +133,7 @@ else
     public class MovieWithDates
     {
         public int MovieId { get; set; }
+        public List<int>? TheaterId { get; set; }
         public string? MovieTitle { get; set; }
         public List<DateTime>? Dates { get; set; }
         public List<int>? ShowIds { get; set; }

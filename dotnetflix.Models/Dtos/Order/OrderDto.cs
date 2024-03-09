@@ -11,4 +11,8 @@ public class OrderDto
 	public int Id { get; set; }
 	public decimal TotalPrice { get; set; }
 	public ICollection<int> TicketIds { get; set; }
+	
+	public string Uuid { get; set; }
+	public string CustomerName { get; set; }
+	public string CustomerEmail { get; set; }
 }
