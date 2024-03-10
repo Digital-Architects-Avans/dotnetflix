@@ -1,44 +1,16 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">.NETflix</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-camera-reels-fill" aria-hidden="true"></span>What's on
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="overview">
-                <span class="bi bi-ticket-fill" aria-hidden="true"></span>Collect tickets
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="agenda">
-                <span class="bi bi-calendar2-check-fill" aria-hidden="true"></span> Agenda
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="catalog">
-                <span class="bi bi-calendar2-check-fill" aria-hidden="true"></span> Search the Catalog
-            </NavLink>
-        </div>
+﻿<div class="navmenu">
+    <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon" />
+    <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" /></label>
+    <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
+        <FluentNavMenu Id="main-menu" Width="250" Collapsible="true" Title="Navigation menu" @bind-Expanded="_expanded">
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">What's on</FluentNavLink>
+            <FluentNavLink Href="agenda" Icon="@(new Icons.Regular.Size20.Calendar())" IconColor="Color.Accent">Agenda</FluentNavLink>
+            <FluentNavLink Href="catalog" Icon="@(new Icons.Regular.Size20.Search())" IconColor="Color.Accent">Search</FluentNavLink>
+            <FluentNavLink Href="overview" Icon="@(new Icons.Regular.Size20.TicketDiagonal())" IconColor="Color.Accent">Collect tickets</FluentNavLink>
+        </FluentNavMenu>
     </nav>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+    private bool _expanded = true;
 }
