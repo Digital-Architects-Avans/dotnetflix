@@ -20,33 +20,12 @@ else
             <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(2)))">@today.AddDays(2).ToString("dd MMM")</FluentButton>
             <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(3)))">@today.AddDays(3).ToString("dd MMM")</FluentButton>
             <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(4)))">@today.AddDays(4).ToString("dd MMM")</FluentButton>
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today))">This Week</FluentButton>
         </div>
     </div>
 
-    // Show grid
-    <FluentDataGrid Virtualize="true" ItemSize="54" GridTemplateColumns="1fr 1fr 2fr" Items="@MoviesWithDates.AsQueryable()">
+    
 
-        @* Title Column *@
-        <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)"></PropertyColumn>
-
-        @* Movie info Column *@
-        <TemplateColumn>
-            <FluentButton IconStart="@(new Icons.Regular.Size16.Info())" Appearance="Appearance.Accent" style="width: 30px; height: 30px;" OnClick="@(() => GetMovieDetails(context.MovieId))">
-            </FluentButton>
-        </TemplateColumn>
-
-        @* Dates Column *@
-        <TemplateColumn Title="">
-            @for (int i = 0; i < context.ShowIds.Count; i++)
-            {
-                int id = context.ShowIds[i];
-                <button id="@id" class="btn btn-light p-2 m-2" onclick="@(() => Redirect(id))">
-                    <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
-                    @context.Dates[i].ToString("H:mm")
-                </button>
-            }
-        </TemplateColumn>
-    </FluentDataGrid>
 }
 
 @code {
