@@ -120,6 +120,12 @@
                 {
                     finalPricePerTicket += 2.5m;
                 }
+                
+                // Set discount for sneak preview shows
+                if (SelectedShow.SneakPreview)
+                {
+                    finalPricePerTicket -= 2.5m;
+                }
 
                 ticketOrder.FinalPrice = finalPricePerTicket;
 
