@@ -5,6 +5,7 @@
 @using dotnetflix.Models.Dtos.Seat
 @using dotnetflix.Models.Dtos.TicketType
 @using dotnetflix.Models.Dtos
+@using dotnetflix.Models.Dtos.Order
 @inject HttpClient Http
 
 <h3>Ticket Management</h3>
@@ -92,6 +93,16 @@
                     <label for="ticketPrice">TicketPrice</label>
                     <InputNumber id="ticketPrice" class="form-control" @bind-Value="SelectedTicket.TicketPrice"/>
                 </div>
+                <div class="form-group">
+                    <label for="orderId">Order</label>
+                    <InputSelect id="orderId" class="form-control" @bind-Value="SelectedTicket.OrderId">
+                        <option value="">Select an order</option>
+                        @foreach (var order in Orders)
+                        {
+                            <option value="@order.Id">@order.Id, @order.CustomerName</option>
+                        }
+                    </InputSelect>
+                </div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </EditForm>
         }
@@ -132,10 +143,20 @@
                        }
                    </InputSelect>
                </div>
-                <div class="form-group">
-                    <label for="ticketPrice">TicketPrice</label>
-                    <InputNumber id="ticketPrice" class="form-control" @bind-Value="SelectedTicket.TicketPrice"/>
-                </div>
+               <div class="form-group">
+                   <label for="ticketPrice">TicketPrice</label>
+                   <InputNumber id="ticketPrice" class="form-control" @bind-Value="SelectedTicket.TicketPrice"/>
+               </div>
+               <div class="form-group">
+                   <label for="orderId">Order</label>
+                   <InputSelect id="orderId" class="form-control" @bind-Value="SelectedTicket.OrderId">
+                       <option value="">Select an order</option>
+                       @foreach (var order in Orders)
+                       {
+                           <option value="@order.Id">@order.Id, @order.CustomerName</option>
+                       }
+                   </InputSelect>
+               </div>
                 <button type="submit" class="btn btn-primary">Update</button>
             </EditForm>
             <button class="btn btn-danger" @onclick="DeleteTicketSubmit">Delete</button>
@@ -151,6 +172,7 @@
     List<ShowDto> Shows = new List<ShowDto>();
     List<TicketTypeDto> TicketTypes = new List<TicketTypeDto>();
     List<SeatDto> Seats = new List<SeatDto>();
+    List<OrderDto> Orders = new List<OrderDto>();
 
 
     protected override async Task OnInitializedAsync()
@@ -159,6 +181,7 @@
         TicketTypes = await Http.GetFromJsonAsync<List<TicketTypeDto>>("api/tickettype");
         Tickets = await Http.GetFromJsonAsync<List<TicketDto>>("api/ticket");
         Seats = await Http.GetFromJsonAsync<List<SeatDto>>("api/seat");
+        Orders = await Http.GetFromJsonAsync<List<OrderDto>>("api/order");
         SelectTicket();
     }
 
@@ -176,7 +199,8 @@
                 ShowId = ticket.ShowId,
                 SeatId = ticket.SeatId,
                 TicketTypeId = ticket.TicketTypeId,
-                TicketPrice = ticket.TicketPrice
+                TicketPrice = ticket.TicketPrice,
+                OrderId = ticket.OrderId
             };
         }
 
@@ -190,7 +214,8 @@
             ShowId = 0,
             SeatId = 0,
             TicketTypeId = 0,
-            TicketPrice = 0
+            TicketPrice = 0,
+            OrderId = 0
         };
     }
 
@@ -201,7 +226,8 @@
             ShowId = SelectedTicket.ShowId,
             SeatId = SelectedTicket.SeatId,
             TicketTypeId = SelectedTicket.TicketTypeId,
-            TicketPrice = SelectedTicket.TicketPrice
+            TicketPrice = SelectedTicket.TicketPrice,
+            OrderId = SelectedTicket.OrderId
         };
 
         var response = await Http.PostAsJsonAsync("api/ticket", NewTicket);
@@ -221,7 +247,8 @@
             ShowId = SelectedTicket.ShowId,
             SeatId = SelectedTicket.SeatId,
             TicketTypeId = SelectedTicket.TicketTypeId,
-            TicketPrice = SelectedTicket.TicketPrice
+            TicketPrice = SelectedTicket.TicketPrice,
+            OrderId = SelectedTicket.OrderId
         };
 
         var response = await Http.PutAsJsonAsync($"api/ticket/{SelectedTicket.Id}", EditTicket);
