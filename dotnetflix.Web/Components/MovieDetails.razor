@@ -6,19 +6,19 @@
 <div class="card mb-3 border-0" style="max-width: 540px;">
     <div class="row g-0">
         <div class="col-md-4">
-            <img src="/images/@Movie.Image" class="img-fluid rounded" alt="..." style="max-height: 250px;">
+            <img src="/images/@Movie?.Image" class="img-fluid rounded" alt="..." style="max-height: 250px;">
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">@Movie.Title (@Movie.Year)</h5>
-                <p class="card-text">@Movie.Description</p>
+                <h5 class="card-title">@Movie?.Title (@Movie?.Year)</h5>
+                <p class="card-text">@Movie?.Description</p>
                 <p class="card-text">
-                    <small class="text-body-secondary">Run time: @Movie.Runtime min</small>
+                    <small class="text-body-secondary">Run time: @Movie?.Runtime min</small>
                 </p>
                 <p class="card-text">
-                    <small class="text-body-secondary">Rating: @Movie.Rating</small>
+                    <small class="text-body-secondary">Rating: @Movie?.Rating</small>
                 </p>
-                <p class="card-text">First shown: @FirstShowDate days ago</p>
+                <small class="text-body-secondary">First shown: @FirstShowDate days ago</small>
             </div>
         </div>
     </div>
@@ -40,15 +40,16 @@
 @code {
 
     // Parameter to be passed to the component
-    [Parameter] public MovieDto Movie { get; set; } = new MovieDto();
-    [Parameter] public ShowDto? Show { get; set; } = null;
-    [Parameter] public string StartTime { get; set; } = "00:00";
-    [Parameter] public string EndTime { get; set; } = "00:00";
+    [Parameter] public MovieDto? Movie { get; set; }
+    [Parameter] public ShowDto? Show { get; set; }
+    [Parameter] public string? StartTime { get; set; }
+    [Parameter] public string? EndTime { get; set; }
 
     [Inject]
     public IShowService? ShowService { get; set; }
-    public IEnumerable<ShowDto>? Shows { get; set; }
-    public int FirstShowDate { get; set; }
+
+    private IEnumerable<ShowDto>? Shows { get; set; }
+    private int FirstShowDate { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,8 +61,12 @@
             EndTime = Show.Date.AddMinutes(Show.ScreenTime).ToString("HH:mm");
         }
 
-        Shows = await ShowService.GetShows();
-        DateTime FirstShow = Shows.Where(s => s.MovieId == Movie.Id).Select(s => (DateTime)s.Date).Min();
-        FirstShowDate = DateTime.Now.DayOfYear - FirstShow.DayOfYear;
+        if (ShowService != null)
+        {
+            Shows = await ShowService.GetShows();
+        }
+
+        var firstShow = Shows?.Where(s => s.MovieId == Movie?.Id).Select(s => s.Date).Min();
+        FirstShowDate = (firstShow != null) ? DateTime.Now.DayOfYear - firstShow.Value.DayOfYear : 0;
     }
 }
