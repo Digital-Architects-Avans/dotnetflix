@@ -74,7 +74,7 @@
                         <option value="">Select a seat</option>
                         @foreach (var seat in Seats)
                         {
-                            <option value="@seat.Id">@seat.Id, @seat.SeatNumber, @seat.RowNumber</option>
+                            <option value="@seat.Id">@seat.Id, @seat.SeatNumber</option>
                         }
                     </InputSelect>
                 </div>
@@ -118,7 +118,7 @@
                         <option value="">Select a seat</option>
                         @foreach (var seat in Seats)
                         {
-                            <option value="@seat.Id">@seat.Id, @seat.SeatNumber, @seat.RowNumber</option>
+                            <option value="@seat.Id">@seat.Id, @seat.SeatNumber</option>
                         }
                     </InputSelect>
                 </div>
@@ -151,8 +151,6 @@
     List<ShowDto> Shows = new List<ShowDto>();
     List<TicketTypeDto> TicketTypes = new List<TicketTypeDto>();
     List<SeatDto> Seats = new List<SeatDto>();
-    List<SeatDto> AllSeats = new List<SeatDto>();
-
 
 
     protected override async Task OnInitializedAsync()
@@ -160,7 +158,7 @@
         Shows = await Http.GetFromJsonAsync<List<ShowDto>>("api/show");
         TicketTypes = await Http.GetFromJsonAsync<List<TicketTypeDto>>("api/tickettype");
         Tickets = await Http.GetFromJsonAsync<List<TicketDto>>("api/ticket");
-        AllSeats = await Http.GetFromJsonAsync<List<SeatDto>>("api/seat");
+        Seats = await Http.GetFromJsonAsync<List<SeatDto>>("api/seat");
         SelectTicket();
     }
 
@@ -181,7 +179,6 @@
                 TicketPrice = ticket.TicketPrice
             };
         }
-        Seats = AllSeats.Where(seat => seat.TheaterRowId == SelectedTicket.ShowId).ToList();
 
     }
 
