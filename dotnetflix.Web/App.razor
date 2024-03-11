@@ -1,4 +1,10 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@* Set theme storage mame to for persistence and load theme to prevent flashing in dark mode *@
+<FluentDesignTheme StorageName="dotnetflix" />
+<script src="_content/Microsoft.FluentUI.AspNetCore.Components/js/loading-theme.js" type="text/javascript"></script>
+<loading-theme storage-name="dotnetflix"></loading-theme>
+
+@* Router *@
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
