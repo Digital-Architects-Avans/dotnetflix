@@ -1,6 +1,7 @@
 @using dotnetflix.Models.Dtos.Movie
 @using dotnetflix.Models.Dtos.Show
 @using System.Globalization
+@using dotnetflix.Web.Services
 
 <div class="card mb-3 border-0" style="max-width: 540px;">
     <div class="row g-0">
@@ -12,11 +13,12 @@
                 <h5 class="card-title">@MovieTitle</h5>
                 <p class="card-text">@MovieDescription</p>
                 <p class="card-text">
-                    <small class="text-body-secondary">Run time: @Movie.Runtime min</small>
+                    <small class="text-body-secondary">Run time: @Movie?.Runtime min</small>
                 </p>
                 <p class="card-text">
-                    <small class="text-body-secondary">Rating: @Movie.Rating</small>
+                    <small class="text-body-secondary">Rating: @Movie?.Rating</small>
                 </p>
+                <small class="text-body-secondary">First shown: @FirstShowDate days ago</small>
             </div>
         </div>
     </div>
@@ -38,17 +40,23 @@
 @code {
 
     // Parameter to be passed to the component
-    [Parameter] public MovieDto Movie { get; set; } = new MovieDto();
+    [Parameter] public MovieDto? Movie { get; set; }
     [Parameter] public ShowDto? Show { get; set; }
-    [Parameter] public string StartTime { get; set; } = "00:00";
-    [Parameter] public string EndTime { get; set; } = "00:00";
+    [Parameter] public string? StartTime { get; set; }
+    [Parameter] public string? EndTime { get; set; }
+
+    [Inject]
+    public IShowService? ShowService { get; set; }
+
+    private IEnumerable<ShowDto>? Shows { get; set; }
+    private int FirstShowDate { get; set; }
 
     [Parameter] public bool? IsSneakPreview { get; set; } = false;
     [Parameter] public string MovieTitle { get; set; } = "Loading...";
     [Parameter] public string MovieDescription { get; set; } = "Loading...";
     [Parameter] public string MovieImage { get; set; } = "no-cover.jpg";
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         if (Show != null)
         {
@@ -74,7 +82,12 @@
             MovieDescription = Movie.Description;
         }
 
-        return Task.CompletedTask;
-    }
+        if (ShowService != null)
+        {
+            Shows = await ShowService.GetShows();
+        }
 
+        var firstShow = Shows?.Where(s => s.MovieId == Movie?.Id).Select(s => s.Date).Min();
+        FirstShowDate = (firstShow != null) ? DateTime.Now.DayOfYear - firstShow.Value.DayOfYear : 0;
+    }
 }
