@@ -1,0 +1,51 @@
+@page "/Settings"
+
+@using Microsoft.FluentUI.AspNetCore.Components.DesignTokens
+@inject BaseLayerLuminance BaseLayerLuminance
+
+<FluentDesignTheme @bind-Mode="@Mode"
+                   OfficeColor="OfficeColor.Default"
+                   CustomColor="#512BD4"
+                   OnLoaded="@OnLoaded"
+                   OnLuminanceChanged="@OnLuminanceChanged"
+                   StorageName="dotnetflix"/>
+
+<FluentSwitch @bind-Value=@IsDark
+              CheckedMessage="Dark"
+              UncheckedMessage="Light"/>
+
+<FluentSelect Label="Theme"
+              Width="250px"
+              Items="@(Enum.GetValues<DesignThemeModes>())"
+              @bind-SelectedOption="@Mode"/>
+
+@code
+{
+    private DesignThemeModes Mode { get; set; }
+    private bool _isDark;
+
+    private bool IsDark
+    {
+        get => _isDark;
+        set
+        {
+            _isDark = value;
+
+            var luminance = _isDark ? StandardLuminance.DarkMode : StandardLuminance.LightMode;
+            Mode = _isDark ? DesignThemeModes.Dark : DesignThemeModes.Light;
+            BaseLayerLuminance.WithDefault(luminance.GetLuminanceValue());
+        }
+    }
+
+    void OnLoaded(LoadedEventArgs e)
+    {
+        Console.WriteLine($"Loaded: {(e.Mode == DesignThemeModes.System ? "System" : "")} {(e.IsDark ? "Dark" : "Light")}");
+        _isDark = e.IsDark;
+    }
+
+    void OnLuminanceChanged(LuminanceChangedEventArgs e)
+    {
+        Console.WriteLine($"Changed: {(e.Mode == DesignThemeModes.System ? "System" : "")} {(e.IsDark ? "Dark" : "Light")}");
+        _isDark = e.IsDark;
+    }
+}
