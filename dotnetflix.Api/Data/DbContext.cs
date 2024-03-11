@@ -222,6 +222,12 @@ namespace dotnetflix.Api.Data
                     Id = 5,
                     Name = "Cinema Pass",
                     Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 6,
+                    Name = "3D",
+                    Discount = 0M
                 }
             );
             

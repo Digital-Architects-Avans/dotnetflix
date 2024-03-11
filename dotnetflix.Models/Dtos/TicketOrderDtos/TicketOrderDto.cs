@@ -8,9 +8,6 @@ public class TicketOrderDto
     public string TheaterName { get; set; }
     public DateTime ShowTime { get; set; }
     public int ShowId { get; set; }
-    public int SeatId { get; set; }
-    public int RowNumber { get; set; }
-    public int SeatNumber { get; set; }
     public int TicketTypeId { get; set; }
     public int Quantity { get; set; }
     public decimal FinalPrice { get; set; } // Price for the ticket after discount applied to Show Base Price

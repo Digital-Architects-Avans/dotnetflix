@@ -41,7 +41,7 @@
             <span>@Order.Uuid</span>
         </h3>
 
-        <MovieDetails Movie="Movie"/>
+        <MovieDetails Movie="Movie" IsSneakPreview="@_isSneakPreview"/>
 
         @foreach (var ticket in Tickets)
         {
@@ -74,6 +74,7 @@
     private PageState Status { get; set; }
     [Parameter] public int OrderCode { get; set; }
     private string _orderCode = "";
+    private bool _isSneakPreview;
 
     private enum PageState
     {
@@ -121,6 +122,9 @@
             if (ShowService != null)
             {
                 Show = await ShowService.GetShow(Tickets[0].ShowId)!;
+                
+                // Check if the show is a sneak preview
+                _isSneakPreview = Show.SneakPreview;
             }
 
             // Get movie details 
