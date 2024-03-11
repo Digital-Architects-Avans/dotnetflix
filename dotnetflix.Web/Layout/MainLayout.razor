@@ -1,11 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
 <FluentLayout>
-    <FluentHeader>
-        .NETflix
-    </FluentHeader>
+    <Header></Header>
     <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
-        <NavMenu />
+        <NavMenu/>
         <FluentBodyContent Class="body-content">
             <ErrorBoundary>
                 <ChildContent>
@@ -20,16 +18,16 @@
         </FluentBodyContent>
     </FluentStack>
     <FluentFooter>
-                <div class="link1">
-                    <a href="https://www.fluentui-blazor.net" target="_blank">Documentation and demos</a>
-                </div>
-                <div class="link2">
-                    <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor" target="_blank">About Blazor</a>
-                </div>
+        <div class="link1">
+            <a href="https://www.fluentui-blazor.net" target="_blank">Documentation and demos</a>
+        </div>
+        <div class="link2">
+            <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor" target="_blank">About Blazor</a>
+        </div>
     </FluentFooter>
 </FluentLayout>
 
-<FluentToastProvider />
-<FluentDialogProvider />
-<FluentTooltipProvider />
-<FluentMessageBarProvider />
+<FluentToastProvider/>
+<FluentDialogProvider/>
+<FluentTooltipProvider/>
+<FluentMessageBarProvider/>
