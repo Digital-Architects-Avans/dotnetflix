@@ -16,15 +16,18 @@
                        </tr>
                    </thead>
                    <tbody>
-                       @foreach (var show in Shows)
-                              {
-                                  <tr @onclick="() => SelectShow(show)" class="@(SelectedShow.Id == show.Id ? "selected-show" : "new-show")">
-                                      <td>@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</td>
-                                  </tr>
-                              }
-                       <tr @onclick="() => SelectShow()" class="new-show">
-                           <td>Add New Show</td>
-                            </tr>
+                   <tr @onclick="() => SelectShow()" class="new-show">
+                       <td>Add New Show</td>
+                   </tr>
+                   @foreach (var show in Shows)
+                   {
+                       <tr @onclick="() => SelectShow(show)" class="@(SelectedShow.Id == show.Id ? "selected-show" : "new-show")">
+                           <td>@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</td>
+                       </tr>
+                   }
+                   <tr @onclick="() => SelectShow()" class="new-show">
+                       <td>Add New Show</td>
+                   </tr>
                    </tbody>
                </table>
     </div>

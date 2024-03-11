@@ -8,4 +8,5 @@ public class AddTicketDto
 	public int SeatId { get; set; }
 	public int TicketTypeId { get; set; }
 	public decimal TicketPrice { get; set; }
+	public int? OrderId { get; set; }
 }

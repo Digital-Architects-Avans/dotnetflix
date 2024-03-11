@@ -110,7 +110,8 @@ public static class DtoConversions
 			SeatNumber = ticket.SeatNumber,
 			ShowTime = ticket.ShowTime,
 			TicketTypeId = ticket.TicketTypeId,
-			TicketPrice = ticket.TicketPrice
+			TicketPrice = ticket.TicketPrice,
+			OrderId = ticket.OrderId
 		};
 	}
     
