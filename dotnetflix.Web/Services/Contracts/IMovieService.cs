@@ -4,5 +4,5 @@ namespace dotnetflix.Web.Services.Contracts;
 
 public interface IMovieService
 {
-    Task<MovieDto?> GetMovie(int id);
+    Task<MovieDto> GetMovie(int id);
 }

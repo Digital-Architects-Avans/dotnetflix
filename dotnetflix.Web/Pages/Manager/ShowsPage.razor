@@ -7,27 +7,24 @@
 
 <div class="row">
     <div class="col-md-6">
-       <table class="table">
-                   <thead>
-                       <tr>
-                           <th>Show details</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                   <tr @onclick="() => SelectShow()" class="new-show">
-                       <td>Add New Show</td>
-                   </tr>
-                   @foreach (var show in Shows)
-                   {
-                       <tr @onclick="() => SelectShow(show)" class="@(SelectedShow.Id == show.Id ? "selected-show" : "new-show")">
-                           <td>@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</td>
-                       </tr>
-                   }
-                   <tr @onclick="() => SelectShow()" class="new-show">
-                       <td>Add New Show</td>
-                   </tr>
-                   </tbody>
-               </table>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Show details</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var show in _shows)
+            {
+                <tr @onclick="() => SelectShow(show)" class="@(_selectedShow.Id == show.Id ? "selected-show" : "new-show")">
+                    <td>@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</td>
+                </tr>
+            }
+            <tr @onclick="() => SelectShow()" class="new-show">
+                <td>Add New Show</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <div class="col-md-6">
         @if (_selectedShow.Id < 1)
