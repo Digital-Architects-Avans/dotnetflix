@@ -1,4 +1,8 @@
 @page "/"
+@using dotnetflix.Web.Services.Contracts
+@using dotnetflix.Models.Dtos.Show
+@using dotnetflix.Models.Dtos.Movie
+@using dotnetflix.Web.Components
 
 <h1>What's on</h1>
 
@@ -19,8 +23,7 @@
             // Show movie details and timings
             if (movieDetails != null)
             {
-                var isSneakPreview = shows.First().SneakPreview;
-                <MovieDetails Movie="movieDetails" IsSneakPreview="@isSneakPreview"/>
+                <MovieDetails Movie="movieDetails"/>
             }
 
             <h6>Today</h6>
@@ -49,8 +52,7 @@ else
 
     // 2) Public properties to expose to the view
     private IEnumerable<ShowDto>? Shows { get; set; }
-    private IEnumerable<ShowDto>? SneakPreviewShows { get; set; }
-    private IEnumerable<IGrouping<int, ShowDto>>? GroupedShowsByMovie { get; set; }
+    private IOrderedEnumerable<IGrouping<int, ShowDto>>? GroupedShowsByMovie { get; set; }
     private IEnumerable<MovieDto> Movies { get; set; } = new List<MovieDto>();
     private int? FoundShows { get; set; }
     private int FoundMovies { get; set; }
@@ -62,44 +64,23 @@ else
 
         if (ShowService != null)
         {
-            // TODO: Add GetShowsByDate method
-
             // Get shows
+            // TODO: Add GetShowsByDate method
+            Shows = await ShowService.GetShows();
+
+            // Filter and order shows for today
             var now = DateTime.Now;
-            
-            var shows = await ShowService.GetShows();
+            Shows = Shows?.Where(show => show.Date.Date == now.Date && show.Date.TimeOfDay >= now.TimeOfDay).OrderBy(show => show.Date);
+            FoundShows = Shows?.Count() ?? null;
 
-            if (shows != null)
+            if (Shows != null)
             {
-                var showArray = shows as ShowDto[] ?? shows.ToArray();
-
-                // Filter and order shows for today
-                Shows = showArray.Where(show => show.Date.Date == now.Date && show.Date.TimeOfDay >= now.TimeOfDay && show.SneakPreview != true).OrderBy(show => show.Date);
-            
-                // Filter and order sneak preview shows for today
-                SneakPreviewShows = showArray.Where(show => show.Date.Date == now.Date && show.Date.TimeOfDay >= now.TimeOfDay && show.SneakPreview);
-                
-                // Calculate the number of shows and movies
-                FoundShows = showArray.Count(show => show.Date.Date == now.Date && show.Date.TimeOfDay >= now.TimeOfDay );
-
                 // Group timings by movie
                 GroupedShowsByMovie = from show in Shows
                     group show by show.MovieId
                     into showGroup
                     orderby showGroup.First().Date
                     select showGroup;
-
-                // Group sneak preview timings by movie
-                if (SneakPreviewShows != null)
-                {
-                    var sneakPreviewGroupedShows = from show in SneakPreviewShows
-                        group show by show.MovieId
-                        into showGroup
-                        orderby showGroup.First().Date
-                        select showGroup;
-
-                    GroupedShowsByMovie = GroupedShowsByMovie.Concat(sneakPreviewGroupedShows);
-                }
 
                 // Get movies for grouped shows
                 if (MovieService != null)
@@ -109,7 +90,6 @@ else
                         var movie = await MovieService.GetMovie(showGroup.First().MovieId);
                         Movies = Movies.Append(movie);
                     }
-
                     FoundMovies = Movies.Count();
                 }
             }

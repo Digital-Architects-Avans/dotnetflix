@@ -14,6 +14,8 @@ public class TicketDto
 	public DateTime ShowTime { get; set; }
 	public int TicketTypeId { get; set; }
 	public decimal TicketPrice { get; set; }
+	
+	public int? OrderId { get; set; }
 }
 
 
