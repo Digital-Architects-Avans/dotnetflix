@@ -155,6 +155,7 @@ public static class DtoConversions
 	    {
 		    Id = seat.Id,
 		    TheaterRowId = seat.TheaterRowId,
+		    RowNumber = seat.TheaterRow.RowNumber,
 		    SeatNumber = seat.SeatNumber
 	    };
     }

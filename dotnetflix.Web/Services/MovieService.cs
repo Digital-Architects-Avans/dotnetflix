@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using dotnetflix.Models.Dtos.Movie;
+using dotnetflix.Models.Dtos.Order;
 using dotnetflix.Web.Services.Contracts;
 
 namespace dotnetflix.Web.Services;
@@ -13,7 +14,7 @@ public class MovieService : IMovieService
         _httpClient = httpClient;
     }
 
-    public async Task<MovieDto> GetMovie(int id)
+    public async Task<MovieDto?> GetMovie(int id)
     {
         try
         {
