@@ -4,7 +4,7 @@
 @using dotnetflix.Models.Dtos.Seat
 @using dotnetflix.Models.Dtos.TicketOrderDtos
 
-<h3>Order Tickets for @SelectedShow?.MovieTitle</h3>
+<h3>Order Tickets for @MovieTitle</h3>
 
 <SeatSelection ShowId="ShowId" @ref="_seatSelection" OnSeatSelectionChange="OnSeatSelectionChanged"/>
 
@@ -41,6 +41,7 @@
     private MovieDto? Movie { get; set; }
     private IEnumerable<TicketTypeDto>? TicketTypes { get; set; }
     private OrderRequestDto OrderRequest { get; set; } = new OrderRequestDto();
+    public string? MovieTitle => SelectedShow?.SneakPreview == true ? "Sneak preview" : SelectedShow?.MovieTitle;
     private bool ChildDiscountAvailable { get; set; }
     private List<TicketOrderDto> SelectedTicketOrders { get; set; } = new List<TicketOrderDto>();
 

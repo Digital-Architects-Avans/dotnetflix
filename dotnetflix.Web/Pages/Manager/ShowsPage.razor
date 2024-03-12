@@ -5,31 +5,31 @@
 @inject HttpClient Http
 <h3>Manager: Shows</h3>
 
-<NavigationHeader />
+<NavigationHeader/>
 
 <div class="row">
     <div class="col-md-6">
-       <table class="table">
-                   <thead>
-                       <tr>
-                           <th>Show details</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                   <tr @onclick="() => SelectShow()" class="new-show">
-                       <td>Add New Show</td>
-                   </tr>
-                   @foreach (var show in Shows)
-                   {
-                       <tr @onclick="() => SelectShow(show)" class="@(SelectedShow.Id == show.Id ? "selected-show" : "new-show")">
-                           <td>@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</td>
-                       </tr>
-                   }
-                   <tr @onclick="() => SelectShow()" class="new-show">
-                       <td>Add New Show</td>
-                   </tr>
-                   </tbody>
-               </table>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Show details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr @onclick="() => SelectShow()" class="new-show">
+                <td>Add New Show</td>
+            </tr>
+            @foreach (var show in Shows)
+            {
+                <tr @onclick="() => SelectShow(show)" class="@(SelectedShow.Id == show.Id ? "selected-show" : "new-show")">
+                    <td>@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</td>
+                </tr>
+            }
+            <tr @onclick="() => SelectShow()" class="new-show">
+                <td>Add New Show</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <div class="col-md-6">
         @if (SelectedShow.Id < 1)
@@ -38,7 +38,7 @@
             <EditForm Model="SelectedShow" OnValidSubmit="NewShowSubmit">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
-        
+
                 <div class="form-group">
                     <label for="movieTitle">Movie Title</label>
                     <InputSelect id="movieTitle" class="form-control" @bind-Value="SelectedShow.MovieTitle">
@@ -50,7 +50,7 @@
                 </div>
                 <div class="form-group">
                     <label for="theaterName">Theater Name</label>
-                    <InputSelect id="theaterName" class="form-control" @bind-Value="SelectedShow.TheaterName" >
+                    <InputSelect id="theaterName" class="form-control" @bind-Value="SelectedShow.TheaterName">
                         @foreach (var theater in Theaters)
                         {
                             <option value="@theater.Name">@theater.Name</option>
@@ -72,18 +72,21 @@
                     <label for="showDate">Show Date</label>
                     <InputDate id="showDate" class="form-control" @bind-Value="SelectedShow.Date"/>
                 </div>
-                
-                
+
+
                 <div class="form-group time-inputs">
                     <label for="showTime">Show Time</label>
                     <div class="time-fields">
                         <InputNumber id="timeHour" step="1" max="23" min="8" class="form-control time-field" @bind-Value="@timeHour"></InputNumber> hours
-                        <InputNumber id="timeMinute" step="5" max="55" min="0" class="form-control time-field" @bind-Value="@timeMinute"></InputNumber> minutes
+                        <InputNumber id="timeMinute" step="1" max="55" min="0" class="form-control time-field" @bind-Value="@timeMinute"></InputNumber> minutes
                     </div>
                 </div>
-                
-                
-                
+
+                <div class="form-group">
+                    <label for="sneakPreview">Sneak preview</label>
+                    <InputCheckbox id="sneakPreview" @bind-Value=SelectedShow.SneakPreview></InputCheckbox>
+                </div>
+
                 <div class="form-group">
                     <label for="basePrice">Base Price</label>
                     <InputNumber id="basePrice" class="form-control" @bind-Value="SelectedShow.BasePrice" step="0.10"/>
@@ -97,25 +100,25 @@
             <EditForm Model="SelectedShow" OnValidSubmit="UpdateShowSubmit">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
-        
+
                 <div class="form-group">
-                            <label for="movieTitle">Movie Title</label>
-                            <InputSelect id="movieTitle" class="form-control" @bind-Value="SelectedShow.MovieTitle">
-                                @foreach (var movie in Movies)
-                                {
-                                    <option value="@movie.Title">@movie.Title</option>
-                                }
-                            </InputSelect>
-                        </div>
-                        <div class="form-group">
-                            <label for="theaterName">Theater Name</label>
-                            <InputSelect id="theaterName" class="form-control" @bind-Value="SelectedShow.TheaterName">
-                                @foreach (var theater in Theaters)
-                                {
-                                    <option value="@theater.Name">@theater.Name</option>
-                                }
-                            </InputSelect>
-                        </div>
+                    <label for="movieTitle">Movie Title</label>
+                    <InputSelect id="movieTitle" class="form-control" @bind-Value="SelectedShow.MovieTitle">
+                        @foreach (var movie in Movies)
+                        {
+                            <option value="@movie.Title">@movie.Title</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="theaterName">Theater Name</label>
+                    <InputSelect id="theaterName" class="form-control" @bind-Value="SelectedShow.TheaterName">
+                        @foreach (var theater in Theaters)
+                        {
+                            <option value="@theater.Name">@theater.Name</option>
+                        }
+                    </InputSelect>
+                </div>
                 <div class="form-group">
                     <label for="screenTime">Screen Time</label>
                     <InputNumber id="screenTime" class="form-control" @bind-Value="SelectedShow.ScreenTime"/>
@@ -131,16 +134,20 @@
                     <label for="showDate">Show Date</label>
                     <InputDate id="showDate" class="form-control" @bind-Value="SelectedShow.Date"/>
                 </div>
-                
+
                 <div class="form-group time-inputs">
                     <label for="showTime">Show Time</label>
                     <div class="time-fields">
                         <InputNumber id="timeHour" step="1" max="23" min="8" class="form-control time-field" @bind-Value="@timeHour"></InputNumber> hours :
-                        <InputNumber id="timeMinute" step="5" max="55" min="0" class="form-control time-field" @bind-Value="@timeMinute"></InputNumber> minutes
+                        <InputNumber id="timeMinute" step="1" max="55" min="0" class="form-control time-field" @bind-Value="@timeMinute"></InputNumber> minutes
                     </div>
                 </div>
-                
-                
+
+                <div class="form-group">
+                    <label for="sneakPreview">Sneak preview</label>
+                    <InputCheckbox id="sneakPreview" @bind-Value=SelectedShow.SneakPreview></InputCheckbox>
+                </div>
+
                 <div class="form-group">
                     <label for="basePrice">Base Price</label>
                     <InputNumber id="basePrice" class="form-control" @bind-Value="SelectedShow.BasePrice" step="0.01"/>
@@ -159,10 +166,10 @@
     ShowDto SelectedShow = new ShowDto();
     UpdateShowDto EditShow = new UpdateShowDto();
     AddShowDto NewShow = new AddShowDto();
-    TimeSpan SelectedTime { get; set; }= DateTime.Now.TimeOfDay;
+    TimeSpan SelectedTime { get; set; } = DateTime.Now.TimeOfDay;
     int timeHour = 0;
     int timeMinute = 0;
-    
+
     protected override async Task OnInitializedAsync()
     {
         Shows = await Http.GetFromJsonAsync<List<ShowDto>>("api/show");
@@ -186,7 +193,8 @@
             Date = show.Date,
             BasePrice = show.BasePrice,
             ScreenTime = show.ScreenTime,
-            Type = show.Type
+            Type = show.Type,
+            SneakPreview = show.SneakPreview
         };
         SelectedTime = SelectedShow.Date.TimeOfDay;
         timeHour = SelectedShow.Date.Hour;
@@ -205,13 +213,14 @@
             Date = DateTime.Now,
             BasePrice = 12,
             ScreenTime = 120,
-            Type = MovieType.Regular
+            Type = MovieType.Regular,
+            SneakPreview = false
         };
         SelectedTime = SelectedShow.Date.TimeOfDay;
         timeHour = 0;
         timeMinute = 0;
     }
-    
+
     private async Task NewShowSubmit()
     {
         //set the movie and theater id from the selected movie title and theater name
@@ -219,18 +228,19 @@
         var selectedTheater = Theaters.FirstOrDefault(t => t.Name == SelectedShow.TheaterName);
         SelectedShow.MovieId = selectedMovie.Id;
         SelectedShow.TheaterId = selectedTheater.Id;
-        
-        if ( SelectedShow.MovieId > 0 && SelectedShow.TheaterId > 0 )
+
+        if (SelectedShow.MovieId > 0 && SelectedShow.TheaterId > 0)
         {
             SelectedTime = new TimeSpan(timeHour, timeMinute, 0);
             NewShow = new AddShowDto
             {
                 MovieId = SelectedShow.MovieId,
                 TheaterId = SelectedShow.TheaterId,
-                Date = SelectedShow.Date.Date+SelectedTime,
+                Date = SelectedShow.Date.Date + SelectedTime,
                 BasePrice = SelectedShow.BasePrice,
                 ScreenTime = SelectedShow.ScreenTime,
-                Type = SelectedShow.Type
+                Type = SelectedShow.Type,
+                SneakPreview = SelectedShow.SneakPreview
             };
         }
         else
@@ -238,9 +248,9 @@
             // Handle error here, e.g., show an error message
             return;
         }
-        
+
         // get all shows in the same theater
-        var theaterShows = Shows.Where(s => s.TheaterId == NewShow.TheaterId ).ToList();
+        var theaterShows = Shows.Where(s => s.TheaterId == NewShow.TheaterId).ToList();
 
         // Check if there are time conflicts
         foreach (var show in theaterShows)
@@ -249,15 +259,14 @@
             if (NewShow.Date >= show.Date && NewShow.Date < showEndTime)
             {
                 throw new InvalidOperationException("The show times overlap with another show.");
-
             }
+
             if (NewShow.Date.AddMinutes(NewShow.ScreenTime) > show.Date && NewShow.Date.AddMinutes(NewShow.ScreenTime) <= showEndTime)
             {
                 throw new InvalidOperationException("The show times overlap with another show.");
-
             }
         }
-        
+
         var response = await Http.PostAsJsonAsync("api/show", NewShow);
 
         if (response.IsSuccessStatusCode)
@@ -273,8 +282,8 @@
             // Handle error here, e.g., show an error message
         }
     }
-    
-    
+
+
     private async Task UpdateShowSubmit()
     {
         //set the movie and theater id from the selected movie title and theater name
@@ -282,18 +291,19 @@
         var selectedTheater = Theaters.FirstOrDefault(t => t.Name == SelectedShow.TheaterName);
         SelectedShow.MovieId = selectedMovie.Id;
         SelectedShow.TheaterId = selectedTheater.Id;
-        
-        if ( SelectedShow.MovieId > 0 && SelectedShow.TheaterId > 0 )
+
+        if (SelectedShow.MovieId > 0 && SelectedShow.TheaterId > 0)
         {
             SelectedTime = new TimeSpan(timeHour, timeMinute, 0);
             EditShow = new UpdateShowDto
             {
                 MovieId = SelectedShow.MovieId,
                 TheaterId = SelectedShow.TheaterId,
-                Date = SelectedShow.Date.Date+SelectedTime,
+                Date = SelectedShow.Date.Date + SelectedTime,
                 BasePrice = SelectedShow.BasePrice,
                 ScreenTime = SelectedShow.ScreenTime,
-                Type = SelectedShow.Type
+                Type = SelectedShow.Type,
+                SneakPreview = SelectedShow.SneakPreview
             };
         }
         else
@@ -301,9 +311,9 @@
             // Handle error here, e.g., show an error message
             return;
         }
-        
+
         // get all shows in the same theater
-        var theaterShows = Shows.Where(s => s.TheaterId == EditShow.TheaterId ).ToList();
+        var theaterShows = Shows.Where(s => s.TheaterId == EditShow.TheaterId).ToList();
 
         // Check if there are time conflicts
         foreach (var show in theaterShows)
@@ -313,20 +323,19 @@
             {
                 continue;
             }
-            
+
             var showEndTime = show.Date.AddMinutes(show.ScreenTime);
             if (EditShow.Date > show.Date && EditShow.Date < showEndTime)
             {
                 throw new InvalidOperationException("The show times overlap with another show.");
-
             }
+
             if (EditShow.Date.AddMinutes(EditShow.ScreenTime) > show.Date && EditShow.Date.AddMinutes(EditShow.ScreenTime) <= showEndTime)
             {
                 throw new InvalidOperationException("The show times overlap with another show.");
-
             }
         }
-        
+
         var response = await Http.PutAsJsonAsync($"api/show/{SelectedShow.Id}", EditShow);
 
         if (response.IsSuccessStatusCode)
@@ -342,8 +351,8 @@
             // Handle error here, e.g., show an error message
         }
     }
-    
-    
+
+
     private async Task DeleteShowSubmit()
     {
         var response = await Http.DeleteAsync($"api/show/{SelectedShow.Id}");
@@ -361,6 +370,5 @@
             // Handle error here, e.g., show an error message
         }
     }
-    
-}
 
+}

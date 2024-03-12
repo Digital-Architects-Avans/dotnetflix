@@ -34,15 +34,15 @@
 
         break;
     case PageState.OrderFound:
+        
+        <FluentCard MinimalStyle="true" Width="230px" Style="margin-top: 24px; margin-bottom: 24px">
+            <FluentLabel Typo="Typography.HeroTitle">@Order.Uuid.ToUpper()</FluentLabel>
+            <p>Please use this code to collect your tickets in the cinema.</p>
+        </FluentCard>
 
-        <p>(Tickets for order #@OrderCode.)</p>
-        <p style="display: inline-block;">Please save this order code. You will need it to collect your tickets: </p>
-        <h3 style="display: inline-block;">
-            <span>@Order.Uuid</span>
-        </h3>
+        <MovieDetails Movie="Movie" IsSneakPreview="@_isSneakPreview"/>
 
-        <MovieDetails Movie="Movie"/>
-
+        <p>Tickets for order #@OrderCode:</p>
         @foreach (var ticket in Tickets)
         {
             <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>
@@ -68,12 +68,13 @@
     // 2) Public properties to expose to the view
     private OrderDto Order { get; set; } = new OrderDto();
     private List<TicketDto> Tickets { get; set; } = new List<TicketDto>();
-    private ShowDto Show { get; set; } = new ShowDto();
-    private MovieDto Movie { get; set; } = new MovieDto();
+    private ShowDto? Show { get; set; } = new ShowDto();
+    private MovieDto? Movie { get; set; } = new MovieDto();
 
     private PageState Status { get; set; }
     [Parameter] public int OrderCode { get; set; }
     private string _orderCode = "";
+    private bool _isSneakPreview;
 
     private enum PageState
     {
@@ -120,16 +121,22 @@
             // Get show details
             if (ShowService != null)
             {
-                Show = await ShowService.GetShow(Tickets[0].ShowId)!;
+                Show = await ShowService.GetShow(Tickets[0].ShowId);
             }
 
-            // Get movie details 
-            if (MovieService != null)
+            if (Show != null)
             {
-                Movie = await MovieService.GetMovie(Show.MovieId);
-            }
+                // Check if the show is a sneak preview
+                _isSneakPreview = Show.SneakPreview;
 
-            Status = PageState.OrderFound;
+                // Get movie details 
+                if (MovieService != null)
+                {
+                    Movie = await MovieService.GetMovie(Show.MovieId);
+                }
+
+                Status = PageState.OrderFound;
+            }
         }
         else
         {

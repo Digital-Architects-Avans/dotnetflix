@@ -117,9 +117,8 @@
     {
         Movies = await Http.GetFromJsonAsync<List<MovieDto>>("api/movie");
         Shows = await Http.GetFromJsonAsync<List<ShowDto>>("api/show");
+        Shows = Shows.Where(s => s.Date.Date == DateTime.Now.Date && s.SneakPreview == false).ToList();
         SelectedRatings = Enum.GetValues(typeof(Rating)).Cast<Rating>().ToList();
-        Shows = Shows.Where(s => s.Date.Date == DateTime.Now.Date).ToList();
-
     }
     
     void UpdateSelectedRatings(Rating rating, bool isChecked)
