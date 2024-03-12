@@ -16,7 +16,9 @@ public class SeatRepository : ISeatRepository
 
     public async Task<IEnumerable<Seat>> GetSeats()
     {
-        var seats = await _dotNetFlixDbContext.Seats.ToListAsync();
+        var seats = await _dotNetFlixDbContext.Seats
+            .Include(s => s.TheaterRow)
+            .ToListAsync();
         return seats;
     }
     
@@ -31,7 +33,9 @@ public class SeatRepository : ISeatRepository
 
     public async Task<Seat?> GetSeat(int id)
     {
-        var seat = await _dotNetFlixDbContext.Seats.SingleOrDefaultAsync(s => s.Id == id);
+        var seat = await _dotNetFlixDbContext.Seats
+            .Include(s => s.TheaterRow)
+            .SingleOrDefaultAsync(s => s.Id == id);
         return seat;
     }
 
