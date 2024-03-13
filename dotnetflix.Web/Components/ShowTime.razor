@@ -2,9 +2,10 @@
 @using System.Globalization
 
 <FluentCard>
-    <a href="/tickets/@Show.Id" class="stretched-link text-decoration-none">
-        <h5 class="card-title text-black">@StartTime - @EndTime</h5>
-    </a>
+    <a href="/tickets/@Show.Id" class="stretched-link"></a>
+    <FluentAnchor Href="/tickets/@Show.Id" Appearance="Appearance.Hypertext">
+        <h5 class="card-title">@StartTime - @EndTime</h5>
+    </FluentAnchor>
     <h6 class="card-subtitle mb-2 text-body-secondary">@Show.TheaterName</h6>
     <p class="card-text">@Show.Type</p>
     <p class="card-text">
