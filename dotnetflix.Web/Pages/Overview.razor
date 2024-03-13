@@ -46,7 +46,7 @@
 
         <MovieDetails Movie="Movie" IsSneakPreview="@_isSneakPreview"/>
 
-        <p>Tickets for order #@OrderCode:</p>
+        <p style="margin-top: 24px">Tickets for order #@OrderCode:</p>
         @foreach (var ticket in Tickets)
         {
             <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>
