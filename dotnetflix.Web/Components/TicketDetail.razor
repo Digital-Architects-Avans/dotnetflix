@@ -13,24 +13,22 @@
 }
 else
 {
-    <div class="card mb-4 col-xl-6 col-sm-12">
-        <h5 class="card-header">@MovieTitle - @StartTime - @EndTime</h5>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-xl-3 col-sm-4">Theater:</dt>
-                <dd class="col-xl-9 col-sm-8">@Ticket.TheaterName - @Show.Type</dd>
-                <dt class="col-xl-3 col-sm-4">Show Time:</dt>
-                <dd class="col-xl-9 col-sm-8">@Ticket.ShowTime.ToString("dd-MM-yyyy - HH:mm", new CultureInfo("nl-NL"))</dd>
-                <dt class="col-xl-3 col-sm-4">Seat:</dt>
-                <dd class="col-xl-9 col-sm-8">Row @Ticket.RowNumber, Seat @Ticket.SeatNumber</dd>
-                <dt class="col-xl-3 col-sm-4">Ticket Type:</dt>
-                <dd class="col-xl-9 col-sm-8">@TicketType</dd>
-                <dt class="col-xl-3 col-sm-4">Price:</dt>
-                <dd class="col-xl-9 col-sm-8">@Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</dd>
-            </dl>
-            <a class="btn btn-primary" @onclick="PrintTicket">Print ticket</a>
-        </div>
-    </div>
+    <FluentCard Style="max-width: 600px">
+        <h4>@MovieTitle - @StartTime - @EndTime</h4>
+        <dl class="row">
+            <dt class="col-xl-3 col-sm-4">Theater:</dt>
+            <dd class="col-xl-9 col-sm-8">@Ticket.TheaterName - @Show.Type</dd>
+            <dt class="col-xl-3 col-sm-4">Show Time:</dt>
+            <dd class="col-xl-9 col-sm-8">@Ticket.ShowTime.ToString("dd-MM-yyyy - HH:mm", new CultureInfo("nl-NL"))</dd>
+            <dt class="col-xl-3 col-sm-4">Seat:</dt>
+            <dd class="col-xl-9 col-sm-8">Row @Ticket.RowNumber, Seat @Ticket.SeatNumber</dd>
+            <dt class="col-xl-3 col-sm-4">Ticket Type:</dt>
+            <dd class="col-xl-9 col-sm-8">@TicketType</dd>
+            <dt class="col-xl-3 col-sm-4">Price:</dt>
+            <dd class="col-xl-9 col-sm-8">@Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</dd>
+        </dl>
+        <FluentButton Appearance="Appearance.Accent" OnClick="@PrintTicket">Print ticket</FluentButton>
+    </FluentCard>
 }
 
 @code {
