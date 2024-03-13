@@ -15,22 +15,13 @@ body {
     box-sizing: border-box;
 }
 
-.flex-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
-    background-color: #1a1e21;
-}
-
 .theater-container {
-    margin: 20px;
     display: flex;
-    padding: 60px;
+    padding: 24px 40px;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: #1a1e21;
+    background-color: #333333;
 }
 
 .theater-container select {
@@ -89,7 +80,7 @@ body {
 }
 
 .seat {
-    background-color: #444451;
+    background-color: var(--fill-color);
     height: 24px;
     width: 18px;
     margin: 5px;
@@ -105,11 +96,11 @@ body {
 }
 
 .selected {
-    background-color: #0081cb;
+    background-color: var(--accent-fill-rest);
 }
 
 .occupied {
-    background-color: #fff;
+    background-color: #1a1a1a;
 }
 
 .seat:nth-of-type(2) {
