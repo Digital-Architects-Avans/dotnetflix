@@ -19,7 +19,7 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Ticket Type</th>
+                    <th>Ticket type</th>
                     <th>Quantity</th>
                     <th>Price per Ticket</th>
                     <th>Total Price</th>
@@ -40,8 +40,8 @@
                             <tr>
                                 <td>@ticketType.Name</td>
                                 <td>@ticketOrder.Quantity</td>
-                                <td>@pricePerTicket.ToString("C")</td>
-                                <td>@ticketOrder.FinalPrice.ToString("C")</td>
+                                <td>@pricePerTicket.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</td>
+                                <td>@ticketOrder.FinalPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</td>
                             </tr>
                         }
                     }
@@ -51,7 +51,7 @@
                             <strong>Grand Total:</strong>
                         </td>
                         <td>
-                            <strong>@grandTotal.ToString("C")</strong>
+                            <strong>@grandTotal.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</strong>
                         </td>
                     </tr>
                 }

@@ -1,0 +1,3 @@
+.table th, td {
+    color: var(--neutral-foreground-rest);
+}
