@@ -3,5 +3,32 @@
 <FluentHeader Height="92">
     <ChildContent>
         .NETflix
+        <FluentGrid Justify="JustifyContent.FlexEnd">
+            <FluentGridItem>
+                <p class="pt-1">Follow us on social:</p>
+            </FluentGridItem>
+            <FluentGridItem Justify="JustifyContent.FlexEnd" Gap="10px">
+                <FluentAnchor Href="https://www.instagram.com/pathenederland/" Target="_blank">
+                    <i class="bi bi-instagram"></i>
+                </FluentAnchor>
+                <FluentAnchor Href="https://www.facebook.com/pathenederland" Target="_blank">
+                    <i class="bi bi-facebook"></i>
+                </FluentAnchor>
+                <FluentAnchor Href="@_urlTiktok" Target="_blank">
+                    <i class="bi bi-tiktok"></i>
+                </FluentAnchor>
+                <FluentAnchor Href="@_urlPathe" Target="_blank">
+                    <i class="bi bi-youtube"></i>
+                </FluentAnchor>
+                <FluentAnchor Href="https://twitter.com/Pathenederland" Target="_blank">
+                    <i class="bi bi-twitter-x"></i>
+                </FluentAnchor>
+            </FluentGridItem>
+        </FluentGrid>
     </ChildContent>
 </FluentHeader>
+
+@code {
+    private string _urlTiktok = "https://www.tiktok.com/@pathenederland";
+    private string _urlPathe = "https://www.youtube.com/@pathenederland";
+}

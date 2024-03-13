@@ -54,6 +54,7 @@ public class ShowRepository : IShowRepository
             Date = addShowDto.Date,
             ScreenTime = addShowDto.ScreenTime,
             Type = addShowDto.Type,
+            SneakPreview = addShowDto.SneakPreview,
             BasePrice = addShowDto.BasePrice,
             Movie = movie,
             Theater = theater,
@@ -90,6 +91,7 @@ public class ShowRepository : IShowRepository
             show.Date = updateShowDto.Date;
             show.ScreenTime = updateShowDto.ScreenTime;
             show.Type = updateShowDto.Type;
+            show.SneakPreview = updateShowDto.SneakPreview;
             show.BasePrice = updateShowDto.BasePrice;
             show.Movie = movie;
             show.Theater = theater;

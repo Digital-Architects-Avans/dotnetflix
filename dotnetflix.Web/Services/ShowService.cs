@@ -27,7 +27,7 @@ public class ShowService : IShowService
         }
     }
     
-    public async Task<ShowDto>? GetShow(int id)
+    public async Task<ShowDto?> GetShow(int id)
     {
         try
         {
