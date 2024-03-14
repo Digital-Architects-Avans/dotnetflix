@@ -126,7 +126,7 @@ body {
 }
 
 .main {
-    min-height: calc(100dvh - 86px);
+    min-height: calc(100dvh - 206px);
     color: var(--neutral-foreground-rest);
     align-items: stretch !important;
 }
