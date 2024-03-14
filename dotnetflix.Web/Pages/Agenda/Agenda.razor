@@ -5,12 +5,12 @@
 
 @if (Shows == null)
 {
-    <h3>Loading shows..</h3>
+    <h1>Loading shows..</h1>
 }
 else
 {
     DateTime today = DateTime.Now;
-    <h3>Agenda</h3>
+    <h1>Agenda</h1>
 
     // Days buttons
     <div class="d-grid">
@@ -40,23 +40,19 @@ else
         <TemplateColumn Title="">
                 @{
                     for (int i = 0; i < context.ShowIds.Count; i++)
-            {
-                int id = context.ShowIds[i];
+                    {
+                        int id = context.ShowIds[i];
                         <button id="@id" class="btn btn-light shadow-sm p-2 m-2" onclick="@(() => Redirect(id))">
 
-                    <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
-                    @context.Dates[i].ToString("H:mm")
-                    <span class="text-info m-2">Theater @context.TheaterId[i]</span>
-                </button>
-                
-                            <span class="text-info m-2">Theater @(context.TheaterId[i])</span>
-
+                            <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
+                            @context.Dates[i].ToString("H:mm")
+                            <span class="text-info m-2">Theater @context.TheaterId[i]</span>
                             @if (!IsDayGrid)
                             {
                                 <br />
                                 <hr style="margin: 4px;" />
                                 <span class="text-info m-2">@(context.Dates[i].DayOfWeek)</span>
-            }
+                            }
                         </button>
                     }
                 }
@@ -116,7 +112,7 @@ else
     private int ItemSize = 54;
 
     // Group shows by movie and dates
-    protected async Task GetShowByDay(DateTime date, bool isDayGrid = true)
+    protected Task GetShowByDay(DateTime date, bool isDayGrid = true)
         {
         moviesWithDatesList.Clear();
 
@@ -172,6 +168,5 @@ else
         public string? MovieTitle { get; set; }
         public List<DateTime>? Dates { get; set; }
         public List<int>? ShowIds { get; set; }
-        public List<int>? TheaterId { get; set; }
     }
 }
