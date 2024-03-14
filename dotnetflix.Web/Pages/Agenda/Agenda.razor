@@ -15,17 +15,50 @@ else
     // Days buttons
     <div class="d-grid">
         <div class="row-cols-7">
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today, false))">This Week</FluentButton>
             <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today))">Vandaag</FluentButton>
-            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(1)))">@today.AddDays(1).ToString("dd MMM")</FluentButton>
-            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(2)))">@today.AddDays(2).ToString("dd MMM")</FluentButton>
-            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(3)))">@today.AddDays(3).ToString("dd MMM")</FluentButton>
-            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today.AddDays(4)))">@today.AddDays(4).ToString("dd MMM")</FluentButton>
-            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today))">This Week</FluentButton>
+            @for (int i = 0; i < 5; i++)
+            {
+                DateTime day = today.AddDays(i + 1);
+                <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(day))">@day.ToString("dd MMM")</FluentButton>
+            }
         </div>
     </div>
 
-    
+    <FluentDataGrid Virtualize="true" ItemSize="100" Class="loading" GridTemplateColumns="1fr 1fr 6fr" Items="@(MoviesWithDates.AsQueryable())">
 
+        @if (MoviesWithDates != null)
+        {
+            <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)"></PropertyColumn>
+
+            <TemplateColumn>
+                <FluentButton IconStart="@(new Icons.Regular.Size16.Info())" Appearance="Appearance.Accent" style="width: 30px; height: 30px;" OnClick="@(() => GetMovieDetails(context.MovieId))"></FluentButton>
+            </TemplateColumn>
+
+            <TemplateColumn Title="">
+                @{
+                    for (int i = 0; i < context.ShowIds.Count; i++)
+                    {
+                        int id = context.ShowIds[i];
+                        <button id="@id" class="btn btn-light shadow-sm p-2 m-2" onclick="@(() => Redirect(id))">
+
+                            <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
+                            @context.Dates[i].ToString("H:mm")
+
+                            <span class="text-info m-2">Theater @(context.TheaterId[i])</span>
+
+                            @if (!IsDayGrid)
+                            {
+                                <br />
+                                <hr style="margin: 4px;" />
+                                <span class="text-info m-2">@(context.Dates[i].DayOfWeek)</span>
+                            }
+                        </button>
+                    }
+                }
+            </TemplateColumn>
+        }
+    </FluentDataGrid>
 }
 
 @code {
@@ -35,8 +68,15 @@ else
     public MovieDto? Movie { get; set; }
 
 
+    protected override async Task OnInitializedAsync()
+    {
+        Shows = await ShowService.GetShows();
+        await GetShowByDay(DateTime.Now);
+    }
+
+
     // Getting movies
-    private async void GetMovieDetails(int movieId)
+    public async void GetMovieDetails(int movieId)
     {
         Movie = await MovieService.GetMovie(movieId);
 
@@ -52,7 +92,7 @@ else
                 PrimaryAction = "Close",
                 PrimaryActionEnabled = true,
                 SecondaryAction = null,
-                Width = "500px",
+                Width = "540px",
                 PreventScroll = true,
                 ShowDismiss = false,
             };
@@ -66,45 +106,56 @@ else
     public IShowService? ShowService { get; set; }
     public IEnumerable<ShowDto>? Shows { get; set; }
     public IQueryable<MovieWithDates>? MoviesWithDates { get; set; }
+    public List<MovieWithDates> moviesWithDatesList { get; set; } = new List<MovieWithDates>();
 
-    protected override async Task OnInitializedAsync()
-    {
-        Shows = await ShowService.GetShows();
-        await GetShowByDay(DateTime.Now);
-    }
+    private bool IsDayGrid = true;
+    private int ItemSize = 54;
 
     // Group shows by movie and dates
-    protected Task GetShowByDay(DateTime date)
+    protected async Task GetShowByDay(DateTime date, bool isDayGrid = true)
     {
-        if (Shows != null)
+        moviesWithDatesList.Clear();
+
+        if (Shows == null)
+            Task.FromException(new ArgumentNullException());
+
+        var groupedShows = Shows.GroupBy(s => s.MovieId);
+
+        foreach (var group in groupedShows)
         {
-            var groupedShows = Shows.GroupBy(s => s.MovieId);
+            ShowDto show = group.First();
+            List<ShowDto>? filteredGroup;
 
-            var moviesWithDatesList = new List<MovieWithDates>();
-
-            var count = 0;
-            foreach (var group in groupedShows)
+            if (isDayGrid)
             {
-                ShowDto show = group.First();
-
-                MovieWithDates movieWithDates = new MovieWithDates
-                    {
-                        ShowIds = group.Where(d => d.Date.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).Select(s => s.Id).ToList(),
-                        MovieId = show.MovieId,
-                        MovieTitle = show.MovieTitle,
-                        Dates = group.Where(d => d.Date.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd")).Select(s => s.Date).ToList()
-                    };
-
-                moviesWithDatesList.Add(movieWithDates);
-                count++;
+                filteredGroup = group.Where(d => d.Date.Date == date.Date).ToList();
+                ItemSize = 54;
+                IsDayGrid = true;
+            } else
+            {
+                DateTime endDate = date.AddDays(7);
+                filteredGroup = group.Where(d => d.Date >= date && d.Date <= endDate).ToList();
+                filteredGroup.Reverse();
+                ItemSize = 100;
+                IsDayGrid = false;
             }
-            MoviesWithDates = moviesWithDatesList.AsQueryable();
+
+            MovieWithDates movieWithDates = new MovieWithDates
+                {
+                    ShowIds = filteredGroup.Select(s => s.Id).ToList(),
+                    TheaterId = filteredGroup.Select(s => s.TheaterId).ToList(),
+                    MovieId = show.MovieId,
+                    MovieTitle = show.MovieTitle,
+                    Dates = filteredGroup.Select(s => s.Date).ToList()
+                };
+            moviesWithDatesList.Add(movieWithDates);
         }
+        MoviesWithDates = moviesWithDatesList.AsQueryable();
+        
         StateHasChanged();
-        return Task.CompletedTask;
     }
 
-    void Redirect(int showId) => NavManager.NavigateTo("/tickets/" + showId);
+    public void Redirect(int showId) => NavManager.NavigateTo("/tickets/" + showId);
 
     public class MovieWithDates
     {
@@ -112,5 +163,6 @@ else
         public string? MovieTitle { get; set; }
         public List<DateTime>? Dates { get; set; }
         public List<int>? ShowIds { get; set; }
+        public List<int>? TheaterId { get; set; }
     }
 }
