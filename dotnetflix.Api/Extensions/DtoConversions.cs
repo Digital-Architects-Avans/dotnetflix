@@ -63,6 +63,7 @@ public static class DtoConversions
             Description = movie.Description,
             Rating = movie.Rating,
             Runtime = movie.Runtime,
+            SpokenLanguages = movie.SpokenLanguages,
             Image = movie.Image
         };
     }
@@ -79,6 +80,7 @@ public static class DtoConversions
             Date = show.Date,
             ScreenTime = show.ScreenTime,
             Type = show.Type,
+            SneakPreview = show.SneakPreview,
             BasePrice = show.BasePrice,
             TicketIds = show.Tickets.Select(t => t.Id).ToList()
         };
@@ -108,7 +110,8 @@ public static class DtoConversions
 			SeatNumber = ticket.SeatNumber,
 			ShowTime = ticket.ShowTime,
 			TicketTypeId = ticket.TicketTypeId,
-			TicketPrice = ticket.TicketPrice
+			TicketPrice = ticket.TicketPrice,
+			OrderId = ticket.OrderId
 		};
 	}
     
@@ -118,7 +121,10 @@ public static class DtoConversions
         {
 			Id = order.Id,
 			TotalPrice = order.TotalPrice,
-			TicketIds = order.Tickets.Select(t => t.Id).ToList()
+			TicketIds = order.Tickets.Select(t => t.Id).ToList(),
+			CustomerName = order.CustomerName,
+			CustomerEmail = order.CustomerEmail,
+			Uuid = order.Uuid
 		};
 	}
     
@@ -149,6 +155,7 @@ public static class DtoConversions
 	    {
 		    Id = seat.Id,
 		    TheaterRowId = seat.TheaterRowId,
+		    RowNumber = seat.TheaterRow.RowNumber,
 		    SeatNumber = seat.SeatNumber
 	    };
     }

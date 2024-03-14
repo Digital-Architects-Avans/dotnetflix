@@ -14,4 +14,5 @@ public interface IOrderRepository
 	Task<Order> AddOrder(AddOrderDto addOrderDto);
 	Task<Order?> UpdateOrder(int id, UpdateOrderDto updateOrderDto);
 	Task<bool> DeleteOrder(int id);
+	Task<Order?> GetOrderByUuid(string uuid);
 }

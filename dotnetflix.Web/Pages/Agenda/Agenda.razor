@@ -29,22 +29,26 @@ else
 
         @if (MoviesWithDates != null)
         {
-            <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)"></PropertyColumn>
+        <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)"></PropertyColumn>
 
-            <TemplateColumn>
+        @* Movie info Column *@
+        <TemplateColumn>
                 <FluentButton IconStart="@(new Icons.Regular.Size16.Info())" Appearance="Appearance.Accent" style="width: 30px; height: 30px;" OnClick="@(() => GetMovieDetails(context.MovieId))"></FluentButton>
-            </TemplateColumn>
+        </TemplateColumn>
 
-            <TemplateColumn Title="">
+        @* Dates Column *@
+        <TemplateColumn Title="">
                 @{
                     for (int i = 0; i < context.ShowIds.Count; i++)
-                    {
-                        int id = context.ShowIds[i];
+            {
+                int id = context.ShowIds[i];
                         <button id="@id" class="btn btn-light shadow-sm p-2 m-2" onclick="@(() => Redirect(id))">
 
-                            <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
-                            @context.Dates[i].ToString("H:mm")
-
+                    <FluentIcon Value="@(new Icons.Regular.Size16.TicketDiagonal())" />
+                    @context.Dates[i].ToString("H:mm")
+                    <span class="text-info m-2">Theater @context.TheaterId[i]</span>
+                </button>
+                
                             <span class="text-info m-2">Theater @(context.TheaterId[i])</span>
 
                             @if (!IsDayGrid)
@@ -52,11 +56,11 @@ else
                                 <br />
                                 <hr style="margin: 4px;" />
                                 <span class="text-info m-2">@(context.Dates[i].DayOfWeek)</span>
-                            }
+            }
                         </button>
                     }
                 }
-            </TemplateColumn>
+        </TemplateColumn>
         }
     </FluentDataGrid>
 }
@@ -113,7 +117,7 @@ else
 
     // Group shows by movie and dates
     protected async Task GetShowByDay(DateTime date, bool isDayGrid = true)
-    {
+        {
         moviesWithDatesList.Clear();
 
         if (Shows == null)
@@ -121,9 +125,10 @@ else
 
         var groupedShows = Shows.GroupBy(s => s.MovieId);
 
-        foreach (var group in groupedShows)
-        {
-            ShowDto show = group.First();
+            var count = 0;
+            foreach (var group in groupedShows)
+            {
+                ShowDto show = group.First();
             List<ShowDto>? filteredGroup;
 
             if (isDayGrid)
@@ -140,19 +145,22 @@ else
                 IsDayGrid = false;
             }
 
-            MovieWithDates movieWithDates = new MovieWithDates
-                {
+                MovieWithDates movieWithDates = new MovieWithDates
+                    {
                     ShowIds = filteredGroup.Select(s => s.Id).ToList(),
                     TheaterId = filteredGroup.Select(s => s.TheaterId).ToList(),
-                    MovieId = show.MovieId,
-                    MovieTitle = show.MovieTitle,
+                        MovieId = show.MovieId,
+                        MovieTitle = show.MovieTitle,
                     Dates = filteredGroup.Select(s => s.Date).ToList()
-                };
-            moviesWithDatesList.Add(movieWithDates);
-        }
-        MoviesWithDates = moviesWithDatesList.AsQueryable();
+                    };
+
+                moviesWithDatesList.Add(movieWithDates);
+                count++;
+            }
+            MoviesWithDates = moviesWithDatesList.AsQueryable();
         
         StateHasChanged();
+        return Task.CompletedTask;
     }
 
     public void Redirect(int showId) => NavManager.NavigateTo("/tickets/" + showId);
@@ -160,6 +168,7 @@ else
     public class MovieWithDates
     {
         public int MovieId { get; set; }
+        public List<int>? TheaterId { get; set; }
         public string? MovieTitle { get; set; }
         public List<DateTime>? Dates { get; set; }
         public List<int>? ShowIds { get; set; }

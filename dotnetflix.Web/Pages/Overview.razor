@@ -1,11 +1,6 @@
 @page "/overview"
 @page "/overview/{OrderCode:int}"
-
-@using dotnetflix.Web.Services.Contracts
-@using dotnetflix.Models.Dtos.Movie
 @using dotnetflix.Models.Dtos.Order
-@using dotnetflix.Models.Dtos.Show
-@using dotnetflix.Web.Components
 
 @using dotnetflix.Models.Dtos
 
@@ -28,10 +23,10 @@
     case PageState.EnterCode:
 
         // Show form to enter order code
-        <label for="orderCode" class="form-label">Your order number</label>
+        <label for="orderCode" class="form-label">Your unique order code</label>
         <input @bind="_orderCode"
                id="orderCode"
-               type="number"
+               type="text"
                class="form-control"
                placeholder=""
                style="max-width: 128px"/>
@@ -39,15 +34,21 @@
 
         break;
     case PageState.OrderFound:
+        
+        <FluentCard MinimalStyle="true" Width="230px" Style="margin-top: 24px; margin-bottom: 24px">
+            <FluentLabel Typo="Typography.HeroTitle">@Order.Uuid.ToUpper()</FluentLabel>
+            <p>Please use this code to collect your tickets in the cinema.</p>
+        </FluentCard>
 
-        <p>Tickets for order #@OrderCode.</p>
+        <MovieDetails Movie="Movie" IsSneakPreview="@_isSneakPreview"/>
 
-        <MovieDetails Movie="Movie"/>
-
+        <p>Tickets for order #@OrderCode:</p>
         @foreach (var ticket in Tickets)
         {
             <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>
         }
+        
+        <Maps></Maps>
 
         break;
     case PageState.OrderNotFound:
@@ -69,12 +70,13 @@
     // 2) Public properties to expose to the view
     private OrderDto Order { get; set; } = new OrderDto();
     private List<TicketDto> Tickets { get; set; } = new List<TicketDto>();
-    private ShowDto Show { get; set; } = new ShowDto();
-    private MovieDto Movie { get; set; } = new MovieDto();
+    private ShowDto? Show { get; set; } = new ShowDto();
+    private MovieDto? Movie { get; set; } = new MovieDto();
 
     private PageState Status { get; set; }
     [Parameter] public int OrderCode { get; set; }
     private string _orderCode = "";
+    private bool _isSneakPreview;
 
     private enum PageState
     {
@@ -121,16 +123,22 @@
             // Get show details
             if (ShowService != null)
             {
-                Show = await ShowService.GetShow(Tickets[0].ShowId)!;
+                Show = await ShowService.GetShow(Tickets[0].ShowId);
             }
 
-            // Get movie details 
-            if (MovieService != null)
+            if (Show != null)
             {
-                Movie = await MovieService.GetMovie(Show.MovieId);
-            }
+                // Check if the show is a sneak preview
+                _isSneakPreview = Show.SneakPreview;
 
-            Status = PageState.OrderFound;
+                // Get movie details 
+                if (MovieService != null)
+                {
+                    Movie = await MovieService.GetMovie(Show.MovieId);
+                }
+
+                Status = PageState.OrderFound;
+            }
         }
         else
         {
@@ -139,9 +147,20 @@
     }
 
     // 4) Methods UI events
-    private void CollectTicketsClicked()
+    private async void CollectTicketsClicked()
     {
-        NavigationManager.NavigateTo($"/overview/{_orderCode}");
+        if (OrderService != null)
+        {
+            var order = await OrderService.GetOrderByUuid(_orderCode);
+            if (order != null)
+            {
+                NavigationManager.NavigateTo($"/overview/{order.Id}");
+            }
+            else
+            {
+                NavigationManager.NavigateTo($"/overview/10");
+            }
+        }
     }
 
     private void ResetPage()

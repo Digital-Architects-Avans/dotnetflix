@@ -25,6 +25,9 @@ namespace dotnetflix.Api.Data.Entities
         [Required]
         [Range(1, 500)]
         public int Runtime { get; set; }
+        
+        // Based ISO 639-1 (NL for dutch, EN for english)
+        public string SpokenLanguages { get; set; }
 
         public string Image { get; set; }
         

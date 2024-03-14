@@ -14,15 +14,15 @@
                        </tr>
                    </thead>
                    <tbody>
-                       @foreach (var movie in Movies)
-                              {
-                                  <tr @onclick="() => SelectMovie(movie)" class="@(SelectedMovie.Id == movie.Id ? "selected-movie" : "new-movie")">
-                                      <td>@movie.Title</td>
-                                  </tr> 
-                              }
-                       <tr @onclick="() => SelectMovie()" class="new-movie">
-                           <td>Add New Movie</td>
-                            </tr>
+                   @foreach (var movie in Movies)
+                   {
+                       <tr @onclick="() => SelectMovie(movie)" class="@(SelectedMovie.Id == movie.Id ? "selected-movie" : "new-movie")">
+                           <td>@movie.Title</td>
+                       </tr> 
+                   }
+                   <tr @onclick="() => SelectMovie()" class="new-movie">
+                       <td>Add New Movie</td>
+                   </tr>
                    </tbody>
                </table>
     </div>
@@ -58,6 +58,10 @@
                 <div class="form-group">
                     <label for="runtime">Runtime</label>
                     <InputNumber id="runtime" class="form-control" @bind-Value="SelectedMovie.Runtime"/>
+                </div>
+                <div class="form-group">
+                    <label for="spokenLanguages">Spoken Languages</label>
+                    <InputText id="spokenLanguages" class="form-control" @bind-Value="SelectedMovie.SpokenLanguages"/>
                 </div>
                 <div class="form-group">
                     <label for="image">Image</label>
@@ -99,6 +103,10 @@ else
             <InputNumber id="runtime" class="form-control" @bind-Value="SelectedMovie.Runtime"/>
         </div>
         <div class="form-group">
+            <label for="spokenLanguages">Spoken Languages</label>
+            <InputText id="spokenLanguages" class="form-control" @bind-Value="SelectedMovie.SpokenLanguages"/>
+        </div>
+        <div class="form-group">
             <label for="image">Image</label>
             <InputText id="image" class="form-control" @bind-Value="SelectedMovie.Image"/>
         </div>
@@ -136,6 +144,7 @@ else
             Description = movie.Description,
             Rating = movie.Rating,
             Runtime = movie.Runtime,
+            SpokenLanguages = movie.SpokenLanguages,
             Image = movie.Image
         };
     }
@@ -151,6 +160,7 @@ else
             Description = "Master piece directed by Master Movies.",
             Rating = Rating.G,
             Runtime = 4,
+            SpokenLanguages = "NL",
             Image = "no-cover.jpg"
         };
     }
@@ -164,6 +174,7 @@ else
             Description = SelectedMovie.Description,
             Rating = SelectedMovie.Rating,
             Runtime = SelectedMovie.Runtime,
+            SpokenLanguages = SelectedMovie.SpokenLanguages,
             Image = SelectedMovie.Image
         };
         
@@ -193,6 +204,7 @@ else
             Description = SelectedMovie.Description,
             Rating = SelectedMovie.Rating,
             Runtime = SelectedMovie.Runtime,
+            SpokenLanguages = SelectedMovie.SpokenLanguages,
             Image = SelectedMovie.Image
         };
         
