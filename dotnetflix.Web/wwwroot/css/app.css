@@ -248,7 +248,7 @@ code {
     color: #c02d76;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
     .main {
         flex-direction: column !important;
         row-gap: 0 !important;
