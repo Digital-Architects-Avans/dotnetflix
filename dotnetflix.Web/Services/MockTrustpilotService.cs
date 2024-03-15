@@ -12,15 +12,15 @@ public class MockTrustpilotService : ITrustpilotService
             {
                 new TrustpilotReview
                 {
-                    Name = "Test Review 1",
-                    Text = "This is a test review.",
+                    Name = "Karl",
+                    Text = "Toffe film wel!",
                     Stars = 5
                 },
                 new TrustpilotReview
                 {
-                    Name = "Test Review 2",
-                    Text = "This is another test review.",
-                    Stars = 4
+                    Name = "Karen",
+                    Text = "De popcorn plakt aan je vingers",
+                    Stars = 2
                 }
             }
         });
