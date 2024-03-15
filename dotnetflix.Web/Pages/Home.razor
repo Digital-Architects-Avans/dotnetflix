@@ -23,13 +23,15 @@
                 <MovieDetails Movie="movieDetails" IsSneakPreview="@isSneakPreview"/>
             }
 
-            <h6>Today</h6>
+            // Show timings
+            <h6 class="mt-3">Today</h6>
             <div class="row pb-3">
 
                 @foreach (var show in shows)
                 {
-                    // Show timings
-                    <ShowTime Show="show"/>
+                    <div class="col-xxl-2 col-xl-3 col-md-4 col-sm-6 pb-4 pt-2 show-time-card">
+                        <ShowTime Show="show"/>
+                    </div>
                 }
 
             </div>

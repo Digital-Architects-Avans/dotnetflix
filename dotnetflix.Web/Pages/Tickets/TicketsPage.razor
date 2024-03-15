@@ -5,23 +5,21 @@
 @using dotnetflix.Models.Dtos.TicketOrderDtos
 
 <h3>Order Tickets for @MovieTitle</h3>
+<p style="margin-top: 24px">Select your seats:</p>
+
 
 <SeatSelection ShowId="ShowId" @ref="_seatSelection" OnSeatSelectionChange="OnSeatSelectionChanged"/>
 
 @if (_seatSelection != null && _seatSelection.SelectedSeats.Any())
 {
-    <div class="container mt-4">
-        <h4>Select Ticket Types:</h4>
+        <h4 class="mt-3">Select Ticket Types:</h4>
         <form>
             @foreach (var seat in _seatSelection.SelectedSeats.Take(10))
             {
                 <TicketTypeSelector TicketTypes="TicketTypes" Seat="@seat" ChildDiscountAvailable="ChildDiscountAvailable" OnUpdateSelectedTicketType="UpdateSelectedTicketType"/>
             }
         </form>
-    </div>
-    <div class="container">
-        <button class="btn btn-primary" @onclick="SummariseOrder">Confirm selection</button>
-    </div>
+        <button class="btn btn-primary mt-3" @onclick="SummariseOrder">Confirm selection</button>
 }
 
 
@@ -63,7 +61,7 @@
             }
         }
     }
-    
+
     private void OnSeatSelectionChanged(List<SeatDto> selectedSeats)
     {
         // Clear existing ticket orders as they will be recalculated
@@ -91,7 +89,7 @@
             SelectedTicketOrders.Add(ticketOrder);
         }
     }
-    
+
     private void UpdateSelectedTicketType(TicketTypeSelector.TicketTypeChangeArgs args)
     {
         // Find the corresponding ticket order for the seat ID
@@ -108,7 +106,7 @@
     {
         // Update the current order request with the selected ticket orders
         OrderRequest.TicketOrders = SelectedTicketOrders;
-        
+
         foreach (var ticketOrder in OrderRequest.TicketOrders)
         {
             var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
@@ -121,7 +119,7 @@
                 {
                     finalPricePerTicket += 2.5m;
                 }
-                
+
                 // Set discount for sneak preview shows
                 if (SelectedShow.SneakPreview)
                 {

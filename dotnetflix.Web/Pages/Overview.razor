@@ -23,14 +23,18 @@
     case PageState.EnterCode:
 
         // Show form to enter order code
-        <label for="orderCode" class="form-label">Your unique order code</label>
-        <input @bind="_orderCode"
-               id="orderCode"
-               type="text"
-               class="form-control"
-               placeholder=""
-               style="max-width: 128px"/>
-        <button type="button" class="btn btn-primary mt-2" @onclick="CollectTicketsClicked">Collect tickets</button>
+        <FluentStack Orientation="Orientation.Vertical">
+            <FluentTextField
+                @bind-Value=_orderCode
+                Minlength="6" Maxlength="6"
+                Label="Enter your unique order code:"
+                Style="width: 140px;"/>
+            <FluentButton IconStart="@(new Icons.Regular.Size20.TicketDiagonal())"
+                          Appearance="Appearance.Accent"
+                          OnClick="@CollectTicketsClicked">
+                Collect tickets
+            </FluentButton>
+        </FluentStack>
 
         break;
     case PageState.OrderFound:
@@ -42,7 +46,7 @@
 
         <MovieDetails Movie="Movie" IsSneakPreview="@_isSneakPreview"/>
 
-        <p>Tickets for order #@OrderCode:</p>
+        <p style="margin-top: 24px">Tickets for order #@OrderCode:</p>
         @foreach (var ticket in Tickets)
         {
             <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>

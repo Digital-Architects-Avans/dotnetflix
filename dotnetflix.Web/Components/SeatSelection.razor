@@ -5,45 +5,43 @@
 
 @if (Seats != null && Seats.Any())
 {
-    <div class="flex-container">
-        <div class="theater-container rounded-5 shadow-lg">
-            <ul class="showcase">
-                <li>
-                    <div class="seat"></div>
-                    <small>Available</small>
-                </li>
-                <li>
-                    <div class="seat selected"></div>
-                    <small>Selected</small>
-                </li>
-                <li>
-                    <div class="seat occupied"></div>
-                    <small>Occupied</small>
-                </li>
-            </ul>
+    <div class="theater-container rounded">
+        <ul class="showcase">
+            <li>
+                <div class="seat"></div>
+                <small>Available</small>
+            </li>
+            <li>
+                <div class="seat selected"></div>
+                <small>Selected</small>
+            </li>
+            <li>
+                <div class="seat occupied"></div>
+                <small>Occupied</small>
+            </li>
+        </ul>
 
-            <div class="container">
-                <div class="screen mb-5"></div>
-                <div class="theater">
-                    @foreach (var rowGroup in Seats.GroupBy(s => s.RowNumber).OrderBy(g => g.Key))
-                    {
-                        <div class="row">
-                            @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
-                            {
-                                // Check if the seat is available
-                                bool isAvailable = AvailableSeats?.Any(s => s.Id == seat.Id) ?? false;
-                                // Add the "occupied" class if the seat is not available
-                                string seatClass = isAvailable ? "" : "occupied";
+        <div class="container">
+            <div class="screen mb-5"></div>
+            <div class="theater">
+                @foreach (var rowGroup in Seats.GroupBy(s => s.RowNumber).OrderBy(g => g.Key))
+                {
+                    <div class="row">
+                        @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
+                        {
+                            // Check if the seat is available
+                            bool isAvailable = AvailableSeats?.Any(s => s.Id == seat.Id) ?? false;
+                            // Add the "occupied" class if the seat is not available
+                            string seatClass = isAvailable ? "" : "occupied";
 
-                                <div class="seat @(SelectedSeats.Contains(seat) ? "selected" : seatClass)"
-                                     @onclick="() => ToggleSeatSelection(seat)"
-                                     style="cursor: @(isAvailable ? "pointer" : "not-allowed")">
-                                    <span>@seat.SeatNumber</span>
-                                </div>
-                            }
-                        </div>
-                    }
-                </div>
+                            <div class="seat @(SelectedSeats.Contains(seat) ? "selected" : seatClass)"
+                                 @onclick="() => ToggleSeatSelection(seat)"
+                                 style="cursor: @(isAvailable ? "pointer" : "not-allowed")">
+                                <span>@seat.SeatNumber</span>
+                            </div>
+                        }
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -68,7 +66,7 @@ else
 
     private IEnumerable<TicketTypeDto>? TicketTypes { get; set; }
     public Dictionary<int, int> SelectedTicketTypes { get; set; } = new Dictionary<int, int>();
-    
+
     // Todo: Temporary seat reservation when a seat is selected?
 
     protected override async Task OnInitializedAsync()
