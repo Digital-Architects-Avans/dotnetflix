@@ -362,3 +362,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/dotnetflix.Api/Properties/serviceDependencies.local.json
+/dotnetflix.Api/Properties/serviceDependencies.json
+/dotnetflix.Api/Properties/ServiceDependencies/local/mssql1.arm.json
