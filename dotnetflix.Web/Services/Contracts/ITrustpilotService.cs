@@ -13,6 +13,6 @@ public class TrustpilotReviews
 public class TrustpilotReview
 {
     public string Name { get; set; }
-    public string Text { get; set; }
+    public string ReviewText { get; set; }
     public int Stars { get; set; }
 }

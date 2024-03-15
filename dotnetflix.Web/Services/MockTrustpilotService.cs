@@ -13,13 +13,13 @@ public class MockTrustpilotService : ITrustpilotService
                 new TrustpilotReview
                 {
                     Name = "Karl",
-                    Text = "Toffe film wel!",
+                    ReviewText = "Toffe film wel!",
                     Stars = 5
                 },
                 new TrustpilotReview
                 {
                     Name = "Karen",
-                    Text = "De popcorn plakt aan je vingers",
+                    ReviewText = "De popcorn plakt aan je vingers",
                     Stars = 2
                 }
             }

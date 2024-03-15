@@ -33,7 +33,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="reviewText">Write a review:</label>
-                        <InputTextArea id="reviewText" class="form-control" @bind-Value="newReview.Text" />
+                        <InputTextArea id="reviewText" class="form-control" @bind-Value="newReview.ReviewText" />
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit your review</button>
@@ -54,7 +54,7 @@
                 }
             </p>
             <b>@review.Name</b>
-            <p>@review.Text</p>
+            <p>@review.ReviewText</p>
         </div>
     </div>
     <br/>
