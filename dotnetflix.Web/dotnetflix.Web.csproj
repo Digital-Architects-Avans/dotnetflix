@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.4.0" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="8.0.2" />
     <PackageReference Include="Microsoft.NET.Sdk.WebAssembly.Pack" Version="8.0.2" />
+    <PackageReference Include="QRCoder" Version="1.4.3" />
     <PackageReference Include="Select.HtmlToPdf" Version="23.2.0" />
     <PackageReference Include="Select.Pdf" Version="23.2.0" />
     <PackageReference Include="Select.Pdf.NetCore" Version="23.2.0" />
