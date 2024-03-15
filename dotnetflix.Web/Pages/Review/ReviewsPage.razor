@@ -1,8 +1,86 @@
-@page "/ReviewsPage"
-<h3>ReviewsPage</h3>
+@page "/reviews"
+@using dotnetflix.Api.Services.Contracts
+@inject ITrustpilotService MockTrustpilotService
+
+<h3>Reviews .NETflix</h3>
+
+<div class="row">
+    <div class="col-md-6 text-center">
+        <img src="/images/trustpilot.png" class="img-fluid rounded" alt="" style="max-height: 150px;">
+        <p>TrustScore @_trustScore | @_trustCount reviews </p>
+    </div>
+    <div class="col-md-6">
+            <h3>Submit a Review</h3>
+            <EditForm Model="newReview" OnValidSubmit="HandleValidSubmit">
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label for="name">Name:</label>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <InputText id="name" class="form-control" @bind-Value="newReview.Name" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label for="stars">Stars:</label>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <InputSelect id="stars" class="form-control" @bind-Value="newReview.Stars">
+                            <option value="">Select...</option>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label for="reviewText">Review:</label>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <InputTextArea id="reviewText" class="form-control" @bind-Value="newReview.Text" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </EditForm>
+        </div>
+</div>
+
+
+<hr/>
+@foreach (var review in reviews)
+{
+    <div class="card" style="max-width: 425px;">
+        <div class="card-body">
+            <p>
+                @for (int i = 0; i < review.Stars; i++)
+                {
+                    <img src="/images/star.png" alt="" style="max-height: 25px;">
+                }
+            </p>
+            <b>@review.Name</b>
+            <p>@review.Text</p>
+        </div>
+    </div>
+    <br/>
+}
 
 @code {
-// trustpilot credentials(google account)
-// username/email: dotnetflix2@gmail.com
-// password: GhFlR123
+    private TrustpilotReview[] reviews;
+    private TrustpilotReview newReview = new TrustpilotReview();
+    private double _trustScore = 4.8;
+    private int _trustCount = 5;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var reviewsResponse = await MockTrustpilotService.GetReviewsAsync();
+        reviews = reviewsResponse.Reviews;
+    }
+    
+    private void HandleValidSubmit()
+    {
+        // Handle the form submission here.
+        // This could involve sending the new review to a server, adding it to the list of reviews, etc.
+    }
 }
