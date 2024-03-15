@@ -10,7 +10,9 @@
     <PackageReference Include="MailKit" Version="4.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0-preview.2.24128.5" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.4.1" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.DataGrid.EntityFrameworkAdapter" Version="4.4.0" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.4.0" />
@@ -19,6 +21,7 @@
     <PackageReference Include="Select.HtmlToPdf" Version="23.2.0" />
     <PackageReference Include="Select.Pdf" Version="23.2.0" />
     <PackageReference Include="Select.Pdf.NetCore" Version="23.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
