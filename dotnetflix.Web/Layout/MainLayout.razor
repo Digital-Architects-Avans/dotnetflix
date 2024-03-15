@@ -1,17 +1,24 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
+
+<FluentLayout>
+    <Header></Header>
+    <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
         <NavMenu/>
-    </div>
-    <main>
-        <div class="top-row px-4 pt-3 pb-1">
-            <Header></Header>
-        </div>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+        <FluentBodyContent Class="body-content">
+            <ErrorBoundary>
+                <ChildContent>
+                    <div class="content">
+                        @Body
+                    </div>
+                </ChildContent>
+                <ErrorContent Context="ex">
+                    <div class="blazor-error-boundary">@ex.Message</div>
+                </ErrorContent>
+            </ErrorBoundary>
+        </FluentBodyContent>
+    </FluentStack>
+    <Footer></Footer>
+</FluentLayout>
 
 <FluentToastProvider/>
 <FluentDialogProvider/>

@@ -3,38 +3,33 @@
 @using System.Globalization
 @using dotnetflix.Web.Services
 
-<div class="card mb-3 border-0" style="max-width: 540px;">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img src="/images/@MovieImage" class="img-fluid rounded" alt="" style="max-height: 250px;">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">@MovieTitle</h5>
-                <p class="card-text">@MovieDescription</p>
-                <p class="card-text">
-                    <small class="text-body-secondary">Run time: @Movie?.Runtime min</small>
-                </p>
-                <p class="card-text">
-                    <small class="text-body-secondary">Rating: @Movie?.Rating</small>
-                </p>
-                <small class="text-body-secondary">First shown: @FirstShowDate days ago</small>
-            </div>
-        </div>
-    </div>
-</div>
+<FluentGrid Justify="JustifyContent.FlexStart">
+    <FluentGridItem Style="min-width: 200px;">
+        <img src="/images/@MovieImage" class="img-fluid rounded" alt="..." style="max-height: 250px;">
+    </FluentGridItem>
+    <FluentGridItem>
+        <h5 class="card-title">@MovieTitle</h5>
+        <p class="card-text" style="max-width: 500px">@MovieDescription</p>
+        <p class="card-text">
+            <small class="text-body-secondary">Run time: @Movie?.Runtime min</small>
+        </p>
+        <p class="card-text">
+            <small class="text-body-secondary">Rating: @Movie?.Rating</small>
+        </p>
+        <small class="text-body-secondary">First shown: @FirstShowDate days ago</small>
+    </FluentGridItem>
+</FluentGrid>
+
 @if (Show != null)
 {
-    <div class="card border-0">
-        <div class="card-body">
-            <h5 class="card-title text-black">@StartTime - @EndTime</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">@Show.TheaterName</h6>
-            <p class="card-text">@Show.Type</p>
-            <p class="card-text">
-                <small class="text-body-secondary">From @Show.BasePrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</small>
-            </p>
-        </div>
-    </div>
+    <FluentCard>
+        <h5 class="card-title text-black">@StartTime - @EndTime</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">@Show.TheaterName</h6>
+        <p class="card-text">@Show.Type</p>
+        <p class="card-text">
+            <small class="text-body-secondary">From @Price.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</small>
+        </p>
+    </FluentCard>
 }
 
 @code {
@@ -49,6 +44,7 @@
     [Parameter] public string MovieTitle { get; set; } = "Loading...";
     [Parameter] public string MovieDescription { get; set; } = "Loading...";
     [Parameter] public string MovieImage { get; set; } = "no-cover.jpg";
+    [Parameter] public decimal Price { get; set; }
 
     [Inject] public IShowService? ShowService { get; set; }
 
@@ -65,6 +61,15 @@
             StartTime = Show.Date.ToString("HH:mm");
             // Get end time by adding screen time to start time
             EndTime = Show.Date.AddMinutes(Show.ScreenTime).ToString("HH:mm");
+            // Set price
+            if (Show.SneakPreview)
+            {
+                Price = Show.BasePrice - 2.5m;
+            }
+            else
+            {
+                Price = Show.BasePrice;
+            }
         }
 
         // If the component is a sneak preview, set title and description
