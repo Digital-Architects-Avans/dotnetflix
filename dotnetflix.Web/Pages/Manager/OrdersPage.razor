@@ -109,6 +109,7 @@
         SelectedOrder = new OrderDto
         {
             Id = order.Id,
+            TicketIds = order.TicketIds,
             TotalPrice = order.TotalPrice,
             Uuid = order.Uuid,
             CustomerName = order.CustomerName,
@@ -130,6 +131,7 @@
     {
         NewOrder = new AddOrderDto
         {
+            TicketIds = SelectedOrder.TicketIds,
             Uuid = SelectedOrder.Uuid,
             CustomerName = SelectedOrder.CustomerName,
             CustomerEmail = SelectedOrder.CustomerEmail
@@ -149,6 +151,7 @@
     {
         EditOrder = new UpdateOrderDto
         {
+            TicketIds = SelectedOrder.TicketIds,
             TotalPrice = SelectedOrder.TotalPrice,
             Uuid = SelectedOrder.Uuid,
             CustomerName = SelectedOrder.CustomerName,
