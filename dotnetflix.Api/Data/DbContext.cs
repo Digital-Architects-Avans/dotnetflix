@@ -227,7 +227,7 @@ namespace dotnetflix.Api.Data
                 {
                     Id = 7,
                     Name = "VIP Ticket",
-                    Discount = 0M
+                    Discount = -5.00M
                 }
             );
             
