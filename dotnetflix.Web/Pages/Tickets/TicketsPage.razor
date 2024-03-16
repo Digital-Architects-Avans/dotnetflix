@@ -82,13 +82,11 @@
 
     private void OnSeatSelectionChanged(List<SeatDto> selectedSeats)
     {
-        // Clear existing ticket orders as they will be recalculated
-        SelectedTicketOrders.Clear();
-
         foreach (var seat in selectedSeats)
         {
-            // Create a new TicketOrderDto for each selected seat
-            if (Movie != null && SelectedShow != null)
+            // Check if the seat is already in the list of selected ticket orders, add if not
+            var existingSeat = SelectedTicketOrders.FirstOrDefault(to => to.SeatId == seat.Id);
+            if (existingSeat == null && Movie != null && SelectedShow != null)
             {
                 var ticketOrder = new TicketOrderDto
                 {
@@ -107,6 +105,17 @@
                 };
 
                 SelectedTicketOrders.Add(ticketOrder);
+                Console.WriteLine("Added new ticket order for seat " + seat.Id);
+            }
+        }
+
+        // Check if seat for ticket orders are still selected, delete if not
+        foreach (var seat in SelectedTicketOrders)
+        {
+            if (selectedSeats.All(s => s.Id != seat.SeatId))
+            {
+                SelectedTicketOrders.Remove(seat);
+                Console.WriteLine("Removed ticket order for seat " + seat.SeatId);
             }
         }
     }
