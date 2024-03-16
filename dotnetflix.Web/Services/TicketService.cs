@@ -2,6 +2,7 @@
 using dotnetflix.Web.Services.Contracts;
 using System.Net.Http.Json;
 using dotnetflix.Models.Dtos.OrderRequestDtos;
+using dotnetflix.Models.Dtos.Supplement;
 using dotnetflix.Models.Dtos.TicketType;
 
 namespace dotnetflix.Web.Services;
@@ -58,6 +59,35 @@ public class TicketService : ITicketService
                 }
 
                 return await response.Content.ReadFromJsonAsync<IEnumerable<TicketTypeDto>>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception(message);
+            }
+        }
+        catch (Exception e)
+        {
+            // Log Exception
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    public async Task<IEnumerable<SupplementDto>?> GetSupplements()
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"api/Supplement");
+
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    return Enumerable.Empty<SupplementDto>();
+                }
+
+                return await response.Content.ReadFromJsonAsync<IEnumerable<SupplementDto>>();
             }
             else
             {
