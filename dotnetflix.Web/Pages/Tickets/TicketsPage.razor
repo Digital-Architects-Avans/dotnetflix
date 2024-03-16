@@ -13,7 +13,7 @@
 
 <SeatSelection ShowId="ShowId" @ref="_seatSelection" OnSeatSelectionChange="OnSeatSelectionChanged"/>
 
-@if (_seatSelection != null && _seatSelection.SelectedSeats.Any())
+@if (_seatSelection != null && _seatSelection.SelectedSeats.Any() && SelectedShow != null)
 {
     <h4 class="mt-3">Ticket type</h4>
     <p>Please select your ticket type:</p>
@@ -56,7 +56,7 @@
     private IEnumerable<TicketTypeDto>? TicketTypes { get; set; }
     private IEnumerable<SupplementDto>? Supplements { get; set; }
     private OrderRequestDto OrderRequest { get; set; } = new OrderRequestDto();
-    public string? MovieTitle => SelectedShow?.SneakPreview == true ? "Sneak preview" : SelectedShow?.MovieTitle;
+    private string? MovieTitle => SelectedShow?.SneakPreview == true ? "Sneak preview" : SelectedShow?.MovieTitle;
     private bool ChildDiscountAvailable { get; set; }
     private List<TicketOrderDto> SelectedTicketOrders { get; set; } = new List<TicketOrderDto>();
 
@@ -88,23 +88,26 @@
         foreach (var seat in selectedSeats)
         {
             // Create a new TicketOrderDto for each selected seat
-            var ticketOrder = new TicketOrderDto
+            if (Movie != null && SelectedShow != null)
             {
-                MovieId = Movie.Id,
-                MovieTitle = Movie.Title,
-                TheaterId = SelectedShow.TheaterId,
-                TheaterName = SelectedShow.TheaterName,
-                ShowTime = SelectedShow.Date,
-                ShowId = SelectedShow.Id,
-                SeatId = seat.Id,
-                RowNumber = seat.RowNumber,
-                SeatNumber = seat.SeatNumber,
-                TicketTypeId = 1,
-                Quantity = 1,
-                FinalPrice = 0
-            };
+                var ticketOrder = new TicketOrderDto
+                {
+                    MovieId = Movie.Id,
+                    MovieTitle = Movie.Title,
+                    TheaterId = SelectedShow.TheaterId,
+                    TheaterName = SelectedShow.TheaterName,
+                    ShowTime = SelectedShow.Date,
+                    ShowId = SelectedShow.Id,
+                    SeatId = seat.Id,
+                    RowNumber = seat.RowNumber,
+                    SeatNumber = seat.SeatNumber,
+                    TicketTypeId = 1,
+                    Quantity = 1,
+                    FinalPrice = 0
+                };
 
-            SelectedTicketOrders.Add(ticketOrder);
+                SelectedTicketOrders.Add(ticketOrder);
+            }
         }
     }
 
@@ -152,36 +155,55 @@
 
         foreach (var ticketOrder in OrderRequest.TicketOrders)
         {
-            var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
-            if (ticketType != null)
+            if (TicketTypes != null && SelectedShow != null)
             {
-                // Calculate the final price per ticket with the discount applied
-                var finalPricePerTicket = SelectedShow.BasePrice - ticketType.Discount;
-
-                if (SelectedShow.Type == MovieType.ThreeD)
+                var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
+                if (ticketType != null)
                 {
-                    finalPricePerTicket += 2.5m;
+                    // Calculate the final price per ticket with the discount applied
+                    var finalPricePerTicket = SelectedShow.BasePrice - ticketType.Discount;
+
+                    // Add a surcharge for 3D movies
+                    if (SelectedShow.Type == MovieType.ThreeD)
+                    {
+                        finalPricePerTicket += 2.5m;
+                    }
+
+                    // Set discount for sneak preview shows
+                    if (SelectedShow.SneakPreview)
+                    {
+                        finalPricePerTicket -= 2.5m;
+                    }
+
+                    // Add cost for selected supplements
+                    if (ticketOrder.SupplementIds.Any())
+                    {
+                        var supplementCost = 0m;
+                        foreach (var supplement in ticketOrder.SupplementIds)
+                        {
+                            if (Supplements != null)
+                            {
+                                supplementCost += Supplements.FirstOrDefault(s => s.Id == supplement)!.Price;
+                            }
+                        }
+
+                        finalPricePerTicket += supplementCost;
+                    }
+
+                    ticketOrder.FinalPrice = finalPricePerTicket;
+
+                    // Update the FinalPrice in the TicketOrderDto to reflect the total price for the quantity selected
+                    // FinalPrice holds the total price for all tickets of this type
+                    ticketOrder.FinalPrice *= ticketOrder.Quantity;
                 }
-
-                // Set discount for sneak preview shows
-                if (SelectedShow.SneakPreview)
-                {
-                    finalPricePerTicket -= 2.5m;
-                }
-
-                ticketOrder.FinalPrice = finalPricePerTicket;
-
-                // Update the FinalPrice in the TicketOrderDto to reflect the total price for the quantity selected
-                // FinalPrice holds the total price for all tickets of this type
-                ticketOrder.FinalPrice *= ticketOrder.Quantity;
             }
         }
 
         // Save the order request in the OrderStateService
-        OrderStateService.CurrentOrder = OrderRequest;
+        if (OrderStateService != null) OrderStateService.CurrentOrder = OrderRequest;
 
         // Navigate to the SeatSelection page
-        NavigationManager.NavigateTo($"/Checkout/");
+        if (NavigationManager != null) NavigationManager.NavigateTo($"/Checkout/");
     }
 
 }
