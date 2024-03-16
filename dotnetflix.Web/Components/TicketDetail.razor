@@ -1,9 +1,13 @@
+@using QRCoder
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.PixelFormats
 @using dotnetflix.Models.Dtos
 @using dotnetflix.Models.Dtos.Movie
 @using dotnetflix.Models.Dtos.Show
 @inject IJSRuntime JsRuntime
 @using SelectPdf
 @using System.Globalization
+
 
 @if (Ticket == null)
 {
@@ -28,13 +32,20 @@ else
             <dd class="col-xl-9 col-sm-8">@Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</dd>
         </dl>
         <FluentButton Appearance="Appearance.Accent" OnClick="@PrintTicket">Print ticket</FluentButton>
+        <div>
+            <img src="@QRCodeBase64" alt="Ticket QR Code" width="100" height="100" />
+        </div>
     </FluentCard>
 }
 
 @code {
 
-    // Set properties te facilitate dependency injection
+    // Set properties to facilitate dependency injection
     [Inject] public ITicketService? TicketService { get; set; }
+
+    // Get NavigationManager for URL generation
+    [Inject] public NavigationManager MyNavigationManager { get; set; };
+    [Parameter] public string BaseUri { get; set; }
 
     // Parameter to be passed to the component
     [Parameter] public TicketDto? Ticket { get; set; }
@@ -46,6 +57,8 @@ else
     [Parameter] public string StartTime { get; set; } = "00:00";
     [Parameter] public string EndTime { get; set; } = "00:00";
     [Parameter] public string? TicketType { get; set; }
+
+    private string QRCodeBase64 { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,7 +77,41 @@ else
                 var ticketTypes = await TicketService.GetTicketTypes();
                 if (ticketTypes != null) TicketType = ticketTypes.FirstOrDefault(t => t.Id == Ticket.TicketTypeId)?.Name;
             }
+
+            // Generate QR code for ticket URL
+            GenerateQRCode(TicketUrl);
         }
+    }
+
+    private string TicketUrl => $"{MyNavigationManager.Uri}";
+
+    private void GenerateQRCode(string text)
+    {
+        // Create QR code data
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+
+        // Calculate QR code image dimensions
+        int width = qrCodeData.ModuleMatrix.Count;
+        int height = qrCodeData.ModuleMatrix.Count;
+
+        // Render QR code using ImageSharp
+        var qrCodeImage = new Image<Rgba32>(width, height);
+
+        // Iterate through each module (pixel) in the QR code data and set corresponding pixels in the ImageSharp image
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                // Set black pixel for modules with data and white pixel for empty modules
+                qrCodeImage[x, y] = qrCodeData.ModuleMatrix[y][x] ? new Rgba32(0, 0, 0) : new Rgba32(255, 255, 255);
+            }
+        }
+
+        // Convert the ImageSharp image to a base64-encoded string
+        using var memoryStream = new MemoryStream();
+        qrCodeImage.SaveAsPng(memoryStream);
+        QRCodeBase64 = $"data:image/png;base64,{Convert.ToBase64String(memoryStream.ToArray())}";
     }
 
     private async Task PrintTicket()
@@ -74,7 +121,7 @@ else
         await jsPdf.InvokeVoidAsync("text", $"Theater: {Ticket!.TheaterName} - {Show.Type}", 10, 20);
         await jsPdf.InvokeVoidAsync("text", $"Show Time: {Ticket.ShowTime}", 10, 30);
         await jsPdf.InvokeVoidAsync("text", $"Seat: Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}", 10, 40);
-        await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {Ticket.TicketTypeId}", 10, 50);
+        await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {TicketType}", 10, 50);
         await jsPdf.InvokeVoidAsync("text", $"Price: {Ticket.TicketPrice}", 10, 60);
         await jsPdf.InvokeVoidAsync("save", "ticket.pdf");
     }

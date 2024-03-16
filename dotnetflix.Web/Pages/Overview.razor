@@ -3,9 +3,9 @@
 
 @using QRCoder
 @using SixLabors.ImageSharp
-
 @using SixLabors.ImageSharp.Formats.Png
 @using SixLabors.ImageSharp.PixelFormats
+
 @using dotnetflix.Models.Dtos.Order
 
 @using dotnetflix.Models.Dtos
@@ -51,7 +51,7 @@
             @if (!string.IsNullOrEmpty(QRCodeBase64))
             {
                 <div>
-                    <img src="@QRCodeBase64" alt="QR Code" />
+                    <img src="@QRCodeBase64" alt="QR Code" height="100px" width="100px"/>
                 </div>
             }
         </FluentCard>
