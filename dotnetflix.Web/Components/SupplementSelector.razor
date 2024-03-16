@@ -1,0 +1,37 @@
+@using dotnetflix.Models.Dtos.Supplement
+@using dotnetflix.Models.Dtos
+@using dotnetflix.Models.Dtos.Seat
+
+<p>Get your favourite cinema treats with discount:</p>
+
+<FluentStack Orientation="Orientation.Vertical">
+    @if (Supplements != null)
+    {
+        @foreach (var supplement in Supplements)
+        {
+            <FluentCheckbox CheckStateChanged="@(e => HandleSupplementChange(supplement.Id, Seat.Id))">@supplement.Name - @supplement.Price</FluentCheckbox>
+        }
+    }
+</FluentStack>
+
+@code {
+    [Parameter] public IEnumerable<SupplementDto>? Supplements { get; set; }
+    [Parameter] public SeatDto Seat { get; set; } = new SeatDto();
+    [Parameter] public EventCallback<SupplementChangeArgs> OnUpdateSelectedSupplements { get; set; }
+
+    private void HandleSupplementChange(int selectedSupplementId, int seatId)
+    {
+        var args = new SupplementChangeArgs
+        {
+            SupplementId = selectedSupplementId,
+            SeatId = seatId
+        };
+        OnUpdateSelectedSupplements.InvokeAsync(args);
+    }
+    
+    public class SupplementChangeArgs
+    {
+        public int SupplementId { get; set; }
+        public int SeatId { get; set; }
+    }
+}
