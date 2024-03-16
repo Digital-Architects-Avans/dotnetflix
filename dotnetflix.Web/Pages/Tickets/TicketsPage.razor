@@ -4,6 +4,7 @@
 @using dotnetflix.Models.Dtos.Seat
 @using dotnetflix.Models.Dtos.TicketOrderDtos
 @using System.Globalization
+@using dotnetflix.Models.Dtos.Supplement
 
 <h1>Tickets for @MovieTitle</h1>
 <h4 style="margin-top: 24px">Seat selection</h4>
@@ -29,6 +30,8 @@
                     <dd class="col-xl-9 col-sm-8">Row @seat.RowNumber, Seat @seat.SeatNumber</dd>
                 </dl>
                 <TicketTypeSelector TicketTypes="TicketTypes" Seat="@seat" ChildDiscountAvailable="ChildDiscountAvailable" OnUpdateSelectedTicketType="UpdateSelectedTicketType"/>
+                <FluentDivider Style="margin: 20px 0;"></FluentDivider>
+                <SupplementSelector Supplements="Supplements" Seat="@seat" OnUpdateSelectedSupplements="UpdateSelectedSupplements"/>
             </FluentCard>
         }
     </form>
@@ -51,6 +54,7 @@
     private ShowDto? SelectedShow { get; set; }
     private MovieDto? Movie { get; set; }
     private IEnumerable<TicketTypeDto>? TicketTypes { get; set; }
+    private IEnumerable<SupplementDto>? Supplements { get; set; }
     private OrderRequestDto OrderRequest { get; set; } = new OrderRequestDto();
     public string? MovieTitle => SelectedShow?.SneakPreview == true ? "Sneak preview" : SelectedShow?.MovieTitle;
     private bool ChildDiscountAvailable { get; set; }
@@ -66,6 +70,7 @@
             {
                 Movie = await MovieService.GetMovie(SelectedShow.MovieId);
                 TicketTypes = await TicketService.GetTicketTypes();
+                Supplements = await TicketService.GetSupplements();
 
                 if (Movie != null)
                 {
@@ -112,6 +117,18 @@
         {
             // Update the ticket type for the selected seat
             ticketOrder.TicketTypeId = args.SelectedTicketTypeId;
+        }
+    }
+    
+    private void UpdateSelectedSupplements(SupplementSelector.SupplementChangeArgs args)
+    {
+        // Find the corresponding ticket order for the seat ID
+        var ticketOrder = SelectedTicketOrders.FirstOrDefault(to => to.SeatId == args.SeatId);
+
+        if (ticketOrder != null)
+        {
+            // Update the supplements for the selected seat
+            Console.WriteLine("Adding supplement " + args.SupplementId + " to ticket order for seat " + args.SeatId);
         }
     }
 
