@@ -40,5 +40,7 @@ namespace dotnetflix.Api.Data.Entities
 		// The Ticket entity has a many-to-one relationship with the Show entity
 
 		public Show Show { get; set; }
+		
+		public ICollection<int>? Supplements { get; set; }
     }
 }

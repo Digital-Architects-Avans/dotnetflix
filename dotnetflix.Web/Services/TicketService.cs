@@ -143,7 +143,8 @@ public class TicketService : ITicketService
                     RowNumber = ticketOrder.RowNumber,
                     SeatNumber = ticketOrder.SeatNumber,
                     TicketTypeId = ticketOrder.TicketTypeId,
-                    TicketPrice = ticketOrder.FinalPrice
+                    TicketPrice = ticketOrder.FinalPrice,
+                    Supplements = ticketOrder.SupplementIds
                 };
 
                 // Post the newTicket to your API to save it in the database

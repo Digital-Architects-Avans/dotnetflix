@@ -8,6 +8,7 @@ using dotnetflix.Models.Dtos.Show;
 using dotnetflix.Models.Dtos.Supplement;
 using dotnetflix.Models.Dtos.Theater;
 using dotnetflix.Models.Dtos.TheaterRow;
+using dotnetflix.Models.Dtos.Ticket;
 using dotnetflix.Models.Dtos.TicketType;
 
 namespace dotnetflix.Api.Extensions;
@@ -117,7 +118,8 @@ public static class DtoConversions
 			ShowTime = ticket.ShowTime,
 			TicketTypeId = ticket.TicketTypeId,
 			TicketPrice = ticket.TicketPrice,
-			OrderId = ticket.OrderId
+			OrderId = ticket.OrderId,
+			Supplements = ticket.Supplements
 		};
 	}
     
