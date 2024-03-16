@@ -25,7 +25,9 @@ public class MockTrustpilotService : ITrustpilotService
                    return default(IEnumerable<ReviewDto>);
                }
 
-               return await response.Content.ReadFromJsonAsync<IEnumerable<ReviewDto>>();
+               var reviews = await response.Content.ReadFromJsonAsync<IEnumerable<ReviewDto>>();
+               return reviews.OrderByDescending(r => r.Id);
+
            }
            else
            {
