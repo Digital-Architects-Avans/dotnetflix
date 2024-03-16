@@ -10,7 +10,6 @@
 <h4 style="margin-top: 24px">Seat selection</h4>
 <p>Please select your seats:</p>
 
-
 <SeatSelection ShowId="ShowId" @ref="_seatSelection" OnSeatSelectionChange="OnSeatSelectionChanged"/>
 
 @if (_seatSelection != null && _seatSelection.SelectedSeats.Any() && SelectedShow != null)
@@ -20,6 +19,7 @@
     <form>
         @foreach (var seat in _seatSelection.SelectedSeats.Take(10))
         {
+            var ticketOrder = SelectedTicketOrders.FirstOrDefault(to => to.SeatId == seat.Id);
             <FluentCard Style="max-width: 600px; margin: 16px 0;">
                 <dl class="row">
                     <dt class="col-xl-3 col-sm-4">Theater:</dt>
@@ -31,7 +31,7 @@
                 </dl>
                 <TicketTypeSelector TicketTypes="TicketTypes" Seat="@seat" ChildDiscountAvailable="ChildDiscountAvailable" OnUpdateSelectedTicketType="UpdateSelectedTicketType"/>
                 <FluentDivider Style="margin: 20px 0;"></FluentDivider>
-                <SupplementSelector Supplements="Supplements" Seat="@seat" OnUpdateSelectedSupplements="UpdateSelectedSupplements"/>
+                <SupplementSelector Supplements="Supplements" Seat="@seat" TicketOrder="@ticketOrder" OnUpdateSelectedSupplements="UpdateSelectedSupplements"/>
             </FluentCard>
         }
     </form>
