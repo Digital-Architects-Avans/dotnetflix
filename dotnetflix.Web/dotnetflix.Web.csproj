@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazorise" Version="1.5.0-preview2" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="1.5.0-preview2" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.5.0-preview2" />
+    <PackageReference Include="Blazorise.QRCode" Version="1.5.0-preview2" />
     <PackageReference Include="MailKit" Version="4.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
