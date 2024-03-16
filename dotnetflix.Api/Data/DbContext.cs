@@ -225,6 +225,28 @@ namespace dotnetflix.Api.Data
                 }
             );
             
+            modelBuilder.Entity<Supplement>().HasData(
+
+                new Supplement()
+                {
+                    Id = 1,
+                    Name = "Large popcorn",
+                    Price = 3.00M
+                },
+                new Supplement()
+                {
+                    Id = 2,
+                    Name = "Large M&Ms",
+                    Price = 4.00M
+                },
+                new Supplement()
+                {
+                    Id = 3,
+                    Name = "Large popcorn",
+                    Price = 1.50M
+                }
+            );
+            
         }
 
         public DbSet<Movie> Movies { get; set; }
@@ -235,5 +257,6 @@ namespace dotnetflix.Api.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
+        public DbSet<Supplement> Supplements { get; set; }
     }
 }
