@@ -61,4 +61,15 @@ public class MockTrustpilotService : ITrustpilotService
            throw new Exception(message.Result);
        }
    }
+   
+   public async Task<double> GetTrustScore()
+   {
+       var reviews = await GetReviews();
+       if (reviews != null && reviews.Any())
+       {
+           return reviews.Average(r => r.Stars);
+       }
+       return 0;
+   }
+   
 }

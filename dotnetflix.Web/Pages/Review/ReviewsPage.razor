@@ -1,5 +1,6 @@
 @page "/reviews"
 @using dotnetflix.Api.Services.Contracts
+@using dotnetflix.Models.Dtos.Review
 @inject ITrustpilotService MockTrustpilotService
 
 <h3>Reviews .NETflix</h3>
@@ -61,20 +62,30 @@
 }
 
 @code {
-    private TrustpilotReview[] reviews;
-    private TrustpilotReview newReview = new TrustpilotReview();
-    private double _trustScore = 4.8;
-    private int _trustCount = 5;
+    private IEnumerable<ReviewDto> reviews;
+
+    private AddReviewDto newReview = new AddReviewDto
+    {
+        Name = "",
+        Stars = 5,
+        ReviewText = ""
+    };
+    private double _trustScore;
+    private int _trustCount;
 
     protected override async Task OnInitializedAsync()
     {
-        var reviewsResponse = await MockTrustpilotService.GetReviewsAsync();
-        reviews = reviewsResponse.Reviews;
+        reviews = await MockTrustpilotService.GetReviews();
+        _trustScore = await MockTrustpilotService.GetTrustScore();
+        _trustCount = reviews.Count();
     }
-    
-    private void HandleValidSubmit()
+
+    private async Task HandleValidSubmit()
     {
-        // Handle the form submission here.
-        // This could involve sending the new review to a server, adding it to the list of reviews, etc.
+        await MockTrustpilotService.AddReview(newReview);
+        newReview = new AddReviewDto(); 
+        reviews = await MockTrustpilotService.GetReviews(); 
+        _trustScore = await MockTrustpilotService.GetTrustScore();
+        _trustCount = reviews.Count();
     }
 }

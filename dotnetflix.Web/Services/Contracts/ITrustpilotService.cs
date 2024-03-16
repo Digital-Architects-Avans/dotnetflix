@@ -6,6 +6,7 @@ public interface ITrustpilotService
 {
     Task<IEnumerable<ReviewDto>> GetReviews();
     Task<AddReviewDto> AddReview(AddReviewDto addReviewDto);
+    Task<double> GetTrustScore();
 }
 
 
