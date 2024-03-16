@@ -18,25 +18,6 @@ namespace dotnetflix.Api.Migrations
                 keyColumn: "Id",
                 keyValue: 6);
 
-            migrationBuilder.AddColumn<string>(
-                name: "CustomerEmail",
-                table: "Orders",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "CustomerName",
-                table: "Orders",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Uuid",
-                table: "Orders",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
             migrationBuilder.CreateTable(
                 name: "Supplements",
                 columns: table => new
