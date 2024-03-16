@@ -19,6 +19,12 @@ public class ReviewRepository : IReviewRepository
         var reviews = await _dotNetFlixDbContext.Reviews.ToListAsync();
         return reviews;
     }
+    
+    public async Task<Review?> GetReview(int id)
+    {
+        var review = await _dotNetFlixDbContext.Reviews.SingleOrDefaultAsync(r => r.Id == id);
+        return review;
+    }
 
     public Task<Review> AddReview(AddReviewDto addReviewDto)
     {
