@@ -1,6 +1,7 @@
 @using dotnetflix.Models.Dtos.Supplement
 @using dotnetflix.Models.Dtos
 @using dotnetflix.Models.Dtos.Seat
+@using System.Globalization
 
 <p>Get your favourite cinema treats with discount:</p>
 
@@ -9,7 +10,7 @@
     {
         @foreach (var supplement in Supplements)
         {
-            <FluentCheckbox CheckStateChanged="@(e => HandleSupplementChange(supplement.Id, Seat.Id))">@supplement.Name - @supplement.Price</FluentCheckbox>
+            <FluentCheckbox CheckStateChanged="@(e => HandleSupplementChange(supplement.Id, Seat.Id))">@supplement.Name +@supplement.Price.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</FluentCheckbox>
         }
     }
 </FluentStack>
