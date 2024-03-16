@@ -119,7 +119,7 @@
             ticketOrder.TicketTypeId = args.SelectedTicketTypeId;
         }
     }
-    
+
     private void UpdateSelectedSupplements(SupplementSelector.SupplementChangeArgs args)
     {
         // Find the corresponding ticket order for the seat ID
@@ -128,7 +128,20 @@
         if (ticketOrder != null)
         {
             // Update the supplements for the selected seat
-            Console.WriteLine("Adding supplement " + args.SupplementId + " to ticket order for seat " + args.SeatId);
+            var activeSupplements = ticketOrder.SupplementIds;
+
+            if (activeSupplements.Contains(args.SupplementId))
+            {
+                Console.WriteLine("Removing supplement " + args.SupplementId + " from ticket order for seat " + args.SeatId);
+                activeSupplements.Remove(args.SupplementId);
+            }
+            else
+            {
+                Console.WriteLine("Adding supplement " + args.SupplementId + " to ticket order for seat " + args.SeatId);
+                activeSupplements.Add(args.SupplementId);
+            }
+
+            ticketOrder.SupplementIds = activeSupplements;
         }
     }
 
