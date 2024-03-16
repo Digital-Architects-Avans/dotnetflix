@@ -1,0 +1,36 @@
+﻿@page "/manager/newsletter"
+
+<div class="d-flex justify-content-center mt-3">
+
+    <EditForm Model="@newsLetterForm" OnValidSubmit="@HandleValidSubmit" FormName="newsLetter">
+
+        <h1>Write and Send a News Letter</h1>
+
+        <FluentStack Class="mt-5" HorizontalAlignment="HorizontalAlignment.Center" Orientation="Orientation.Vertical">
+
+            <FluentTextField Appearance="FluentInputAppearance.Filled" Name="subject" Label="Subject" @bind-Value="newsLetterForm.Subject" Required Style="width: 600px;" />
+            <FluentTextArea Appearance="FluentInputAppearance.Filled" Name="message" Label="Message" @bind-Value="newsLetterForm.Message" Rows="28" Required Style="width: 600px;" />
+
+            <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Send News Letter</FluentButton>
+        </FluentStack>
+    </EditForm>
+
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private NewsLetterForm newsLetterForm { get; set; } = new();
+
+    private void HandleValidSubmit()
+    {
+
+    }
+
+    public class NewsLetterForm
+    {
+        [Required]
+        public string? Subject { get; set; }
+        [Required]
+        public string? Message { get; set; }
+    }
+}

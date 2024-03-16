@@ -1,11 +1,11 @@
 ﻿@page "/newsletter"
-@using System.ComponentModel.DataAnnotations
+
 
 <div class="d-flex justify-content-center m-lg-5">
 
     @if (!isSubscribed)
     {
-        <EditForm Model="@newsLetterForm" OnValidSubmit="@HandleValidSubmit" FormName="starship_fluent_entry">
+        <EditForm Model="@newsLetterForm" OnValidSubmit="@HandleValidSubmit" FormName="newsLetter">
 
             <h1>Subscribe to our News Letter!</h1>
 
