@@ -2,7 +2,7 @@
 @using dotnetflix.Models.Dtos.Seat
 
 <div class="form-group">
-    <label for="@($"ticketType_{Seat.Id}")">Ticket Type for Seat @Seat.SeatNumber:</label>
+    <label for="@($"ticketType_{Seat.Id}")" class="mb-2"><b>Ticket Type:</b></label>
 <select class="form-select form-select-sm" id="@($"ticketType_{Seat.Id}")" @onchange="e => HandleTicketTypeChange(e, Seat.Id)">
     @foreach (var ticketType in TicketTypes)
     {

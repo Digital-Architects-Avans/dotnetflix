@@ -3,23 +3,36 @@
 @using dotnetflix.Models.Dtos.OrderRequestDtos
 @using dotnetflix.Models.Dtos.Seat
 @using dotnetflix.Models.Dtos.TicketOrderDtos
+@using System.Globalization
 
-<h3>Order Tickets for @MovieTitle</h3>
-<p style="margin-top: 24px">Select your seats:</p>
+<h1>Tickets for @MovieTitle</h1>
+<h4 style="margin-top: 24px">Seat selection</h4>
+<p>Please select your seats:</p>
 
 
 <SeatSelection ShowId="ShowId" @ref="_seatSelection" OnSeatSelectionChange="OnSeatSelectionChanged"/>
 
 @if (_seatSelection != null && _seatSelection.SelectedSeats.Any())
 {
-        <h4 class="mt-3">Select Ticket Types:</h4>
-        <form>
-            @foreach (var seat in _seatSelection.SelectedSeats.Take(10))
-            {
+    <h4 class="mt-3">Ticket type</h4>
+    <p>Please select your ticket type:</p>
+    <form>
+        @foreach (var seat in _seatSelection.SelectedSeats.Take(10))
+        {
+            <FluentCard Style="max-width: 600px; margin: 16px 0;">
+                <dl class="row">
+                    <dt class="col-xl-3 col-sm-4">Theater:</dt>
+                    <dd class="col-xl-9 col-sm-8">@SelectedShow.TheaterName</dd>
+                    <dt class="col-xl-3 col-sm-4">Show Time:</dt>
+                    <dd class="col-xl-9 col-sm-8">@SelectedShow.Date.ToString("dd-MM-yyyy - HH:mm", new CultureInfo("nl-NL"))</dd>
+                    <dt class="col-xl-3 col-sm-4">Seat:</dt>
+                    <dd class="col-xl-9 col-sm-8">Row @seat.RowNumber, Seat @seat.SeatNumber</dd>
+                </dl>
                 <TicketTypeSelector TicketTypes="TicketTypes" Seat="@seat" ChildDiscountAvailable="ChildDiscountAvailable" OnUpdateSelectedTicketType="UpdateSelectedTicketType"/>
-            }
-        </form>
-        <button class="btn btn-primary mt-3" @onclick="SummariseOrder">Confirm selection</button>
+            </FluentCard>
+        }
+    </form>
+    <button class="btn btn-primary mt-3" @onclick="SummariseOrder">Confirm selection</button>
 }
 
 
