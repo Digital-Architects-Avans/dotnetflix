@@ -5,6 +5,7 @@ using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Order;
 using dotnetflix.Models.Dtos.Seat;
 using dotnetflix.Models.Dtos.Show;
+using dotnetflix.Models.Dtos.Subscriber;
 using dotnetflix.Models.Dtos.Theater;
 using dotnetflix.Models.Dtos.TheaterRow;
 using dotnetflix.Models.Dtos.TicketType;
@@ -52,8 +53,13 @@ public static class DtoConversions
 	{
 		return seats.Select(seat => seat.ConvertToDto()).ToList();
 	}
-	
-	public static MovieDto ConvertToDto(this Movie movie)
+
+    public static IEnumerable<SubscriberDto> ConvertToDto(this IEnumerable<Subscriber> subscribers)
+    {
+        return subscribers.Select(subscriber => subscriber.ConvertToDto()).ToList();
+    }
+
+    public static MovieDto ConvertToDto(this Movie movie)
     {
         return new MovieDto
         {
@@ -158,5 +164,15 @@ public static class DtoConversions
 		    RowNumber = seat.TheaterRow.RowNumber,
 		    SeatNumber = seat.SeatNumber
 	    };
+    }
+
+    public static SubscriberDto ConvertToDto(this Subscriber subscriber)
+    {
+        return new SubscriberDto
+        {
+            Id = subscriber.id,
+            Name = subscriber.name,
+            Email = subscriber.email
+        };
     }
 }
