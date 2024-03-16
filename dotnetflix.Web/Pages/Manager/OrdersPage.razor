@@ -1,5 +1,6 @@
 @page "/manager/orders"
 @using dotnetflix.Models.Dtos.Order
+@using dotnetflix.Models.Dtos
 @inject HttpClient Http
 
 <h3>Manager: Orders</h3>
@@ -38,6 +39,18 @@
                     <label for="totalPrice">Total Price</label>
                     <InputNumber id="totalPrice" class="form-control" @bind-Value="SelectedOrder.TotalPrice" />
                 </div>
+                
+                <div class="form-group">
+                    <label for="selectedTicketIds">Tickets</label>
+                    <select id="selectedTicketIds" class="form-control" multiple @onchange="UpdateSelectedTickets">
+                        <option value="">Select tickets</option>
+                        @foreach (var ticket in Tickets.Where(t => t.OrderId == null))
+                        {
+                            <option value="@ticket.Id">@ticket.Id, @ticket.ShowTime, @ticket.Movie, @ticket.TheaterName</option>
+                        }
+                    </select>
+                </div>
+                
 
                 <div class="form-group">
                     <label for="uuid">UUID</label>
@@ -68,10 +81,33 @@
                     <label for="totalPrice">Total Price</label>
                     <InputNumber id="totalPrice" class="form-control" @bind-Value="SelectedOrder.TotalPrice" />
                 </div>
+                
+                <div class="form-group">
+                    <label>Current Tickets</label>
+                    @foreach (var ticketId in SelectedOrder.TicketIds)
+                    {
+                        var ticket = Tickets.FirstOrDefault(t => t.Id == ticketId);
+                        if (ticket != null)
+                        {
+                            <p>@ticket.Id, @ticket.ShowTime, @ticket.Movie, @ticket.TheaterName</p>
+                        }
+                    }
+                </div>
 
                 <div class="form-group">
+                    <label for="selectedTicketIds">Select all wanted tickets</label>
+                    <select id="selectedTicketIds" class="form-control" multiple @onchange="UpdateSelectedTickets">
+                        <option value="">Select tickets</option>
+                        @foreach (var ticket in Tickets.Where(t => t.OrderId == null || t.OrderId == SelectedOrder.Id))
+                        {
+                            <option value="@ticket.Id">@ticket.Id, @ticket.ShowTime, @ticket.Movie, @ticket.TheaterName</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="form-group">
                     <label for="uuid">UUID</label>
-                    <InputText id="uuid" class="form-control" @bind-Value="SelectedOrder.Uuid" />
+                    <InputText id="uuid" class="form-control" @bind-Value="SelectedOrder.Uuid"/>
                 </div>
 
                 <div class="form-group">
@@ -92,7 +128,8 @@
 </div>
 
 @code {
-     List<OrderDto> Orders = new List<OrderDto>();
+    List<TicketDto> Tickets = new List<TicketDto>();
+    List<OrderDto> Orders = new List<OrderDto>();
     OrderDto SelectedOrder = new OrderDto();
     UpdateOrderDto EditOrder = new UpdateOrderDto();
     AddOrderDto NewOrder = new AddOrderDto();
@@ -100,6 +137,7 @@
     protected override async Task OnInitializedAsync()
     {
         Orders = await Http.GetFromJsonAsync<List<OrderDto>>("api/order");
+        Tickets = await Http.GetFromJsonAsync<List<TicketDto>>("api/ticket");
         SelectOrder();
     }
 
@@ -177,6 +215,14 @@
             Orders = await Http.GetFromJsonAsync<List<OrderDto>>("api/order");
             SelectOrder();
             StateHasChanged();
+        }
+    }
+    
+    private void UpdateSelectedTickets(ChangeEventArgs e)
+    {
+        if (e.Value is not null)
+        {
+            SelectedOrder.TicketIds = ((string[])e.Value).Select(int.Parse).ToList();
         }
     }
 }
