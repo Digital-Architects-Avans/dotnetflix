@@ -44,22 +44,30 @@
 
 
 <hr/>
-@foreach (var review in reviews)
+@if (reviews != null)
 {
-    <div class="card" style="max-width: 425px;">
-        <div class="card-body">
-            <p>
-                @for (int i = 0; i < review.Stars; i++)
-                {
-                    <img src="/images/star.png" alt="" style="max-height: 25px;">
-                }
-            </p>
-            <b>@review.Name</b>
-            <p>@review.ReviewText</p>
+    foreach (var review in reviews)
+    {
+        <div class="card text-black" style="max-width: 425px;">
+            <div class="card-body">
+                <p>
+                    @for (int i = 0; i < review.Stars; i++)
+                    {
+                        <img src="/images/star.png" alt="" style="max-height: 25px;">
+                    }
+                </p>
+                <b>@review.Name</b>
+                <p>@review.ReviewText</p>
+            </div>
         </div>
-    </div>
-    <br/>
+        <br/>
+    }
 }
+else
+{
+    <p>No reviews to show here yet... </p>
+}
+
 
 @code {
     private IEnumerable<ReviewDto> reviews;
@@ -67,7 +75,6 @@
     private AddReviewDto newReview = new AddReviewDto
     {
         Name = "",
-        Stars = 5,
         ReviewText = ""
     };
     private double _trustScore;

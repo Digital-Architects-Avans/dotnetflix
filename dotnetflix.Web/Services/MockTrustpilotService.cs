@@ -17,7 +17,7 @@ public class MockTrustpilotService : ITrustpilotService
    {
        try
        {
-           var response = await _httpClient.GetAsync("api/Review/GetReviews");
+           var response = await _httpClient.GetAsync("api/Review");
            if (response.IsSuccessStatusCode)
            {
                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
@@ -40,7 +40,7 @@ public class MockTrustpilotService : ITrustpilotService
        }
    }
 
-   public Task<AddReviewDto> AddReview(AddReviewDto newReview)
+   public async Task<AddReviewDto> AddReview(AddReviewDto newReview)
    {
        var addReviewDto = new AddReviewDto
        {
@@ -48,18 +48,24 @@ public class MockTrustpilotService : ITrustpilotService
            Stars = newReview.Stars,
            ReviewText = newReview.ReviewText
        };
-       
-       var response = _httpClient.PostAsJsonAsync("api/Review", addReviewDto);
-       
-       if (response.Result.IsSuccessStatusCode)
+
+       try
        {
-           return Task.FromResult(addReviewDto);
+           var response = await _httpClient.PostAsJsonAsync("api/Review", addReviewDto);
+           response.EnsureSuccessStatusCode();
+
+           if (response.IsSuccessStatusCode)
+           {
+               return await Task.FromResult(addReviewDto);
+           }
        }
-       else
+       catch (HttpRequestException ex)
        {
-           var message = response.Result.Content.ReadAsStringAsync();
-           throw new Exception(message.Result);
+           Console.WriteLine($"An error occurred: {ex.Message}");
+           throw;
        }
+
+       return null;
    }
    
    public async Task<double> GetTrustScore()

@@ -26,9 +26,17 @@ public class ReviewRepository : IReviewRepository
         return review;
     }
 
-    public Task<Review> AddReview(AddReviewDto addReviewDto)
+    public async Task<Review> AddReview(AddReviewDto addReviewDto)
     {
-        throw new NotImplementedException();
+        var review = new Review
+        {
+            Name = addReviewDto.Name,
+            Stars = addReviewDto.Stars,
+            ReviewText = addReviewDto.ReviewText
+        };
+        var result = _dotNetFlixDbContext.Reviews.AddAsync(review);
+        await _dotNetFlixDbContext.SaveChangesAsync();
+        return result.Result.Entity;
     }
     
 }
