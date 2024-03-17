@@ -123,6 +123,7 @@ else
         await jsPdf.InvokeVoidAsync("text", $"Seat: Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}", 10, 40);
         await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {TicketType}", 10, 50);
         await jsPdf.InvokeVoidAsync("text", $"Price: {Ticket.TicketPrice}", 10, 60);
+        await jsPdf.InvokeVoidAsync("image", $"QR: {GenerateQRCode(TicketUrl)}", 10, 60);
         await jsPdf.InvokeVoidAsync("save", "ticket.pdf");
     }
 
