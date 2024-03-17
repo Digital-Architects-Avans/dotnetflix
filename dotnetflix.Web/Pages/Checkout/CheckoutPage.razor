@@ -50,7 +50,9 @@
                                 if (supplementDto != null)
                                 {
                                     <tr style="border-bottom-color: transparent;">
-                                        <td colspan="4">+ @supplementDto.Name</td>
+                                        <td>+ @supplementDto.Name</td>
+                                        <td>1</td>
+                                        <td colspan="2">@supplementDto.Price.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</td>
                                     </tr>
                                 }
                             }
