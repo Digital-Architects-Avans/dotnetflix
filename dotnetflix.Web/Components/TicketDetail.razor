@@ -91,11 +91,11 @@ else
         await jsPdf.InvokeVoidAsync("text", $"Seat: Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}", 10, 40);
         await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {TicketType}", 10, 50);
         await jsPdf.InvokeVoidAsync("text", $"Price: {Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")}", 10, 60);
-        // if (Ticket.Supplements.Any() && Supplements != null)
-        // {
-        //     var supplements = string.Join(", ", Ticket.Supplements.Select(s => Supplements.FirstOrDefault(supplement => supplement.Id == s)?.Name));
-        //     await jsPdf.InvokeVoidAsync("text", $"Supplements: {supplements}", 10, 70);
-        // }
+        if (SupplementsForTicket != null && SupplementsForTicket.Any())
+        {
+            var supplements = string.Join(", ", SupplementsForTicket.Select(s => $"{s.Name}"));
+            await jsPdf.InvokeVoidAsync("text", $"Supplements: {supplements}", 10, 70);
+        }
 
         await jsPdf.InvokeVoidAsync("save", "ticket.pdf");
     }
