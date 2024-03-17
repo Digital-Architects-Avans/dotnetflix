@@ -15,6 +15,10 @@ namespace dotnetflix.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
+            // Composite primary key for junction table
+            modelBuilder.Entity<TicketSupplement>()
+                .HasKey(ts => new { ts.TicketId, ts.SupplementId });
 
             // Set the precision and scale for the TotalPrice and BasePrice properties
             modelBuilder.Entity<Order>()
@@ -266,5 +270,6 @@ namespace dotnetflix.Api.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<Supplement> Supplements { get; set; }
+        public DbSet<TicketSupplement> TicketSupplements { get; set; }
     }
 }
