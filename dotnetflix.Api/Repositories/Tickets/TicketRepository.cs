@@ -41,7 +41,9 @@ public class TicketRepository: ITicketRepository
     
     public async Task<Ticket?> GetTicket(int id)
     {
-        var ticket = await _dotNetFlixDbContext.Tickets.SingleOrDefaultAsync(t => t.Id == id);
+        var ticket = await _dotNetFlixDbContext.Tickets
+            .Include(t => t.Supplements)
+            .SingleOrDefaultAsync(t => t.Id == id);
         return ticket;
     }
 
