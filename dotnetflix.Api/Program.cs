@@ -8,6 +8,7 @@ using dotnetflix.Api.Repositories.Supplements;
 using dotnetflix.Api.Repositories.TheaterRows;
 using dotnetflix.Api.Repositories.Theaters;
 using dotnetflix.Api.Repositories.Tickets;
+using dotnetflix.Api.Repositories.TicketSupplements;
 using dotnetflix.Api.Repositories.TicketTypes;
 using dotnetflix.Api.Services;
 using dotnetflix.Api.Services.Contracts;
@@ -36,6 +37,7 @@ builder.Services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
 builder.Services.AddScoped<ISeatRepository, SeatRepository>();
 builder.Services.AddScoped<IPayPalService, PayPalService>();
 builder.Services.AddScoped<ISupplementRepository, SupplementRepository>();
+builder.Services.AddScoped<ITicketSupplementRepository, TicketSupplementRepository>();
 
 builder.Services.AddHttpClient("PayPalSandBoxHttpClient", client =>
 {
