@@ -1,7 +1,7 @@
 @page "/manager/movies"
 @using dotnetflix.Models.Dtos.Movie
 @inject HttpClient Http
-<h3>Manager: Movies</h3>
+<h3>@Localizer["MoviesPageManagerMovies"]</h3>
 
 <NavigationHeader />
 
@@ -10,7 +10,7 @@
        <table class="table">
                    <thead>
                        <tr>
-                           <th>Movie titles</th>
+                           <th>@Localizer["MoviesPageMovieTitles"]</th>
                        </tr>
                    </thead>
                    <tbody>
@@ -29,7 +29,7 @@
     <div class="col-md-6">
         @if (SelectedMovie.Id < 1)
         {
-            <h4>Add New Movie</h4>
+            <h4>@Localizer["MoviesPageAddNewMovie"]</h4>
             <EditForm Model="SelectedMovie" OnValidSubmit="NewMovieSubmit">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
@@ -72,7 +72,7 @@
         }
 else
 {
-    <h4>Update Movie</h4>
+    <h4>@Localizer["MoviesPageUpdateMovie"]</h4>
     <EditForm Model="SelectedMovie" OnValidSubmit="UpdateMovieSubmit">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
@@ -119,6 +119,8 @@ else
 </div>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     List<MovieDto> Movies = new List<MovieDto>();
     MovieDto SelectedMovie = new MovieDto();
     UpdateMovieDto EditMovie = new UpdateMovieDto();

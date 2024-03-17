@@ -3,7 +3,7 @@
 @using dotnetflix.Models.Dtos.Review
 @inject ITrustpilotService MockTrustpilotService
 
-<h3>Reviews .NETflix</h3>
+<h3>@Localizer["ReviewsPageTitle"]</h3>
 
 <div class="row">
     <div class="col-md-6 text-center">
@@ -15,15 +15,15 @@
             <EditForm Model="newReview" OnValidSubmit="HandleValidSubmit">
                 <div class="form-row">
                     <div class="form-group form-inline col-md-12">
-                        <label for="name" class="mr-2">Enter your name:</label>
+                        <label for="name" class="mr-2">@Localizer["ReviewsPageEnterName"]:</label>
                         <InputText id="name" class="form-control" @bind-Value="newReview.Name" />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group form-inline col-md-12">
-                        <label for="stars" class="mr-2">Rate our service:</label>
+                        <label for="stars" class="mr-2">@Localizer["ReviewsPageRateService"]:</label>
                         <InputSelect id="stars" class="form-control" @bind-Value="newReview.Stars">
-                            <option value="">Select...</option>
+                            <option value="">@Localizer["ReviewsPageSelect"]...</option>
                             @for (int i = 1; i <= 5; i++)
                             {
                                 <option value="@i">@i</option>
@@ -33,11 +33,11 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <label for="reviewText">Write a review:</label>
+                        <label for="reviewText">@Localizer["ReviewsPageWriteReview"]:</label>
                         <InputTextArea id="reviewText" class="form-control" @bind-Value="newReview.ReviewText" />
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit your review</button>
+                <button type="submit" class="btn btn-primary">@Localizer["ReviewsPageSubmitReview"]</button>
             </EditForm>
         </div>
 </div>
@@ -65,11 +65,13 @@
 }
 else
 {
-    <p>No reviews to show here yet... </p>
+    <p>@Localizer["ReviewsPageNoReviews"]... </p>
 }
 
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     private IEnumerable<ReviewDto> reviews;
 
     private AddReviewDto newReview = new AddReviewDto

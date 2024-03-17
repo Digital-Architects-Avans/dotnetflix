@@ -4,22 +4,22 @@
 @using dotnetflix.Models.Dtos.Seat
 @using dotnetflix.Models.Dtos.TicketOrderDtos
 
-<h3>Order Tickets for @MovieTitle</h3>
-<p style="margin-top: 24px">Select your seats:</p>
+<h3>@Localizer["TicketsPageOrderTickets", MovieTitle]</h3>
+<p style="margin-top: 24px">@Localizer["TicketsPageSelectSeats"]:</p>
 
 
 <SeatSelection ShowId="ShowId" @ref="_seatSelection" OnSeatSelectionChange="OnSeatSelectionChanged"/>
 
 @if (_seatSelection != null && _seatSelection.SelectedSeats.Any())
 {
-        <h4 class="mt-3">Select Ticket Types:</h4>
+        <h4 class="mt-3">@Localizer["TicketsPageSelectTicketTypes"]:</h4>
         <form>
             @foreach (var seat in _seatSelection.SelectedSeats.Take(10))
             {
                 <TicketTypeSelector TicketTypes="TicketTypes" Seat="@seat" ChildDiscountAvailable="ChildDiscountAvailable" OnUpdateSelectedTicketType="UpdateSelectedTicketType"/>
             }
         </form>
-        <button class="btn btn-primary mt-3" @onclick="SummariseOrder">Confirm selection</button>
+        <button class="btn btn-primary mt-3" @onclick="SummariseOrder">@Localizer["TicketsPageOrderConfirm"]</button>
 }
 
 
@@ -32,6 +32,7 @@
     [Inject] public ITicketService? TicketService { get; set; }
     [Inject] public IOrderStateService? OrderStateService { get; set; }
     [Inject] public NavigationManager? NavigationManager { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     private SeatSelection? _seatSelection;
 

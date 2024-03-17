@@ -1,6 +1,6 @@
 @page "/"
 
-<h1>What's on</h1>
+<h1>@Localizer["HomeWhatsOn"]</h1>
 
 @if (FoundShows != null)
 {
@@ -40,7 +40,7 @@
 }
 else
 {
-    <p>Gathering screenings...</p>
+    <p>@Localizer["HomeGatheringScreenings"]...</p>
 }
 
 @code {
@@ -48,6 +48,7 @@ else
     // 1) Set properties te facilitate dependency injection
     [Inject] public IShowService? ShowService { get; set; }
     [Inject] public IMovieService? MovieService { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     // 2) Public properties to expose to the view
     private IEnumerable<ShowDto>? Shows { get; set; }

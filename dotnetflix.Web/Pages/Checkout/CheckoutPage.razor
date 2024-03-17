@@ -19,10 +19,10 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Ticket type</th>
-                    <th>Quantity</th>
-                    <th>Price per Ticket</th>
-                    <th>Total Price</th>
+                    <th>@Localizer["CheckoutPageTicketType"]</th>
+                    <th>@Localizer["CheckoutPageQuantity"]</th>
+                    <th>@Localizer["CheckoutPagePricePerTicket"]</th>
+                    <th>@Localizer["CheckoutPageTotalPrice"]</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,7 +48,7 @@
 
                     <tr>
                         <td colspan="3" class="text-right">
-                            <strong>Grand Total:</strong>
+                            <strong>@Localizer["CheckoutGrandTotal"]:</strong>
                         </td>
                         <td>
                             <strong>@grandTotal.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</strong>
@@ -58,7 +58,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="4">No tickets selected.</td>
+                        <td colspan="4">@Localizer["CheckoutPageNoTicketsSelected"].</td>
                     </tr>
                 }
                 </tbody>
@@ -110,6 +110,7 @@
     [Inject] public ITicketService TicketService { get; set; }
     [Inject] public IOrderService OrderService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     public OrderRequestDto? OrderRequest { get; set; }
 

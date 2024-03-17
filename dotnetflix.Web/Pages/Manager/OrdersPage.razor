@@ -2,7 +2,7 @@
 @using dotnetflix.Models.Dtos.Order
 @inject HttpClient Http
 
-<h3>Manager: Orders</h3>
+<h3>@Localizer["OrdersPageManagerOrders"]</h3>
 <NavigationHeader />    
 
 <div class="row">
@@ -92,10 +92,14 @@
 </div>
 
 @code {
-     List<OrderDto> Orders = new List<OrderDto>();
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
+    List<OrderDto> Orders = new List<OrderDto>();
     OrderDto SelectedOrder = new OrderDto();
     UpdateOrderDto EditOrder = new UpdateOrderDto();
     AddOrderDto NewOrder = new AddOrderDto();
+
+
 
     protected override async Task OnInitializedAsync()
     {

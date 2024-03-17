@@ -1,15 +1,15 @@
-<p>Navigate to: </p>
+<p>@Localizer["NavigationHeaderTitle"]: </p>
 
-<NavLink href="/manager/movies" class="btn btn-primary">Movies</NavLink>
-<NavLink href="/manager/shows" class="btn btn-primary">Shows</NavLink>
-<NavLink href="/manager/orders" class="btn btn-primary">Orders</NavLink>
-<NavLink href="/manager/tickets" class="btn btn-primary">Tickets</NavLink>
-<NavLink href="/manager/tickettypes" class="btn btn-primary">Ticket Types</NavLink>
-<NavLink href="/manager/theaters" class="btn btn-primary">Theaters</NavLink>
-<NavLink href="/manager/theaterrows" class="btn btn-primary">Theater Rows</NavLink>
-<NavLink href="/manager/seats" class="btn btn-primary">Seats</NavLink>
+<NavLink href="/manager/movies" class="btn btn-primary">@Localizer["NavigationHeaderMovies"]</NavLink>
+<NavLink href="/manager/shows" class="btn btn-primary">@Localizer["NavigationHeaderShows"]</NavLink>
+<NavLink href="/manager/orders" class="btn btn-primary">@Localizer["NavigationHeaderOrders"]</NavLink>
+<NavLink href="/manager/tickets" class="btn btn-primary">@Localizer["NavigationHeaderTickets"]</NavLink>
+<NavLink href="/manager/tickettypes" class="btn btn-primary">@Localizer["NavigationHeaderTicketTypes"]</NavLink>
+<NavLink href="/manager/theaters" class="btn btn-primary">@Localizer["NavigationHeaderTheaters"]</NavLink>
+<NavLink href="/manager/theaterrows" class="btn btn-primary">@Localizer["NavigationHeaderTheaterRows"]</NavLink>
+<NavLink href="/manager/seats" class="btn btn-primary">@Localizer["NavigationHeaderSeats"]</NavLink>
 <hr/>
 
 @code {
-    
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 }
