@@ -107,6 +107,10 @@ public class TicketRepository: ITicketRepository
             .Include(r => r.TheaterRow)
             .SingleOrDefaultAsync(s => s.Id == updateTicketDto.SeatId);
         
+        var supplements = await _dotNetFlixDbContext.Supplements
+            .Where(s => updateTicketDto.Supplements.Contains(s.Id))
+            .ToListAsync();
+        
         if (show == null || seat == null)
         {
             throw new KeyNotFoundException("The Show or Seat was not found.");
@@ -131,6 +135,7 @@ public class TicketRepository: ITicketRepository
             ticket.TicketTypeId = updateTicketDto.TicketTypeId;
             ticket.TicketPrice = updateTicketDto.TicketPrice;
             ticket.Show = show; // Assign the loaded show to the ticket
+            ticket.Supplements = supplements;
             await _dotNetFlixDbContext.SaveChangesAsync();
             return ticket;
         }
