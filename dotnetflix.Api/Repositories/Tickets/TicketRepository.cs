@@ -25,7 +25,6 @@ public class TicketRepository: ITicketRepository
     {
         var tickets = await _dotNetFlixDbContext.Tickets
             .Where(t => t.ShowId == showId)
-            .Include(t => t.Supplements)
             .ToListAsync();
         return tickets;
     }
@@ -34,7 +33,6 @@ public class TicketRepository: ITicketRepository
     {
         var tickets = await _dotNetFlixDbContext.Tickets
             .Where(t => t.OrderId == orderId)
-            .Include(t => t.Supplements)
             .ToListAsync();
         return tickets;
     }
@@ -42,7 +40,6 @@ public class TicketRepository: ITicketRepository
     public async Task<Ticket?> GetTicket(int id)
     {
         var ticket = await _dotNetFlixDbContext.Tickets
-            .Include(t => t.Supplements)
             .SingleOrDefaultAsync(t => t.Id == id);
         return ticket;
     }
@@ -58,11 +55,6 @@ public class TicketRepository: ITicketRepository
         var seat = await _dotNetFlixDbContext.Seats
             .Include(r => r.TheaterRow)
             .SingleOrDefaultAsync(s => s.Id == addTicketDto.SeatId);
-        
-        var supplements = await _dotNetFlixDbContext.Supplements
-            .Where(s => addTicketDto.Supplements.Contains(s.Id))
-            .ToListAsync();
-        
         
         if (show == null || seat == null)
         {
@@ -88,7 +80,6 @@ public class TicketRepository: ITicketRepository
             TicketTypeId = addTicketDto.TicketTypeId,
             TicketPrice = addTicketDto.TicketPrice,
             Show = show, // Assign the loaded show to the ticket
-            Supplements = supplements
         };
         
         var result = await _dotNetFlixDbContext.Tickets.AddAsync(ticket);
@@ -108,10 +99,6 @@ public class TicketRepository: ITicketRepository
         var seat = await _dotNetFlixDbContext.Seats
             .Include(r => r.TheaterRow)
             .SingleOrDefaultAsync(s => s.Id == updateTicketDto.SeatId);
-        
-        var supplements = await _dotNetFlixDbContext.Supplements
-            .Where(s => updateTicketDto.Supplements.Contains(s.Id))
-            .ToListAsync();
         
         if (show == null || seat == null)
         {
@@ -137,7 +124,6 @@ public class TicketRepository: ITicketRepository
             ticket.TicketTypeId = updateTicketDto.TicketTypeId;
             ticket.TicketPrice = updateTicketDto.TicketPrice;
             ticket.Show = show; // Assign the loaded show to the ticket
-            ticket.Supplements = supplements;
             await _dotNetFlixDbContext.SaveChangesAsync();
             return ticket;
         }
