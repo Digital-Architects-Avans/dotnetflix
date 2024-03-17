@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using dotnetflix.Models.Dtos.OrderRequestDtos;
 using dotnetflix.Models.Dtos.Supplement;
 using dotnetflix.Models.Dtos.Ticket;
+using dotnetflix.Models.Dtos.TicketSupplements;
 using dotnetflix.Models.Dtos.TicketType;
 
 namespace dotnetflix.Web.Services;
@@ -138,6 +139,61 @@ public class TicketService : ITicketService
         }
     }
 
+    public async Task<IEnumerable<TicketSupplementDto>?> GetTicketSupplementDtosForTicket(int id)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"api/TicketSupplement/Ticket/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    return Enumerable.Empty<TicketSupplementDto>();
+                }
+
+                return await response.Content.ReadFromJsonAsync<IEnumerable<TicketSupplementDto>>();
+            }
+            else
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new Exception(message);
+            }
+        }
+        catch (Exception e)
+        {
+            // Log Exception
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<SupplementDto>?> GetSupplementDtosForTicket(int id)
+    {
+        try
+        {
+            var supplementDtos = await GetTicketSupplementDtosForTicket(id);
+            var supplements = new List<SupplementDto>();
+
+            foreach (var supplementDto in supplementDtos)
+            {
+                var response = await _httpClient.GetAsync($"api/Supplement/{supplementDto.SupplementId}");
+                response.EnsureSuccessStatusCode(); // Throws if response is not successful
+
+                var supplement = await response.Content.ReadFromJsonAsync<SupplementDto>();
+                supplements.Add(supplement);
+            }
+
+            return supplements;
+        }
+        catch (Exception e)
+        {
+            // Log Exception
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     public async Task<IEnumerable<TicketDto>?> GetTicketsForShow(int showId)
     {
         var response = await _httpClient.GetAsync($"api/Ticket/Show/{showId}");
@@ -172,8 +228,7 @@ public class TicketService : ITicketService
                     ShowId = ticketOrder.ShowId,
                     SeatId = ticketOrder.SeatId, // Assign the selected seat ID
                     TicketTypeId = ticketOrder.TicketTypeId,
-                    TicketPrice = ticketOrder.FinalPrice,
-                    Supplements = ticketOrder.SupplementIds
+                    TicketPrice = ticketOrder.FinalPrice
                 };
 
                 // Post the newTicket to your API to save it in the database
@@ -182,6 +237,22 @@ public class TicketService : ITicketService
                 {
                     var createdTicket = await response.Content.ReadFromJsonAsync<TicketDto>();
                     if (createdTicket != null) generatedTickets.Add(createdTicket);
+                    
+                    // If the ticket was created successfully, add the supplements to the ticket
+                    foreach (var supplementId in ticketOrder.SupplementIds)
+                    {
+                        var ticketSupplement = new AddTicketSupplementDto
+                        {
+                            TicketId = createdTicket.Id,
+                            SupplementId = supplementId
+                        };
+                        var supplementResponse = await _httpClient.PostAsJsonAsync($"api/TicketSupplement", ticketSupplement);
+                        if (!supplementResponse.IsSuccessStatusCode)
+                        {
+                            var message = await supplementResponse.Content.ReadAsStringAsync();
+                            throw new Exception($"Failed to add supplement to ticket: {message}");
+                        }
+                    }
                 }
                 else
                 {
