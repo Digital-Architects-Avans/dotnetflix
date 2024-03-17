@@ -1,6 +1,8 @@
 ﻿@page "/manager/newsletter"
+@using dotnetflix.Models.Dtos.Email
 @using dotnetflix.Models.Dtos.Subscriber
 @inject IToastService ToastService
+@inject HttpClient Http
 
 <div class="m-lg-5 mt-3">
 
@@ -70,9 +72,23 @@
 
     protected override async Task OnInitializedAsync() => await GetSubscribers();
 
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
+        if (Subscribers == null || newsLetterForm.Message == null || newsLetterForm.Subject == null)
+            return;
 
+        foreach (var subscriber in Subscribers)
+        {
+            var msg = newsLetterForm.Message.Replace("{name}", subscriber.Name);
+
+            var emailDto = new EmailDto
+                {
+                    Subject = newsLetterForm.Subject,
+                    Message = newsLetterForm.Message,
+                    Recipient = subscriber.Email
+                };
+            await Http.PostAsJsonAsync("api/email", emailDto);
+        }
     }
 
     private async Task GetSubscribers()
