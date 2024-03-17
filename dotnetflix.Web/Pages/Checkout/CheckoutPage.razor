@@ -109,11 +109,11 @@
 <div class="row">
     <div class="col-md-6">
         <label for="customerName" class="form-label">Name</label>
-        <input type="text" class="form-control" id="customerName" @bind="OrderRequest.CustomerName"/>
+        <input type="text" class="form-control" id="customerName" @bind="OrderRequest.CustomerName" />
     </div>
     <div class="col-md-6">
         <label for="customerEmail" class="form-label">Email</label>
-        <input type="email" class="form-control" id="customerEmail" @bind="OrderRequest.CustomerEmail"/>
+        <input type="email" class="form-control" id="customerEmail" @bind="OrderRequest.CustomerEmail" />
     </div>
 </div>
 
@@ -139,8 +139,7 @@
     protected string? PaymentErrorMessage;
 
     public static event Action<string> OnPaymentProcessed;
-
-
+    
     protected override async Task OnInitializedAsync()
     {
         if (OrderStateService.CurrentOrder.TicketOrders.Any())
@@ -199,7 +198,10 @@
             var newOrderId = newOrder.Id;
             var newOrderUuid = newOrder.Uuid;
 
-            await SendEmail(newOrderUuid);
+            if (!string.IsNullOrEmpty(OrderRequest.CustomerName) || !string.IsNullOrEmpty(OrderRequest.CustomerEmail))
+            {
+                await SendEmail(newOrderUuid);
+            }
 
             NavigationManager.NavigateTo($"/overview/{newOrderId}");
             // Todo: Show order with Ticket Details such as seats on a summary page
