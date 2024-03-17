@@ -25,6 +25,16 @@ public class TicketRepository: ITicketRepository
     {
         var tickets = await _dotNetFlixDbContext.Tickets
             .Where(t => t.ShowId == showId)
+            .Include(t => t.Supplements)
+            .ToListAsync();
+        return tickets;
+    }
+    
+    public async Task<IEnumerable<Ticket>> GetTicketsForOrder(int orderId)
+    {
+        var tickets = await _dotNetFlixDbContext.Tickets
+            .Where(t => t.OrderId == orderId)
+            .Include(t => t.Supplements)
             .ToListAsync();
         return tickets;
     }
@@ -46,6 +56,11 @@ public class TicketRepository: ITicketRepository
         var seat = await _dotNetFlixDbContext.Seats
             .Include(r => r.TheaterRow)
             .SingleOrDefaultAsync(s => s.Id == addTicketDto.SeatId);
+        
+        var supplements = await _dotNetFlixDbContext.Supplements
+            .Where(s => addTicketDto.Supplements.Contains(s.Id))
+            .ToListAsync();
+        
         
         if (show == null || seat == null)
         {
@@ -70,7 +85,8 @@ public class TicketRepository: ITicketRepository
             ShowTime = show.Date,
             TicketTypeId = addTicketDto.TicketTypeId,
             TicketPrice = addTicketDto.TicketPrice,
-            Show = show // Assign the loaded show to the ticket
+            Show = show, // Assign the loaded show to the ticket
+            Supplements = supplements
         };
         
         var result = await _dotNetFlixDbContext.Tickets.AddAsync(ticket);
