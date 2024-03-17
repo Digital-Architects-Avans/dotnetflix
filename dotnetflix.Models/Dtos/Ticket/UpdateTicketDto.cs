@@ -14,5 +14,4 @@ public class UpdateTicketDto
     public int TicketTypeId { get; set; }
     public decimal TicketPrice { get; set; }
     public int? OrderId { get; set; }
-    public ICollection<int> Supplements { get; set; }
 }
