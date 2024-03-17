@@ -119,7 +119,7 @@ public static class DtoConversions
 			TicketTypeId = ticket.TicketTypeId,
 			TicketPrice = ticket.TicketPrice,
 			OrderId = ticket.OrderId,
-			Supplements = ticket.Supplements
+			Supplements = ticket.Supplements.Select(s => s.Id).ToList()
 		};
 	}
     
