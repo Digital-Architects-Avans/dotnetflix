@@ -28,16 +28,12 @@ else
             <dt class="col-xl-3 col-sm-4">Price:</dt>
             <dd class="col-xl-9 col-sm-8">@Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</dd>
 
-            @if (Ticket.Supplements.Any() && Supplements != null)
+            @if (SupplementsForTicket != null)
             {
-                foreach (var supplement in Ticket.Supplements)
+                foreach (var supplement in SupplementsForTicket)
                 {
-                    var supplementDto = Supplements.FirstOrDefault(s => s.Id == supplement);
-                    if (supplementDto != null)
-                    {
-                        <dt class="col-xl-3 col-sm-4">Supplement:</dt>
-                        <dd class="col-xl-9 col-sm-8">@supplementDto.Name (@supplementDto.Price.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ","))</dd>
-                    }
+                    <dt class="col-xl-3 col-sm-4">Supplement:</dt>
+                    <dd class="col-xl-9 col-sm-8">@supplement.Name (@supplement.Price.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ","))</dd>
                 }
             }
         </dl>
@@ -61,7 +57,7 @@ else
     [Parameter] public string StartTime { get; set; } = "00:00";
     [Parameter] public string EndTime { get; set; } = "00:00";
     [Parameter] public string? TicketType { get; set; }
-    private IEnumerable<SupplementDto>? Supplements { get; set; }
+    private IEnumerable<SupplementDto>? SupplementsForTicket { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,7 +77,7 @@ else
                 if (ticketTypes != null) TicketType = ticketTypes.FirstOrDefault(t => t.Id == Ticket.TicketTypeId)?.Name;
 
                 // Get supplements
-                Supplements = await TicketService.GetSupplements();
+                SupplementsForTicket = await TicketService.GetSupplementDtosForTicket(Ticket.Id);
             }
         }
     }
@@ -95,13 +91,14 @@ else
         await jsPdf.InvokeVoidAsync("text", $"Seat: Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}", 10, 40);
         await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {TicketType}", 10, 50);
         await jsPdf.InvokeVoidAsync("text", $"Price: {Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")}", 10, 60);
-        if (Ticket.Supplements.Any() && Supplements != null)
-        {
-            var supplements = string.Join(", ", Ticket.Supplements.Select(s => Supplements.FirstOrDefault(supplement => supplement.Id == s)?.Name));
-            await jsPdf.InvokeVoidAsync("text", $"Supplements: {supplements}", 10, 70);
-        }
+        // if (Ticket.Supplements.Any() && Supplements != null)
+        // {
+        //     var supplements = string.Join(", ", Ticket.Supplements.Select(s => Supplements.FirstOrDefault(supplement => supplement.Id == s)?.Name));
+        //     await jsPdf.InvokeVoidAsync("text", $"Supplements: {supplements}", 10, 70);
+        // }
 
         await jsPdf.InvokeVoidAsync("save", "ticket.pdf");
     }
 
 }
+
