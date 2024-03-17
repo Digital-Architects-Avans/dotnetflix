@@ -1,4 +1,5 @@
-﻿using dotnetflix.Models.Dtos.TicketType;
+﻿using dotnetflix.Models.Dtos.Supplement;
+using dotnetflix.Models.Dtos.TicketType;
 
 namespace dotnetflix.Models.Dtos;
 
@@ -15,5 +16,5 @@ public class TicketDto
     public int TicketTypeId { get; set; }
     public decimal TicketPrice { get; set; }
     public int? OrderId { get; set; }
-    public ICollection<int>? Supplements { get; set; }
+    public ICollection<int> Supplements { get; set; }
 }
