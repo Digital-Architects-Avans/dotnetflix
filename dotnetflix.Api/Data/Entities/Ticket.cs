@@ -38,8 +38,9 @@ namespace dotnetflix.Api.Data.Entities
 	    
 		// Navigation properties
 		// The Ticket entity has a many-to-one relationship with the Show entity
-
 		public Show Show { get; set; }
-		public ICollection<Supplement> Supplements { get; set; }
+		
+		// Many-to-many relationship with Supplement
+		public ICollection<TicketSupplement> TicketSupplements { get; set; }
     }
 }
