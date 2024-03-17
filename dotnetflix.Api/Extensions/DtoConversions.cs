@@ -9,6 +9,7 @@ using dotnetflix.Models.Dtos.Supplement;
 using dotnetflix.Models.Dtos.Theater;
 using dotnetflix.Models.Dtos.TheaterRow;
 using dotnetflix.Models.Dtos.Ticket;
+using dotnetflix.Models.Dtos.TicketSupplements;
 using dotnetflix.Models.Dtos.TicketType;
 
 namespace dotnetflix.Api.Extensions;
@@ -58,6 +59,11 @@ public static class DtoConversions
 	public static IEnumerable<SupplementDto> ConvertToDto(this IEnumerable<Supplement> supplements)
 	{
 		return supplements.Select(supplement => supplement.ConvertToDto()).ToList();
+	}
+	
+	public static IEnumerable<TicketSupplementDto> ConvertToDto(this IEnumerable<TicketSupplement> ticketSupplements)
+	{
+		return ticketSupplements.Select(ticketSupplement => ticketSupplement.ConvertToDto()).ToList();
 	}
 	
 	public static MovieDto ConvertToDto(this Movie movie)
@@ -118,8 +124,7 @@ public static class DtoConversions
 			ShowTime = ticket.ShowTime,
 			TicketTypeId = ticket.TicketTypeId,
 			TicketPrice = ticket.TicketPrice,
-			OrderId = ticket.OrderId,
-			Supplements = ticket.Supplements.Select(s => s.Id).ToList()
+			OrderId = ticket.OrderId
 		};
 	}
     
@@ -176,5 +181,15 @@ public static class DtoConversions
 		    Name = supplement.Name,
 		    Price = supplement.Price
 	    };
+	}
+    
+	public static TicketSupplementDto ConvertToDto(this TicketSupplement ticketSupplement)
+	{
+		return new TicketSupplementDto
+		{
+			Id = ticketSupplement.Id,
+			TicketId = ticketSupplement.TicketId,
+			SupplementId = ticketSupplement.SupplementId
+		};
 	}
 }
