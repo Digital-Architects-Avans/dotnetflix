@@ -120,8 +120,8 @@
             // Get tickets details
             if (TicketService != null)
             {
-                var tickets = await TicketService.GetTickets();
-                if (tickets != null) Tickets = tickets.Where(ticketDto => Order.TicketIds.Contains(ticketDto.Id)).ToList();
+                var tickets = await TicketService.GetTicketsForOrder(Order.Id);
+                Tickets = tickets.ToList();
             }
 
             // Get show details
