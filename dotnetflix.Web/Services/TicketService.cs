@@ -160,12 +160,11 @@ public class TicketService : ITicketService
 
     public async Task<List<TicketDto>> GenerateTickets(OrderRequestDto orderRequest)
     {
-        List<TicketDto> generatedTickets = new List<TicketDto>();
+        var generatedTickets = new List<TicketDto>();
 
         foreach (var ticketOrder in orderRequest.TicketOrders)
         {
-            // Todo: Add Seats based upon the seats in the OrderRequest (User Selection)
-            for (int i = 0; i < ticketOrder.Quantity; i++)
+            for (var i = 0; i < ticketOrder.Quantity; i++)
             {
                 // Create a new ticket for each quantity with the assigned seat
                 var newTicket = new AddTicketDto
