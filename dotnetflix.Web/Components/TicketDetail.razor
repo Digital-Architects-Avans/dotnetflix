@@ -4,6 +4,7 @@
 @inject IJSRuntime JsRuntime
 @using SelectPdf
 @using System.Globalization
+@using dotnetflix.Models.Dtos.Supplement
 
 @if (Ticket == null)
 {
@@ -26,7 +27,21 @@ else
             <dd class="col-xl-9 col-sm-8">@TicketType</dd>
             <dt class="col-xl-3 col-sm-4">Price:</dt>
             <dd class="col-xl-9 col-sm-8">@Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</dd>
+
+            @if (Ticket.Supplements.Any() && Supplements != null)
+            {
+                foreach (var supplement in Ticket.Supplements)
+                {
+                    var supplementDto = Supplements.FirstOrDefault(s => s.Id == supplement);
+                    if (supplementDto != null)
+                    {
+                        <dt class="col-xl-3 col-sm-4">Supplement:</dt>
+                        <dd class="col-xl-9 col-sm-8">@supplementDto.Name (@supplementDto.Price.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ","))</dd>
+                    }
+                }
+            }
         </dl>
+
         <FluentButton Appearance="Appearance.Accent" OnClick="@PrintTicket">Print ticket</FluentButton>
     </FluentCard>
 }
@@ -46,6 +61,7 @@ else
     [Parameter] public string StartTime { get; set; } = "00:00";
     [Parameter] public string EndTime { get; set; } = "00:00";
     [Parameter] public string? TicketType { get; set; }
+    private IEnumerable<SupplementDto>? Supplements { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,6 +79,9 @@ else
             {
                 var ticketTypes = await TicketService.GetTicketTypes();
                 if (ticketTypes != null) TicketType = ticketTypes.FirstOrDefault(t => t.Id == Ticket.TicketTypeId)?.Name;
+
+                // Get supplements
+                Supplements = await TicketService.GetSupplements();
             }
         }
     }
@@ -70,12 +89,18 @@ else
     private async Task PrintTicket()
     {
         var jsPdf = await JsRuntime.InvokeAsync<IJSObjectReference>("eval", "new window.jsPDF()");
-        await jsPdf.InvokeVoidAsync("text", $"Ticket for {MovieTitle} at {Show.Date}", 10, 10);
+        await jsPdf.InvokeVoidAsync("text", $"Ticket for {MovieTitle} at {StartTime} - {EndTime}", 10, 10);
         await jsPdf.InvokeVoidAsync("text", $"Theater: {Ticket!.TheaterName} - {Show.Type}", 10, 20);
-        await jsPdf.InvokeVoidAsync("text", $"Show Time: {Ticket.ShowTime}", 10, 30);
+        await jsPdf.InvokeVoidAsync("text", $"Show Time: {Ticket.ShowTime.ToString("dd-MM-yyyy - HH:mm", new CultureInfo("nl-NL"))}", 10, 30);
         await jsPdf.InvokeVoidAsync("text", $"Seat: Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}", 10, 40);
-        await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {Ticket.TicketTypeId}", 10, 50);
-        await jsPdf.InvokeVoidAsync("text", $"Price: {Ticket.TicketPrice}", 10, 60);
+        await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {TicketType}", 10, 50);
+        await jsPdf.InvokeVoidAsync("text", $"Price: {Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")}", 10, 60);
+        if (Ticket.Supplements.Any() && Supplements != null)
+        {
+            var supplements = string.Join(", ", Ticket.Supplements.Select(s => Supplements.FirstOrDefault(supplement => supplement.Id == s)?.Name));
+            await jsPdf.InvokeVoidAsync("text", $"Supplements: {supplements}", 10, 70);
+        }
+
         await jsPdf.InvokeVoidAsync("save", "ticket.pdf");
     }
 
