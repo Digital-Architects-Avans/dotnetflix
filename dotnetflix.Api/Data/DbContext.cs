@@ -28,6 +28,14 @@ namespace dotnetflix.Api.Data
             modelBuilder.Entity<TicketType>()
                 .Property(t => t.Discount)
                 .HasPrecision(6, 2);
+            
+            modelBuilder.Entity<Supplement>()
+                .Property(s => s.Price)
+                .HasPrecision(6, 2);
+            
+            modelBuilder.Entity<Show>()
+                .Property(s => s.BasePrice)
+                .HasPrecision(6, 2); 
 
             // Seed data for Movie
             modelBuilder.Entity<Movie>().HasData(
