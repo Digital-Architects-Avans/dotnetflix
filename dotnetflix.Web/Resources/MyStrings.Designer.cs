@@ -59,5 +59,428 @@ namespace dotnetflix.Web.Resources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading shows.
+        /// </summary>
+        public static string AgendaLoadingShows {
+            get {
+                return ResourceManager.GetString("AgendaLoadingShows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This week.
+        /// </summary>
+        public static string AgendaThisWeek {
+            get {
+                return ResourceManager.GetString("AgendaThisWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agenda.
+        /// </summary>
+        public static string AgendaTitle {
+            get {
+                return ResourceManager.GetString("AgendaTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Today.
+        /// </summary>
+        public static string AgendaToday {
+            get {
+                return ResourceManager.GetString("AgendaToday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grand total.
+        /// </summary>
+        public static string CheckoutGrandTotal {
+            get {
+                return ResourceManager.GetString("CheckoutGrandTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No tickets selected.
+        /// </summary>
+        public static string CheckoutPageNoTicketsSelected {
+            get {
+                return ResourceManager.GetString("CheckoutPageNoTicketsSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Price per ticket.
+        /// </summary>
+        public static string CheckoutPagePricePerTicket {
+            get {
+                return ResourceManager.GetString("CheckoutPagePricePerTicket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantity.
+        /// </summary>
+        public static string CheckoutPageQuantity {
+            get {
+                return ResourceManager.GetString("CheckoutPageQuantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ticket type.
+        /// </summary>
+        public static string CheckoutPageTicketType {
+            get {
+                return ResourceManager.GetString("CheckoutPageTicketType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total price.
+        /// </summary>
+        public static string CheckoutPageTotalPrice {
+            get {
+                return ResourceManager.GetString("CheckoutPageTotalPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gathering screenings.
+        /// </summary>
+        public static string HomeGatheringScreenings {
+            get {
+                return ResourceManager.GetString("HomeGatheringScreenings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What&apos;s on.
+        /// </summary>
+        public static string HomeWhatsOn {
+            get {
+                return ResourceManager.GetString("HomeWhatsOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manager dashboard.
+        /// </summary>
+        public static string ManagerPageTitle {
+            get {
+                return ResourceManager.GetString("ManagerPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add new movie.
+        /// </summary>
+        public static string MoviesPageAddNewMovie {
+            get {
+                return ResourceManager.GetString("MoviesPageAddNewMovie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manager: Movies.
+        /// </summary>
+        public static string MoviesPageManagerMovies {
+            get {
+                return ResourceManager.GetString("MoviesPageManagerMovies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movie titles.
+        /// </summary>
+        public static string MoviesPageMovieTitles {
+            get {
+                return ResourceManager.GetString("MoviesPageMovieTitles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update movie.
+        /// </summary>
+        public static string MoviesPageUpdateMovie {
+            get {
+                return ResourceManager.GetString("MoviesPageUpdateMovie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movies.
+        /// </summary>
+        public static string NavigationHeaderMovies {
+            get {
+                return ResourceManager.GetString("NavigationHeaderMovies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orders.
+        /// </summary>
+        public static string NavigationHeaderOrders {
+            get {
+                return ResourceManager.GetString("NavigationHeaderOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seats.
+        /// </summary>
+        public static string NavigationHeaderSeats {
+            get {
+                return ResourceManager.GetString("NavigationHeaderSeats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows.
+        /// </summary>
+        public static string NavigationHeaderShows {
+            get {
+                return ResourceManager.GetString("NavigationHeaderShows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Theater rows.
+        /// </summary>
+        public static string NavigationHeaderTheaterRows {
+            get {
+                return ResourceManager.GetString("NavigationHeaderTheaterRows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Theaters.
+        /// </summary>
+        public static string NavigationHeaderTheaters {
+            get {
+                return ResourceManager.GetString("NavigationHeaderTheaters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tickets.
+        /// </summary>
+        public static string NavigationHeaderTickets {
+            get {
+                return ResourceManager.GetString("NavigationHeaderTickets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ticket types.
+        /// </summary>
+        public static string NavigationHeaderTicketTypes {
+            get {
+                return ResourceManager.GetString("NavigationHeaderTicketTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Navigate to.
+        /// </summary>
+        public static string NavigationHeaderTitle {
+            get {
+                return ResourceManager.GetString("NavigationHeaderTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manager: Orders.
+        /// </summary>
+        public static string OrdersPageManagerOrders {
+            get {
+                return ResourceManager.GetString("OrdersPageManagerOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collect your tickets.
+        /// </summary>
+        public static string OverviewCollectTickets {
+            get {
+                return ResourceManager.GetString("OverviewCollectTickets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collect tickets.
+        /// </summary>
+        public static string OverviewCollectTicketsButton {
+            get {
+                return ResourceManager.GetString("OverviewCollectTicketsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your unique number.
+        /// </summary>
+        public static string OverviewEnterCode {
+            get {
+                return ResourceManager.GetString("OverviewEnterCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Getting tickets.
+        /// </summary>
+        public static string OverviewGettingTickets {
+            get {
+                return ResourceManager.GetString("OverviewGettingTickets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading.
+        /// </summary>
+        public static string OverviewLoading {
+            get {
+                return ResourceManager.GetString("OverviewLoading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No order found with #{0}.
+        /// </summary>
+        public static string OverviewNoOrderFound {
+            get {
+                return ResourceManager.GetString("OverviewNoOrderFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tickets for order #{0}.
+        /// </summary>
+        public static string OverviewTicketsForOrder {
+            get {
+                return ResourceManager.GetString("OverviewTicketsForOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Try again.
+        /// </summary>
+        public static string OverviewTryAgain {
+            get {
+                return ResourceManager.GetString("OverviewTryAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please use this code to collect your tickets in the cinema..
+        /// </summary>
+        public static string OverviewUseThisCode {
+            get {
+                return ResourceManager.GetString("OverviewUseThisCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your name.
+        /// </summary>
+        public static string ReviewsPageEnterName {
+            get {
+                return ResourceManager.GetString("ReviewsPageEnterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No reviews yet.
+        /// </summary>
+        public static string ReviewsPageNoReviews {
+            get {
+                return ResourceManager.GetString("ReviewsPageNoReviews", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate our service.
+        /// </summary>
+        public static string ReviewsPageRateService {
+            get {
+                return ResourceManager.GetString("ReviewsPageRateService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select.
+        /// </summary>
+        public static string ReviewsPageSelect {
+            get {
+                return ResourceManager.GetString("ReviewsPageSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Submit your review.
+        /// </summary>
+        public static string ReviewsPageSubmitReview {
+            get {
+                return ResourceManager.GetString("ReviewsPageSubmitReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reviews .NETflix.
+        /// </summary>
+        public static string ReviewsPageTitle {
+            get {
+                return ResourceManager.GetString("ReviewsPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Write a review.
+        /// </summary>
+        public static string ReviewsPageWriteReview {
+            get {
+                return ResourceManager.GetString("ReviewsPageWriteReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm order.
+        /// </summary>
+        public static string TicketsPageOrderConfirm {
+            get {
+                return ResourceManager.GetString("TicketsPageOrderConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order Tickets for {0}.
+        /// </summary>
+        public static string TicketsPageOrderTickets {
+            get {
+                return ResourceManager.GetString("TicketsPageOrderTickets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select seats.
+        /// </summary>
+        public static string TicketsPageSelectSeats {
+            get {
+                return ResourceManager.GetString("TicketsPageSelectSeats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select ticket types.
+        /// </summary>
+        public static string TicketsPageSelectTicketTypes {
+            get {
+                return ResourceManager.GetString("TicketsPageSelectTicketTypes", resourceCulture);
+            }
+        }
     }
 }
