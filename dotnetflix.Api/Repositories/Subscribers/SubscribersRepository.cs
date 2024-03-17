@@ -32,5 +32,18 @@ public class SubscribersRepository : ISubscribersRepository
         await _dotNetFlixDbContext.SaveChangesAsync();
         return result.Entity;
     }
+
+    public async Task<bool> DeleteSubscriber(int id)
+    {
+        var subscriber = await _dotNetFlixDbContext.Subscribers.FindAsync(id);
+
+        if (subscriber == null)
+            return false;
+        
+        _dotNetFlixDbContext.Subscribers.Remove(subscriber);
+        await _dotNetFlixDbContext.SaveChangesAsync();
+
+        return true;
+    }
 }
 

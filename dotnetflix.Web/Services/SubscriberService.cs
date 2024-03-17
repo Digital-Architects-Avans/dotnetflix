@@ -1,6 +1,4 @@
-﻿using dotnetflix.Models.Dtos;
-using dotnetflix.Models.Dtos.OrderRequestDtos;
-using dotnetflix.Models.Dtos.Subscriber;
+﻿using dotnetflix.Models.Dtos.Subscriber;
 using dotnetflix.Web.Services.Contracts;
 using System.Net.Http.Json;
 
@@ -10,6 +8,11 @@ public class SubscriberService : ISubscriberService
 {
     private readonly HttpClient _httpClient;
 
+    public SubscriberService(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
     public async Task<IEnumerable<SubscriberDto>?> GetSubscribers()
     {
         try
@@ -17,9 +20,9 @@ public class SubscriberService : ISubscriberService
             var response = await _httpClient.GetFromJsonAsync<IEnumerable<SubscriberDto>>("api/Subscriber");
             return response;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(ex);
             throw;
         }
     }
@@ -36,15 +39,28 @@ public class SubscriberService : ISubscriberService
             var response = await _httpClient.PostAsJsonAsync("api/Subscriber", addSubscriberDto);
 
             if (response.IsSuccessStatusCode)
-            {
-                // success
                 return true;
-            }
-
         }
         catch (HttpRequestException ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine(ex);
+            throw;
+        }
+        return false;
+    }
+
+    public async Task<bool> DeleteSubscriber(int  id)
+    {
+        try
+        {
+            var response = await _httpClient.DeleteAsync($"api/Subscriber/{id}");
+
+            if (response.IsSuccessStatusCode)
+                return true;
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
             throw;
         }
         return false;

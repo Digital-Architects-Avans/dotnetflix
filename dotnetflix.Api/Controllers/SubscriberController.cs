@@ -53,5 +53,26 @@ public class SubscriberController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteSubscriber(int id)
+    {
+        try
+        {
+            var subscriber = await _subscriberRepository.DeleteSubscriber(id);
+
+            if (!subscriber)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing request for DeleteSubscriber with ID: {Id}", id);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
 }
 
