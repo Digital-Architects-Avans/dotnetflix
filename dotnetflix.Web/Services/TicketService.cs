@@ -3,6 +3,7 @@ using dotnetflix.Web.Services.Contracts;
 using System.Net.Http.Json;
 using dotnetflix.Models.Dtos.OrderRequestDtos;
 using dotnetflix.Models.Dtos.Supplement;
+using dotnetflix.Models.Dtos.Ticket;
 using dotnetflix.Models.Dtos.TicketType;
 
 namespace dotnetflix.Web.Services;
@@ -42,6 +43,40 @@ public class TicketService : ITicketService
             // Log Exception
             Console.WriteLine(e);
             throw;
+        }
+    }
+    
+    public async Task<TicketDto?> GetTicket(int id)
+    {
+        try
+        {
+            var ticket = await _httpClient.GetFromJsonAsync<TicketDto>($"api/Ticket/{id}");
+            return ticket ?? new TicketDto();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    public async Task<IEnumerable<TicketDto>?> GetTicketsForOrder(int orderId)
+    {
+        var response = await _httpClient.GetAsync($"api/Ticket/Order/{orderId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return Enumerable.Empty<TicketDto>();
+            }
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<TicketDto>>();
+        }
+        else
+        {
+            var message = await response.Content.ReadAsStringAsync();
+            throw new Exception(message);
         }
     }
 
@@ -133,15 +168,10 @@ public class TicketService : ITicketService
             for (int i = 0; i < ticketOrder.Quantity; i++)
             {
                 // Create a new ticket for each quantity with the assigned seat
-                var newTicket = new TicketDto
+                var newTicket = new AddTicketDto
                 {
                     ShowId = ticketOrder.ShowId,
-                    Movie = ticketOrder.MovieTitle,
-                    TheaterName = ticketOrder.TheaterName,
-                    ShowTime = ticketOrder.ShowTime,
                     SeatId = ticketOrder.SeatId, // Assign the selected seat ID
-                    RowNumber = ticketOrder.RowNumber,
-                    SeatNumber = ticketOrder.SeatNumber,
                     TicketTypeId = ticketOrder.TicketTypeId,
                     TicketPrice = ticketOrder.FinalPrice,
                     Supplements = ticketOrder.SupplementIds
