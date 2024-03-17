@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Toevoegen</value>
+  </data>
   <data name="AgendaLoadingShows" xml:space="preserve">
     <value>Ophalen voorstellingen</value>
   </data>
@@ -128,6 +131,9 @@
   </data>
   <data name="AgendaToday" xml:space="preserve">
     <value>Vandaag</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Beschikbaar</value>
   </data>
   <data name="CheckoutGrandTotal" xml:space="preserve">
     <value>Totaalprijs voorstelling</value>
@@ -147,14 +153,35 @@
   <data name="CheckoutPageTotalPrice" xml:space="preserve">
     <value>Totaalprijs</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beschrijving</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Korting</value>
+  </data>
+  <data name="FirstShown" xml:space="preserve">
+    <value>Aantal draaidagen</value>
+  </data>
   <data name="HomeGatheringScreenings" xml:space="preserve">
     <value>Ophalen gegevens</value>
   </data>
   <data name="HomeWhatsOn" xml:space="preserve">
     <value>Wat draait er</value>
   </data>
+  <data name="Image" xml:space="preserve">
+    <value>Afbeelding</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Ophalen gegevens</value>
+  </data>
   <data name="ManagerPageTitle" xml:space="preserve">
     <value>Manager dashboard</value>
+  </data>
+  <data name="Movie" xml:space="preserve">
+    <value>Film</value>
   </data>
   <data name="MoviesPageAddNewMovie" xml:space="preserve">
     <value>Voef film toe</value>
@@ -167,6 +194,9 @@
   </data>
   <data name="MoviesPageUpdateMovie" xml:space="preserve">
     <value>Film bijwerken</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Naam</value>
   </data>
   <data name="NavigationHeaderMovies" xml:space="preserve">
     <value>Films</value>
@@ -195,6 +225,12 @@
   <data name="NavigationHeaderTitle" xml:space="preserve">
     <value>Navigeer naar</value>
   </data>
+  <data name="New" xml:space="preserve">
+    <value>Nieuw</value>
+  </data>
+  <data name="Occupied" xml:space="preserve">
+    <value>Bezet</value>
+  </data>
   <data name="OverviewCollectTickets" xml:space="preserve">
     <value>Haal je tickets op</value>
   </data>
@@ -222,6 +258,12 @@
   <data name="OverviewUseThisCode" xml:space="preserve">
     <value>Gebruik deze code om je tickets op te halen</value>
   </data>
+  <data name="Price" xml:space="preserve">
+    <value>Prijs</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Beoordeling</value>
+  </data>
   <data name="ReviewsPageEnterName" xml:space="preserve">
     <value>Vul je naam in</value>
   </data>
@@ -243,16 +285,76 @@
   <data name="ReviewsPageWriteReview" xml:space="preserve">
     <value>Schrijf een beoordeling</value>
   </data>
+  <data name="Row" xml:space="preserve">
+    <value>Rij</value>
+  </data>
+  <data name="RunTime" xml:space="preserve">
+    <value>Speelduur</value>
+  </data>
+  <data name="Seat" xml:space="preserve">
+    <value>Stoel</value>
+  </data>
+  <data name="SeatSelectionNoSeatsAvailable" xml:space="preserve">
+    <value>Geen stoelen meer beschikbaar voor deze voorstelling</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Geselecteerd</value>
+  </data>
+  <data name="ShowTime" xml:space="preserve">
+    <value>Aanvangstijd</value>
+  </data>
+  <data name="SpokenLanguages" xml:space="preserve">
+    <value>Gesproken taal</value>
+  </data>
+  <data name="Theater" xml:space="preserve">
+    <value>Theater</value>
+  </data>
+  <data name="Ticket" xml:space="preserve">
+    <value>Kaartje</value>
+  </data>
   <data name="TicketsPageOrderConfirm" xml:space="preserve">
     <value>Bevestig bestelling</value>
   </data>
   <data name="TicketsPageOrderTickets" xml:space="preserve">
     <value>Bestel kaartjes voor {0}</value>
   </data>
+  <data name="TicketsPageSelectSeat" xml:space="preserve">
+    <value>Selecteer een stoel</value>
+  </data>
   <data name="TicketsPageSelectSeats" xml:space="preserve">
     <value>Selecteer stoelen</value>
   </data>
   <data name="TicketsPageSelectTicketTypes" xml:space="preserve">
     <value>Selecteer ticket types</value>
+  </data>
+  <data name="TicketType" xml:space="preserve">
+    <value>Type kaartje</value>
+  </data>
+  <data name="TicketTypesDiscount" xml:space="preserve">
+    <value>Korting</value>
+  </data>
+  <data name="TicketTypesPageAddNewTicketType" xml:space="preserve">
+    <value>Voeg nieuw type kaartje toe</value>
+  </data>
+  <data name="TicketTypesPageName" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="TicketTypesPageTicketType" xml:space="preserve">
+    <value>Ticket type / korting</value>
+  </data>
+  <data name="TicketTypesPageUpdateTicketType" xml:space="preserve">
+    <value>Bijwerken type kaartje</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Bijwerken</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Jaar</value>
   </data>
 </root>

@@ -2,7 +2,7 @@
 @using dotnetflix.Models.Dtos.TicketType
 @inject HttpClient Http
 
-<h3>Ticket Type / Discounts</h3>
+<h3>@Localizer["TicketTypesPageTicketType"]</h3>
 
 <NavigationHeader />
 
@@ -12,15 +12,15 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>Discount</th>
+                <th>@Localizer["TicketTypesPageName"]</th>
+                <th>@Localizer["TicketTypesDiscount"]</th>
             </tr>
             </thead>
             <tbody>
             <tr @onclick="() => SelectTicketType()" class="new-ticket-type">
-                <td>Add</td>
-                <td>New</td>
-                <td>Type</td>
+                <td>@Localizer["Add"]</td>
+                <td>@Localizer["New"]</td>
+                <td>@Localizer["Type"]</td>
             </tr>
             @foreach (var type in TicketTypes)
             {
@@ -36,45 +36,47 @@
     <div class="col-md-6">
         @if (SelectedTicketType.Id < 1)
         {
-            <h4>Add New Ticket Type</h4>
+            <h4>@Localizer["TicketTypesPageAddNewTicketType"]</h4>
             <EditForm Model="SelectedTicketType" OnValidSubmit="NewTicketTypeSubmit">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
 
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">@Localizer["Name"]</label>
                     <InputText id="name" class="form-control" @bind-Value="SelectedTicketType.Name"/>
                 </div>
                 <div class="form-group">
-                    <label for="discount">Discount</label>
+                    <label for="discount">@Localizer["Discount"]</label>
                     <InputNumber id="discount" class="form-control" @bind-Value="SelectedTicketType.Discount"/>
                 </div>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">@Localizer["Add"]</button>
             </EditForm>
         }
         else
         {
-            <h4>Update Ticket Type</h4>
+            <h4>@Localizer["TicketTypesPageUpdateTicketType"]</h4>
             <EditForm Model="SelectedTicketType" OnValidSubmit="UpdateTicketTypeSubmit">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
 
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">@Localizer["Name"]</label>
                     <InputText id="name" class="form-control" @bind-Value="SelectedTicketType.Name"/>
                 </div>
                 <div class="form-group">
-                    <label for="discount">Discount</label>
+                    <label for="discount">@Localizer["Discount"]</label>
                     <InputNumber id="discount" class="form-control" @bind-Value="SelectedTicketType.Discount"/>
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">@Localizer["Update"]</button>
             </EditForm>
-            <button class="btn btn-danger" @onclick="DeleteTicketTypeSubmit">Delete</button>
+            <button class="btn btn-danger" @onclick="DeleteTicketTypeSubmit">@Localizer["Delete"]</button>
         }
     </div>
 </div>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     List<TicketTypeDto> TicketTypes = new List<TicketTypeDto>();
     TicketTypeDto SelectedTicketType = new TicketTypeDto();
     UpdateTicketTypeDto EditTicketType = new UpdateTicketTypeDto();

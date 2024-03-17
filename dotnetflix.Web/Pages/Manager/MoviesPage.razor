@@ -35,19 +35,19 @@
                 <ValidationSummary/>
 
                 <div class="form-group">
-                    <label for="title">Title</label>
+                    <label for="title">@Localizer["Title"]</label>
                     <InputText id="title" class="form-control" @bind-Value="SelectedMovie.Title"/>
                 </div>
                 <div class="form-group">
-                    <label for="year">Year</label>
+                    <label for="year">@Localizer["Year"]</label>
                     <InputNumber id="year" class="form-control" @bind-Value="SelectedMovie.Year"/>
                 </div>
                 <div class="form-group">
-                    <label for="description">Description</label>
+                    <label for="description">@Localizer["Description"]</label>
                     <InputText id="description" class="form-control" @bind-Value="SelectedMovie.Description"/>
                 </div>
                 <div class="form-group">
-                    <label for="rating">Rating</label>
+                    <label for="rating">@Localizer["Rating"]</label>
                     <InputSelect id="rating" class="form-control" @bind-Value="SelectedMovie.Rating">
                         @foreach (var rating in Enum.GetValues(typeof(Rating)))
                         {
@@ -56,18 +56,18 @@
                     </InputSelect>
                 </div>
                 <div class="form-group">
-                    <label for="runtime">Runtime</label>
+                    <label for="runtime">@Localizer["RunTime"]</label>
                     <InputNumber id="runtime" class="form-control" @bind-Value="SelectedMovie.Runtime"/>
                 </div>
                 <div class="form-group">
-                    <label for="spokenLanguages">Spoken Languages</label>
+                    <label for="spokenLanguages">@Localizer["SpokenLanguages"]</label>
                     <InputText id="spokenLanguages" class="form-control" @bind-Value="SelectedMovie.SpokenLanguages"/>
                 </div>
                 <div class="form-group">
-                    <label for="image">Image</label>
+                    <label for="image">@Localizer["Image"]</label>
                     <InputText id="image" class="form-control" @bind-Value="SelectedMovie.Image"/>
                 </div>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">@Localizer["Add"]</button>
             </EditForm>
         }
 else
@@ -78,19 +78,19 @@ else
         <ValidationSummary/>
 
         <div class="form-group">
-            <label for="title">Title</label>
+            <label for="title">@Localizer["Title"]</label>
             <InputText id="title" class="form-control" @bind-Value="SelectedMovie.Title"/>
         </div>
         <div class="form-group">
-            <label for="year">Year</label>
+            <label for="year">@Localizer["Year"]</label>
             <InputNumber id="year" class="form-control" @bind-Value="SelectedMovie.Year"/>
         </div>
         <div class="form-group">
-            <label for="description">Description</label>
+            <label for="description">@Localizer["Description"]</label>
             <InputText id="description" class="form-control" @bind-Value="SelectedMovie.Description"/>
         </div>
         <div class="form-group">
-            <label for="rating">Rating</label>
+            <label for="rating">@Localizer["Rating"]</label>
             <InputSelect id="rating" class="form-control" @bind-Value="SelectedMovie.Rating">
                 @foreach (var rating in Enum.GetValues(typeof(Rating)))
                 {
@@ -99,20 +99,20 @@ else
             </InputSelect>
         </div>
         <div class="form-group">
-            <label for="runtime">Runtime</label>
+            <label for="runtime">@Localizer["RunTime"]</label>
             <InputNumber id="runtime" class="form-control" @bind-Value="SelectedMovie.Runtime"/>
         </div>
         <div class="form-group">
-            <label for="spokenLanguages">Spoken Languages</label>
+            <label for="spokenLanguages">@Localizer["SpokenLanguages"]</label>
             <InputText id="spokenLanguages" class="form-control" @bind-Value="SelectedMovie.SpokenLanguages"/>
         </div>
         <div class="form-group">
-            <label for="image">Image</label>
+            <label for="image">@Localizer["Image"]</label>
             <InputText id="image" class="form-control" @bind-Value="SelectedMovie.Image"/>
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary">@Localizer["Update"]</button>
     </EditForm>
-    <button class="btn btn-danger" @onclick="DeleteMovieSubmit">Delete</button>
+    <button class="btn btn-danger" @onclick="DeleteMovieSubmit">@Localizer["Delete"]</button>
 
 }
     </div>

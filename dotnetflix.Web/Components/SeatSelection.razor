@@ -9,15 +9,15 @@
         <ul class="showcase">
             <li>
                 <div class="seat"></div>
-                <small>Available</small>
+                <small>@Localizer["Available"]</small>
             </li>
             <li>
                 <div class="seat selected"></div>
-                <small>Selected</small>
+                <small>@Localizer["Selected"]</small>
             </li>
             <li>
                 <div class="seat occupied"></div>
-                <small>Occupied</small>
+                <small>@Localizer["Occupied"]</small>
             </li>
         </ul>
 
@@ -48,12 +48,13 @@
 }
 else
 {
-    <p>No seats available for this show.</p>
+    <p>@Localizer["SeatSelectionNoSeatsAvailable"].</p>
 }
 
 @code {
     [Inject] IShowService? ShowService { get; set; }
     [Inject] ISeatService? SeatService { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     [Parameter] public int ShowId { get; set; }
     [Parameter] public EventCallback<List<SeatDto>> OnSeatSelectionChange { get; set; }

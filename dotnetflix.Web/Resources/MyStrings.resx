@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
   <data name="AgendaLoadingShows" xml:space="preserve">
     <value>Loading shows</value>
   </data>
@@ -128,6 +131,9 @@
   </data>
   <data name="AgendaToday" xml:space="preserve">
     <value>Today</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Available</value>
   </data>
   <data name="CheckoutGrandTotal" xml:space="preserve">
     <value>Grand total</value>
@@ -147,14 +153,35 @@
   <data name="CheckoutPageTotalPrice" xml:space="preserve">
     <value>Total price</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="FirstShown" xml:space="preserve">
+    <value>First shown</value>
+  </data>
   <data name="HomeGatheringScreenings" xml:space="preserve">
     <value>Gathering screenings</value>
   </data>
   <data name="HomeWhatsOn" xml:space="preserve">
     <value>What's on</value>
   </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
   <data name="ManagerPageTitle" xml:space="preserve">
     <value>Manager dashboard</value>
+  </data>
+  <data name="Movie" xml:space="preserve">
+    <value>Movie</value>
   </data>
   <data name="MoviesPageAddNewMovie" xml:space="preserve">
     <value>Add new movie</value>
@@ -167,6 +194,9 @@
   </data>
   <data name="MoviesPageUpdateMovie" xml:space="preserve">
     <value>Update movie</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="NavigationHeaderMovies" xml:space="preserve">
     <value>Movies</value>
@@ -194,6 +224,12 @@
   </data>
   <data name="NavigationHeaderTitle" xml:space="preserve">
     <value>Navigate to</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="Occupied" xml:space="preserve">
+    <value>Occupied</value>
   </data>
   <data name="OrdersPageManagerOrders" xml:space="preserve">
     <value>Manager: Orders</value>
@@ -225,6 +261,12 @@
   <data name="OverviewUseThisCode" xml:space="preserve">
     <value>Please use this code to collect your tickets in the cinema.</value>
   </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
   <data name="ReviewsPageEnterName" xml:space="preserve">
     <value>Enter your name</value>
   </data>
@@ -246,16 +288,76 @@
   <data name="ReviewsPageWriteReview" xml:space="preserve">
     <value>Write a review</value>
   </data>
+  <data name="Row" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="RunTime" xml:space="preserve">
+    <value>Run time</value>
+  </data>
+  <data name="Seat" xml:space="preserve">
+    <value>Seat</value>
+  </data>
+  <data name="SeatSelectionNoSeatsAvailable" xml:space="preserve">
+    <value>No seats available for this show</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="ShowTime" xml:space="preserve">
+    <value>Show time</value>
+  </data>
+  <data name="SpokenLanguages" xml:space="preserve">
+    <value>Spoken languages</value>
+  </data>
+  <data name="Theater" xml:space="preserve">
+    <value>Theater</value>
+  </data>
+  <data name="Ticket" xml:space="preserve">
+    <value>Ticket</value>
+  </data>
   <data name="TicketsPageOrderConfirm" xml:space="preserve">
     <value>Confirm order</value>
   </data>
   <data name="TicketsPageOrderTickets" xml:space="preserve">
     <value>Order Tickets for {0}</value>
   </data>
+  <data name="TicketsPageSelectSeat" xml:space="preserve">
+    <value>Select a seat</value>
+  </data>
   <data name="TicketsPageSelectSeats" xml:space="preserve">
     <value>Select seats</value>
   </data>
   <data name="TicketsPageSelectTicketTypes" xml:space="preserve">
     <value>Select ticket types</value>
+  </data>
+  <data name="TicketType" xml:space="preserve">
+    <value>Ticket type</value>
+  </data>
+  <data name="TicketTypesDiscount" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="TicketTypesPageAddNewTicketType" xml:space="preserve">
+    <value>Add new ticket type</value>
+  </data>
+  <data name="TicketTypesPageName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="TicketTypesPageTicketType" xml:space="preserve">
+    <value>Ticket type / discount</value>
+  </data>
+  <data name="TicketTypesPageUpdateTicketType" xml:space="preserve">
+    <value>Update ticket type</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Year</value>
   </data>
 </root>

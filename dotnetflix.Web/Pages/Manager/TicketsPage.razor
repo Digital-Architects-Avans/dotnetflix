@@ -19,20 +19,20 @@
             <tr>
                 <th>Id</th>
                 <th>ShowId</th>
-                <th>Movie</th>
+                <th>@Localizer["Movie"]</th>
                 <th>DateTime</th>
                 <th>Theater</th>
-                <th>Row</th>
-                <th>Seat</th>
+                <th>@Localizer["Row"]</th>
+                <th>@Localizer["Seat"]</th>
                 <th>Type</th>
-                <th>Price</th>
+                <th>@Localizer["Price"]</th>
             </tr>
             </thead>
             <tbody>
             <tr @onclick="() => SelectTicket()" class="new-ticket">
-                <td>Add</td>
-                <td>New</td>
-                <td>Ticket</td>
+                <td>@Localizer["Add"]</td>
+                <td>@Localizer["New"]</td>
+                <td>@Localizer["Ticket"]</td>
             </tr>
             @foreach (var ticket in Tickets)
             {
@@ -70,9 +70,9 @@
                     </InputSelect>
                 </div>
                 <div class="form-group">
-                    <label for="seatId">Seat</label>
+                    <label for="seatId">@Localizer["Seat"]</label>
                     <InputSelect id="seatId" class="form-control" @bind-Value="SelectedTicket.SeatId">
-                        <option value="">Select a seat</option>
+                        <option value="">@Localizer["TicketsPageSelectSeat"]</option>
                         @foreach (var seat in Seats)
                         {
                             <option value="@seat.Id">@seat.Id, @seat.SeatNumber</option>
@@ -80,7 +80,7 @@
                     </InputSelect>
                 </div>
                 <div class="form-group">
-                    <label for="ticketTypeId">Ticket Type</label>
+                    <label for="ticketTypeId">@Localizer["TicketType"]</label>
                     <InputSelect id="ticketTypeId" class="form-control" @bind-Value="SelectedTicket.TicketTypeId">
                         <option value="">Select a ticket type</option>
                         @foreach (var ticketType in TicketTypes)
@@ -103,7 +103,7 @@
                         }
                     </InputSelect>
                 </div>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">@Localizer["Add"]</button>
             </EditForm>
         }
         else
@@ -157,14 +157,16 @@
                        }
                    </InputSelect>
                </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">@Localizer["Update"]</button>
             </EditForm>
-            <button class="btn btn-danger" @onclick="DeleteTicketSubmit">Delete</button>
+            <button class="btn btn-danger" @onclick="DeleteTicketSubmit">@Localizer["Delete"]</button>
         }
     </div>
 </div>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     List<TicketDto> Tickets = new List<TicketDto>();
     TicketDto SelectedTicket = new TicketDto();
     UpdateTicketDto EditTicket = new UpdateTicketDto();

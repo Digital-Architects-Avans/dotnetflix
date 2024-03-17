@@ -4,7 +4,7 @@
 @using dotnetflix.Models.Dtos.TheaterRow
 @inject HttpClient Http
 
-<h3>Seat Management</h3>
+<h3>@Localizer["Seat"] Management</h3>
 
 <NavigationHeader />
 
@@ -13,8 +13,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Seat Number</th>
-                    <th>Theater Row</th>
+                    <th>@Localizer["Seat"] Number</th>
+                    <th>@Localizer["Theater"] @Localizer["Row"]</th>
                     <th></th>
                 </tr>
             </thead>
@@ -42,11 +42,11 @@
                 <ValidationSummary/>
 
                 <div class="form-group">
-                    <label for="seatNumber">Seat Number</label>
+                    <label for="seatNumber">@Localizer["Seat"] Number</label>
                     <InputNumber id="seatNumber" class="form-control" @bind-Value="SelectedSeat.SeatNumber"/>
                 </div>
                 <div class="form-group">
-                    <label for="theaterRowId">Theater Row</label>
+                    <label for="theaterRowId">@Localizer["Theater"] @Localizer["Row"]</label>
                     <InputSelect id="theaterRowId" class="form-control" @bind-Value="SelectedSeat.TheaterRowId">
                         @foreach (var theaterRow in TheaterRows)
                         {
@@ -65,11 +65,11 @@
                 <ValidationSummary/>
 
                 <div class="form-group">
-                    <label for="seatNumber">Seat Number</label>
+                    <label for="seatNumber">@Localizer["Seat"] Number</label>
                     <InputNumber id="seatNumber" class="form-control" @bind-Value="SelectedSeat.SeatNumber"/>
                 </div>
                 <div class="form-group">
-                    <label for="theaterRowId">Theater Row</label>
+                    <label for="theaterRowId">@Localizer["Theater"] @Localizer["Row"]</label>
                     <InputSelect id="theaterRowId" class="form-control" @bind-Value="SelectedSeat.TheaterRowId">
                         @foreach (var theaterRow in TheaterRows)
                         {
@@ -85,6 +85,8 @@
 </div>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     List<SeatDto> Seats = new List<SeatDto>();
     SeatDto SelectedSeat = new SeatDto();
     List<TheaterRowDto> TheaterRows = new List<TheaterRowDto>();
