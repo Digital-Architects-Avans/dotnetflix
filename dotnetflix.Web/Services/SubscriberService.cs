@@ -1,11 +1,12 @@
 ﻿using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.OrderRequestDtos;
 using dotnetflix.Models.Dtos.Subscriber;
+using dotnetflix.Web.Services.Contracts;
 using System.Net.Http.Json;
 
 namespace dotnetflix.Web.Services;
 
-public class SubscriberService
+public class SubscriberService : ISubscriberService
 {
     private readonly HttpClient _httpClient;
 
@@ -13,20 +14,8 @@ public class SubscriberService
     {
         try
         {
-            var response = await _httpClient.GetAsync($"api/Subscriber");
-
-            if (response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                    return Enumerable.Empty<SubscriberDto>();
-
-                return await response.Content.ReadFromJsonAsync<IEnumerable<SubscriberDto>>();
-            }
-            else
-            {
-                var message = await response.Content.ReadAsStringAsync();
-                throw new Exception(message);
-            }
+            var response = await _httpClient.GetFromJsonAsync<IEnumerable<SubscriberDto>>("api/Subscriber");
+            return response;
         }
         catch (Exception e)
         {
@@ -34,7 +23,7 @@ public class SubscriberService
             throw;
         }
     }
-    public async Task<AddSubscriberDto> AddSubscriber(AddSubscriberDto newSubscriber)
+    public async Task<bool> AddSubscriber(AddSubscriberDto newSubscriber)
     {
         var addSubscriberDto = new AddSubscriberDto
         {
@@ -45,18 +34,20 @@ public class SubscriberService
         try
         {
             var response = await _httpClient.PostAsJsonAsync("api/Subscriber", addSubscriberDto);
-            response.EnsureSuccessStatusCode();
 
             if (response.IsSuccessStatusCode)
-                return await Task.FromResult(addSubscriberDto);
-            
+            {
+                // success
+                return true;
+            }
+
         }
         catch (HttpRequestException ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
             throw;
         }
-        return null;
+        return false;
     }
 }
 

@@ -4,7 +4,7 @@ namespace dotnetflix.Web.Services.Contracts
 {
     public interface ISubscriberService
     {
-        Task<IEnumerable<SubscriberService>> GetSubscribers();
-        Task<SubscriberDto> AddSubscriber(AddSubscriberDto addSubscriberDto);
+        Task<IEnumerable<SubscriberDto>?> GetSubscribers();
+        Task<bool> AddSubscriber(AddSubscriberDto addSubscriberDto);
     }
 }

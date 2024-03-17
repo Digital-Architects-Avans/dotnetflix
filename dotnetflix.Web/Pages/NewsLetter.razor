@@ -1,5 +1,7 @@
 ﻿@page "/newsletter"
-
+@using dotnetflix.Models.Dtos.Subscriber
+@inject HttpClient Http
+@inject IToastService ToastService
 
 <div class="d-flex justify-content-center m-lg-5">
 
@@ -22,7 +24,7 @@
                     <FluentTextField Name="email" Label="Email" @bind-Value="newsLetterForm.Email" Style="width: 250px;" Required />
                     <FluentValidationMessage For="@(() => newsLetterForm.Email)" />
                 </div>
-                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Subscribe!</FluentButton>
+                <FluentButton Type="ButtonType.Submit"  Appearance="Appearance.Accent">Subscribe!</FluentButton>
             </FluentStack>
         </EditForm>
     } else
@@ -36,18 +38,38 @@
 
 </div>
 
-
 @code {
 
     [SupplyParameterFromForm]
     private NewsLetterForm newsLetterForm { get; set; } = new();
-
+    public AddSubscriberDto AddSubscriber = new AddSubscriberDto();
     private bool isSubscribed = false;
 
-    private void HandleValidSubmit()
+    private async void HandleValidSubmit()
     {
-        isSubscribed = true;
-        
+        if (newsLetterForm.Name == null || newsLetterForm.Email == null)
+        {
+            ShowToast("Something went wrong, please try again later.");
+            return;
+        }
+
+        AddSubscriber = new AddSubscriberDto()
+            {
+                Name = newsLetterForm.Name,
+                Email = newsLetterForm.Email
+            };
+
+        var response = await Http.PostAsJsonAsync("api/Subscriber", AddSubscriber);
+
+        if (response.IsSuccessStatusCode)
+        {
+            isSubscribed = true;
+            StateHasChanged();
+        }
+        else
+        {
+            ShowToast("Something went wrong, please try again later.");
+        }
     }
 
     public class NewsLetterForm
@@ -61,6 +83,15 @@
         [MinLength(3, ErrorMessage = "Name is too short!")]
         [RegularExpression(@"[\w.]+@[\w.]+\.[\w.]+", ErrorMessage = "Email is not valid!")]
         public string? Email { get; set; }
+    }
+
+    
+    private void ShowToast(string message)
+    {
+        Random rnd = new();
+
+        var intent = Enum.GetValues<ToastIntent>()[rnd.Next(10)];
+        ToastService.ShowToast(intent, message);
     }
 
     public Task ResetPage()
