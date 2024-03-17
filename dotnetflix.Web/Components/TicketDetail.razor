@@ -59,6 +59,7 @@ else
     [Parameter] public string? TicketType { get; set; }
 
     private string QRCodeBase64 { get; set; }
+    private string QRCodeAscii { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -80,6 +81,7 @@ else
 
             // Generate QR code for ticket URL
             GenerateQRCode(TicketUrl);
+            GenerateAsciiQRCode(TicketUrl);
         }
     }
 
@@ -114,6 +116,17 @@ else
         QRCodeBase64 = $"data:image/png;base64,{Convert.ToBase64String(memoryStream.ToArray())}";
     }
 
+        private void GenerateAsciiQRCode(string text)
+    {
+        // Create QR code data
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+        AsciiQRCode qrCode = new AsciiQRCode(qrCodeData);
+        string qrCodeAsAsciiArt = qrCode.GetGraphic(1);
+        QRCodeAscii = qrCodeAsAsciiArt;
+
+    }
+
     private async Task PrintTicket()
     {
         var jsPdf = await JsRuntime.InvokeAsync<IJSObjectReference>("eval", "new window.jsPDF()");
@@ -123,8 +136,9 @@ else
         await jsPdf.InvokeVoidAsync("text", $"Seat: Row {Ticket.RowNumber}, Seat {Ticket.SeatNumber}", 10, 40);
         await jsPdf.InvokeVoidAsync("text", $"Ticket Type: {TicketType}", 10, 50);
         await jsPdf.InvokeVoidAsync("text", $"Price: {Ticket.TicketPrice}", 10, 60);
-        await jsPdf.InvokeVoidAsync("image", $"QR: {GenerateQRCode(TicketUrl)}", 10, 60);
+        await jsPdf.InvokeVoidAsync("text", $"QR: {QRCodeAscii}", 10, 70);
         await jsPdf.InvokeVoidAsync("save", "ticket.pdf");
+        
     }
 
 }
