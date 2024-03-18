@@ -44,16 +44,15 @@
 
         break;
     case PageState.OrderFound:
-        
+
         <FluentCard MinimalStyle="true" Width="230px" Style="margin-top: 24px; margin-bottom: 24px">
-            <FluentLabel Typo="Typography.HeroTitle">@Order.Uuid.ToUpper()</FluentLabel>
-            <p>Please use this code to collect your tickets in the cinema.</p>
             @if (!string.IsNullOrEmpty(QRCodeBase64))
             {
-                <div>
-                    <img src="@QRCodeBase64" alt="QR Code" height="100px" width="100px"/>
-                </div>
+                <img src="@QRCodeBase64" alt="QR Code" height="100px" width="100px"/>
             }
+            <FluentDivider Style="margin: 20px 0;"></FluentDivider>
+            <FluentLabel Typo="Typography.HeroTitle">@Order.Uuid.ToUpper()</FluentLabel>
+            <p>Please use this code to collect your tickets in the cinema.</p>
         </FluentCard>
 
         <MovieDetails Movie="Movie" IsSneakPreview="@_isSneakPreview"/>
@@ -63,7 +62,7 @@
         {
             <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>
         }
-        
+
         <Maps></Maps>
 
         break;
@@ -152,7 +151,7 @@
                 {
                     Movie = await MovieService.GetMovie(Show.MovieId);
                 }
-                
+
                 // Generate QR code
                 GenerateQRCode(Order.Uuid.ToUpper());
 
@@ -196,7 +195,7 @@
         // Create QR code data
         QRCodeGenerator qrGenerator = new QRCodeGenerator();
         QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
-        
+
         // Calculate QR code image dimensions
         int width = qrCodeData.ModuleMatrix.Count;
         int height = qrCodeData.ModuleMatrix.Count;
