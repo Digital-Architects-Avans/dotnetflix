@@ -536,47 +536,48 @@ namespace dotnetflix.Api.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Subscribers");
-                };
+                });
 
             modelBuilder.Entity("dotnetflix.Api.Data.Entities.Supplement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasPrecision(6, 2)
-                        .HasColumnType("decimal(6,2)");
+                b.Property<decimal>("Price")
+                    .HasPrecision(6, 2)
+                    .HasColumnType("decimal(6,2)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Supplements");
+                b.ToTable("Supplements");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Large popcorn",
-                            Price = 3.00m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Large M&Ms",
-                            Price = 4.00m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Large popcorn",
-                            Price = 1.50m
-                        });
+                b.HasData(
+                    new
+                    {
+                        Id = 1,
+                        Name = "Large popcorn",
+                        Price = 3.00m
+                    },
+                    new
+                    {
+                        Id = 2,
+                        Name = "Large M&Ms",
+                        Price = 4.00m
+                    },
+                    new
+                    {
+                        Id = 3,
+                        Name = "Large popcorn",
+                        Price = 1.50m
+                    });
+            });
 
             modelBuilder.Entity("dotnetflix.Api.Data.Entities.Theater", b =>
                 {
