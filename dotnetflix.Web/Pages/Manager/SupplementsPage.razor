@@ -1,0 +1,178 @@
+@page "/manager/supplements"
+@using dotnetflix.Models.Dtos.Supplement
+@inject HttpClient Http
+
+<h3>Supplements</h3>
+
+<NavigationHeader/>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr @onclick="SelectSupplement">
+                <td>Add</td>
+                <td>New</td>
+                <td>Type</td>
+            </tr>
+            @if (_supplements != null)
+            {
+                foreach (var type in _supplements)
+                {
+                    <tr @onclick="() => SelectSupplement(type)">
+                        <td>@type.Id</td>
+                        <td>@type.Name</td>
+                        <td>@type.Price</td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        @if (_selectedSupplement != null)
+        {
+            if (_selectedSupplement.Id < 1)
+            {
+                <h4>Add New supplement</h4>
+                <EditForm Model="_selectedSupplement" OnValidSubmit="NewSupplementSubmit">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary/>
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <InputText id="name" class="form-control" @bind-Value="_selectedSupplement.Name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <InputNumber id="price" class="form-control" @bind-Value="_selectedSupplement.Price"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </EditForm>
+            }
+            else
+            {
+                <h4>Update supplement</h4>
+                <EditForm Model="_selectedSupplement" OnValidSubmit="UpdateSupplementSubmit">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary/>
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <InputText id="name" class="form-control" @bind-Value="_selectedSupplement.Name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <InputNumber id="price" class="form-control" @bind-Value="_selectedSupplement.Price"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </EditForm>
+                <button class="btn btn-danger" @onclick="DeleteSupplementSubmit">Delete</button>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    List<SupplementDto>? _supplements = new List<SupplementDto>();
+    SupplementDto? _selectedSupplement = new SupplementDto();
+    UpdateSupplementDto _editSupplement = new UpdateSupplementDto();
+    AddSupplementDto _newSupplement = new AddSupplementDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _supplements = await Http.GetFromJsonAsync<List<SupplementDto>>("api/supplement");
+        SelectSupplement();
+    }
+
+    private void SelectSupplement(SupplementDto supplement)
+    {
+        if (_selectedSupplement != null && _selectedSupplement.Id == supplement.Id)
+        {
+            _selectedSupplement = null;
+        }
+        else
+        {
+            _selectedSupplement = new SupplementDto
+            {
+                Id = supplement.Id,
+                Name = supplement.Name,
+                Price = supplement.Price
+            };
+        }
+    }
+
+    private void SelectSupplement()
+    {
+        _selectedSupplement = new SupplementDto
+        {
+            Id = 0,
+            Name = "",
+            Price = 0
+        };
+    }
+
+    private async Task NewSupplementSubmit()
+    {
+        if (_selectedSupplement != null)
+        {
+            _newSupplement = new AddSupplementDto
+            {
+                Name = _selectedSupplement.Name,
+                Price = _selectedSupplement.Price
+            };
+        }
+
+        var response = await Http.PostAsJsonAsync("api/supplement", _newSupplement);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _supplements = await Http.GetFromJsonAsync<List<SupplementDto>>("api/supplement");
+            SelectSupplement();
+            StateHasChanged();
+        }
+    }
+
+    private async Task UpdateSupplementSubmit()
+    {
+        if (_selectedSupplement != null)
+        {
+            _editSupplement = new UpdateSupplementDto
+            {
+                Name = _selectedSupplement.Name,
+                Price = _selectedSupplement.Price
+            };
+
+            var response = await Http.PutAsJsonAsync($"api/supplement/{_selectedSupplement.Id}", _editSupplement);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _supplements = await Http.GetFromJsonAsync<List<SupplementDto>>("api/supplement");
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task DeleteSupplementSubmit()
+    {
+        if (_selectedSupplement != null)
+        {
+            var response = await Http.DeleteAsync($"api/supplement/{_selectedSupplement.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                _supplements = await Http.GetFromJsonAsync<List<SupplementDto>>("api/supplement");
+                SelectSupplement();
+                StateHasChanged();
+            }
+        }
+    }
+
+}

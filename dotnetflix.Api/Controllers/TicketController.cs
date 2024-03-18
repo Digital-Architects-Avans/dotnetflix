@@ -57,12 +57,30 @@ public class TicketController : ControllerBase
 		try
 		{
 			var tickets = await _ticketRepository.GetTicketsForMovie(movieTitle);
-			var ticketDtos = tickets.ConvertToDto();
+      
+      var ticketDtos = tickets.ConvertToDto();
 			return Ok(ticketDtos);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Error processing request for GetTicketsForMovie");
+			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+		}
+	}
+
+	[HttpGet("Order/{orderId:int}")]
+	public async Task<ActionResult<IEnumerable<TicketDto>>> GetTicketsForOrder(int orderId)
+	{
+		try
+		{
+			var tickets = await _ticketRepository.GetTicketsForOrder(orderId);
+
+			var ticketDtos = tickets.ConvertToDto();
+			return Ok(ticketDtos);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error processing request for GetTicketsForOrder");
 			return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 		}
 	}

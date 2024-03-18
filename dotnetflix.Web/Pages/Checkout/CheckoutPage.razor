@@ -5,91 +5,109 @@
 @using System.Globalization
 @using System.Net
 @using dotnetflix.Models.Dtos.Email
+@using dotnetflix.Models.Dtos.Supplement
 @inject HttpClient Http
 
 @using MailKit.Net.Smtp;
 @using MimeKit;
 @implements IDisposable
 
-<div class="container">
-    <div class="row">
-        <!-- Order Summary Column -->
-        <div class="col-md-8">
-            <h3>Order Summary</h3>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Ticket type</th>
-                    <th>Quantity</th>
-                    <th>Price per Ticket</th>
-                    <th>Total Price</th>
-                </tr>
-                </thead>
-                <tbody>
-                @if (OrderRequest.TicketOrders.Any())
+<div class="row">
+    <!-- Order Summary Column -->
+    <div class="col-md-8">
+        <h1>Order Summary</h1>
+        <table class="table" style="border-bottom-color: lightgrey;">
+            <thead>
+            <tr>
+                <th>Ticket type</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (OrderRequest.TicketOrders.Any())
+            {
+                decimal grandTotal = 0;
+                foreach (var ticketOrder in OrderRequest.TicketOrders.Where(to => to.Quantity > 0))
                 {
-                    decimal grandTotal = 0;
-                    foreach (var ticketOrder in OrderRequest.TicketOrders.Where(to => to.Quantity > 0))
+                    var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
+                    if (ticketType != null)
                     {
-                        var ticketType = TicketTypes.FirstOrDefault(tt => tt.Id == ticketOrder.TicketTypeId);
-                        if (ticketType != null)
+                        decimal pricePerTicket = ticketOrder.FinalPrice / ticketOrder.Quantity;
+                        grandTotal += ticketOrder.FinalPrice;
+                        <tr style="border-bottom-color: transparent;">
+                            <td>@ticketType.Name</td>
+                            <td>@ticketOrder.Quantity</td>
+                            <td>@pricePerTicket.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</td>
+                            <td>@ticketOrder.FinalPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</td>
+                        </tr>
+                        if (ticketOrder.SupplementIds.Any() && Supplements != null)
                         {
-                            decimal pricePerTicket = ticketOrder.FinalPrice / ticketOrder.Quantity;
-                            grandTotal += ticketOrder.FinalPrice;
-
-                            <tr>
-                                <td>@ticketType.Name</td>
-                                <td>@ticketOrder.Quantity</td>
-                                <td>@pricePerTicket.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</td>
-                                <td>@ticketOrder.FinalPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</td>
-                            </tr>
+                            foreach (var supplement in ticketOrder.SupplementIds)
+                            {
+                                var supplementDto = Supplements.FirstOrDefault(s => s.Id == supplement);
+                                if (supplementDto != null)
+                                {
+                                    <tr style="border-bottom-color: transparent;">
+                                        <td>+ @supplementDto.Name</td>
+                                        <td>1</td>
+                                        <td colspan="2">@supplementDto.Price.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</td>
+                                    </tr>
+                                }
+                            }
                         }
+
+                        <tr>
+                            <td colspan="4"> </td>
+                        </tr>
                     }
-
-                    <tr>
-                        <td colspan="3" class="text-right">
-                            <strong>Grand Total:</strong>
-                        </td>
-                        <td>
-                            <strong>@grandTotal.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</strong>
-                        </td>
-                    </tr>
                 }
-                else
-                {
-                    <tr>
-                        <td colspan="4">No tickets selected.</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
 
-        <!-- Payment Method Column -->
-        <div class="col-md-4">
-            <h4 class="mb-2">Payment Method</h4>
-            <div id="smart-button-container">
-                <input type="hidden" name="descriptionInput" id="description" @bind="PaymentDescription"/>
-                <input name="amountInput" type="hidden" id="amount" @bind="FormattedPaymentAmount">
-                <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container"></div>
-            </div>
-        </div>
+                <tr>
+                    <td colspan="3" class="text-right">
+                        <strong>Grand Total:</strong>
+                    </td>
+                    <td>
+                        <strong>@grandTotal.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</strong>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">No tickets selected.</td>
+                </tr>
+            }
+            </tbody>
+        </table>
     </div>
-    <div class="container">
-        <!-- Payment Error Message -->
-        @if (!string.IsNullOrEmpty(PaymentErrorMessage))
-        {
-            <div class="alert alert-danger" role="alert">
-                @PaymentErrorMessage
-            </div>
-        }
-    
-        <div class="row">
-            <!-- Order Summary and Payment Method Columns go here... -->
+
+    <!-- Payment Method Column -->
+    <div class="col-md-4">
+        <h2 class="mb-2">Payment Method</h2>
+        <div id="smart-button-container">
+            <input type="hidden" name="descriptionInput" id="description" @bind="PaymentDescription"/>
+            <input name="amountInput" type="hidden" id="amount" @bind="FormattedPaymentAmount">
+            <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container"></div>
         </div>
     </div>
 </div>
+<div class="container">
+    <!-- Payment Error Message -->
+    @if (!string.IsNullOrEmpty(PaymentErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @PaymentErrorMessage
+        </div>
+    }
 
+    <div class="row">
+        <!-- Order Summary and Payment Method Columns go here... -->
+    </div>
+</div>
+
+<h2>Get your tickets by mail</h2>
 <div class="row">
     <div class="col-md-6">
         <label for="customerName" class="form-label">Name</label>
@@ -114,16 +132,16 @@
     public OrderRequestDto? OrderRequest { get; set; }
 
     public IEnumerable<TicketTypeDto> TicketTypes { get; set; } = new List<TicketTypeDto>();
+    private IEnumerable<SupplementDto>? Supplements { get; set; }
 
     protected int TotalQty { get; set; }
     protected string? PaymentDescription { get; set; }
     protected decimal PaymentAmount { get; set; }
     protected string? FormattedPaymentAmount { get; set; }
     protected string? PaymentErrorMessage;
-    
+
     public static event Action<string> OnPaymentProcessed;
-
-
+    
     protected override async Task OnInitializedAsync()
     {
         if (OrderStateService.CurrentOrder.TicketOrders.Any())
@@ -131,6 +149,7 @@
             OrderRequest = OrderStateService.CurrentOrder;
             var movieId = OrderRequest.TicketOrders.First().MovieId;
             TicketTypes = await TicketService.GetTicketTypes();
+            Supplements = await TicketService.GetSupplements();
 
             Guid orderGuid = Guid.NewGuid();
 
@@ -139,9 +158,8 @@
 
             TotalQty = OrderRequest.TicketOrders.Sum(to => to.Quantity);
             PaymentDescription = $"Order {orderGuid} for User"; // TODO: Add user id once implemented 
-            
-            OnPaymentProcessed += VerifyPaymentAndProcessOrder;
 
+            OnPaymentProcessed += VerifyPaymentAndProcessOrder;
         }
     }
 
@@ -166,13 +184,13 @@
     {
         OnPaymentProcessed?.Invoke(orderId);
     }
-    
+
     public void Dispose()
     {
         // Unsubscribe to prevent memory leaks
         OnPaymentProcessed -= VerifyPaymentAndProcessOrder;
     }
-    
+
     private async void VerifyPaymentAndProcessOrder(string orderId)
     {
         var paymentSuccess = await OrderService.VerifyPaymentSuccess(orderId);
@@ -182,8 +200,11 @@
             var newOrderId = newOrder.Id;
             var newOrderUuid = newOrder.Uuid;
 
-            await SendEmail(newOrderUuid);
-            
+            if (!string.IsNullOrEmpty(OrderRequest.CustomerName) || !string.IsNullOrEmpty(OrderRequest.CustomerEmail))
+            {
+                await SendEmail(newOrderUuid);
+            }
+
             NavigationManager.NavigateTo($"/overview/{newOrderId}");
             // Todo: Show order with Ticket Details such as seats on a summary page
         }
@@ -197,6 +218,11 @@
 
     private async Task SendEmail(string UUID)
     {
+        // emailcredentials
+        // Name	Elisha McClure
+        // Username	elisha.mcclure@ethereal.email
+        // Password	6uKpb8uc7yDRbNjSnV
+
         var orderCode = UUID;
         var emailDto = new EmailDto
         {
@@ -215,10 +241,5 @@
             // Error sending email
         }
     }
-
-    // emailcredentials
-    // Name	Elisha McClure
-    // Username	elisha.mcclure@ethereal.email
-    // Password	6uKpb8uc7yDRbNjSnV
 
 }
