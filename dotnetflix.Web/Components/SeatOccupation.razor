@@ -7,6 +7,7 @@
 @if (Seats != null && Seats.Any() && Show != null)
 {
     <FluentCard Style="text-align: center; width: auto; margin: 8px">
+        <h4 class="card-subtitle mb-2 text-body-secondary">@Show.MovieTitle</h4>
         <h5 class="card-title">@StartTime - @EndTime</h5>
         <h6 class="card-subtitle mb-2 text-body-secondary">@Show.TheaterName</h6>
         @foreach (var rowGroup in Seats.GroupBy(s => s.RowNumber).OrderBy(g => g.Key))
