@@ -1,4 +1,5 @@
 @page "/manager/occupancy"
+@using System.Globalization
 
 <h3>Manager: Theater occupancy</h3>
 <NavigationHeader/>
@@ -9,6 +10,8 @@
     </FluentLabel>
     <FluentDatePicker Value="_selectedDay" ValueChanged="OnDatePickerValueChanged"/>
 </FluentStack>
+
+<h1>@_selectedDay.Value.Date.ToString("dd-MM-yyyy", new CultureInfo("nl-NL"))</h1>
 
 @if (Shows != null)
 {
