@@ -1,0 +1,33 @@
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seat {
+    background-color: var(--fill-color);
+    height: 24px;
+    width: 18px;
+    margin: 5px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.seat span {
+    font-size: 14px;
+}
+
+.occupied {
+    background-color: #1a1a1a;
+}
+
+.seat:nth-of-type(2) {
+    margin-right: 18px;
+}
+
+.seat:nth-last-of-type(2) {
+    margin-left: 18px;
+}

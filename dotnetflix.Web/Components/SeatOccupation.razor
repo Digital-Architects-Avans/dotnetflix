@@ -1,0 +1,95 @@
+@using dotnetflix.Models.Dtos.Seat
+@using dotnetflix.Models.Dtos.Theater
+@using dotnetflix.Models.Dtos.TheaterRow
+@using dotnetflix.Models.Dtos.TicketType
+@using System.Globalization
+
+@if (Seats != null && Seats.Any() && Show != null)
+{
+    <FluentCard Style="text-align: center; width: auto; margin: 8px">
+        <h5 class="card-title">@StartTime - @EndTime</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">@Show.TheaterName</h6>
+        @foreach (var rowGroup in Seats.GroupBy(s => s.RowNumber).OrderBy(g => g.Key))
+        {
+            <div class="row">
+                @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
+                {
+                    // Check if the seat is available
+                    bool isAvailable = AvailableSeats?.Any(s => s.Id == seat.Id) ?? false;
+                    // Add the "occupied" class if the seat is not available
+                    string seatClass = isAvailable ? "" : "occupied";
+                    <div class="seat @(seatClass)">
+                        <span>@seat.SeatNumber</span>
+                    </div>
+                }
+            </div>
+        }
+        <h6 class="card-subtitle mb-2 text-body-secondary mt-3">Availability: @AvailableSeatsCount / @SeatsCount</h6>
+    </FluentCard>
+}
+else
+{
+    <p>No seats available for this show.</p>
+}
+
+@code {
+    [Inject] IShowService? ShowService { get; set; }
+    [Inject] ISeatService? SeatService { get; set; }
+
+    // Parameter to be passed to the component
+    [Parameter] public int ShowId { get; set; }
+    [Parameter] public string StartTime { get; set; } = "00:00";
+    [Parameter] public string EndTime { get; set; } = "00:00";
+    [Parameter] public decimal Price { get; set; }
+    [Parameter] public int AvailableSeatsCount { get; set; }
+    [Parameter] public int SeatsCount { get; set; }
+
+    private ShowDto? Show { get; set; }
+
+    private IEnumerable<SeatDto>? Seats { get; set; }
+    private IEnumerable<SeatDto>? AvailableSeats { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ShowService != null && SeatService != null)
+        {
+            Show = await ShowService.GetShow(ShowId);
+            if (Show != null)
+            {
+                // Get all (available) seats for the theater
+                var seats = await SeatService.GetAllSeatsForTheater(Show.TheaterId);
+                if (seats != null)
+                {
+                    var seatDtos = seats as SeatDto[] ?? seats.ToArray();
+                    SeatsCount = seatDtos.Count();
+                    Seats = seatDtos;
+
+                    var availableSeats = await SeatService.GetAvailableSeatsForShow(ShowId);
+                    if (availableSeats != null)
+                    {
+                        var enumerable = availableSeats as SeatDto[] ?? availableSeats.ToArray();
+                        AvailableSeatsCount = enumerable.Count();
+                        AvailableSeats = enumerable;
+                    }
+                }
+
+                // Convert date to time in 24-hour format
+                StartTime = Show.Date.ToString("HH:mm");
+
+                // Get end time by adding screen time to start time
+                EndTime = Show.Date.AddMinutes(Show.ScreenTime).ToString("HH:mm");
+
+                // Set price
+                if (Show.SneakPreview)
+                {
+                    Price = Show.BasePrice - 2.5m;
+                }
+                else
+                {
+                    Price = Show.BasePrice;
+                }
+            }
+        }
+    }
+
+}
