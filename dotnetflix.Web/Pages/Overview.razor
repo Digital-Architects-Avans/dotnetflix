@@ -1,5 +1,11 @@
 @page "/overview"
 @page "/overview/{OrderCode:int}"
+
+@using QRCoder
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.Formats.Png
+@using SixLabors.ImageSharp.PixelFormats
+
 @using dotnetflix.Models.Dtos.Order
 
 @using dotnetflix.Models.Dtos
@@ -38,8 +44,13 @@
 
         break;
     case PageState.OrderFound:
-        
+
         <FluentCard MinimalStyle="true" Width="230px" Style="margin-top: 24px; margin-bottom: 24px">
+            @if (!string.IsNullOrEmpty(QRCodeBase64))
+            {
+                <img src="@QRCodeBase64" alt="QR Code" height="148px" width="148px"/>
+            }
+            <FluentDivider Style="margin: 20px 0;"></FluentDivider>
             <FluentLabel Typo="Typography.HeroTitle">@Order.Uuid.ToUpper()</FluentLabel>
             <p>Please use this code to collect your tickets in the cinema.</p>
         </FluentCard>
@@ -51,7 +62,7 @@
         {
             <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>
         }
-        
+
         <Maps></Maps>
 
         break;
@@ -141,6 +152,9 @@
                     Movie = await MovieService.GetMovie(Show.MovieId);
                 }
 
+                // Generate QR code
+                GenerateQRCode(Order.Uuid.ToUpper(), moduleSize:8);
+
                 Status = PageState.OrderFound;
             }
         }
@@ -171,6 +185,42 @@
     {
         _orderCode = "";
         NavigationManager.NavigateTo("/overview");
+    }
+
+    // QR Code Handling
+    private string QRCodeBase64 { get; set; }
+
+    private void GenerateQRCode(string text, int moduleSize)
+    {
+        // Create QR code data
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+
+        // Calculate QR code image dimensions with increased resolution
+        int width = qrCodeData.ModuleMatrix.Count * moduleSize;
+        int height = qrCodeData.ModuleMatrix.Count * moduleSize;
+
+        // Render QR code using ImageSharp
+        var qrCodeImage = new Image<Rgba32>(width, height);
+
+        // Iterate through each module (pixel) in the QR code data and set corresponding pixels in the ImageSharp image
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                // Calculate the module index in the QR code data based on the coordinates in the ImageSharp image
+                int moduleX = x / moduleSize;
+                int moduleY = y / moduleSize;
+
+                // Set black pixel for modules with data and white pixel for empty modules
+                qrCodeImage[x, y] = qrCodeData.ModuleMatrix[moduleY][moduleX] ? new Rgba32(0, 0, 0) : new Rgba32(255, 255, 255);
+            }
+        }
+
+        // Convert the ImageSharp image to a base64-encoded string
+        using var memoryStream = new MemoryStream();
+        qrCodeImage.SaveAsPng(memoryStream);
+        QRCodeBase64 = $"data:image/png;base64,{Convert.ToBase64String(memoryStream.ToArray())}";
     }
 
 }
