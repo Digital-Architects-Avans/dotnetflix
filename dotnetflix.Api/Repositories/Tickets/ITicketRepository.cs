@@ -6,8 +6,10 @@ namespace dotnetflix.Api.Repositories.Contracts;
 
 public interface ITicketRepository
 {
-    Task<IEnumerable<Ticket>> GetTickets();
-    Task<IEnumerable<Ticket>> GetTicketsForShow(int showId);
+  Task<IEnumerable<Ticket>> GetTickets();
+  Task<IEnumerable<Ticket>> GetTicketsForShow(int showId);
+  Task<IEnumerable<Ticket>> GetTicketsForMovie(string movieTitle);
+  Task<IEnumerable<Ticket>> GetTicketsForOrder(int orderId);
 	Task<Ticket?> GetTicket(int id);
 	Task<Ticket> AddTicket(AddTicketDto addTicketDto);
 	Task<Ticket?> UpdateTicket(int id, UpdateTicketDto updateTicketDto);

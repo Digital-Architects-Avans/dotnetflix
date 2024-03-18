@@ -100,7 +100,7 @@ body {
 }
 
 .occupied {
-    background-color: #1a1a1a;
+    background-color: var(--error);
 }
 
 .seat:nth-of-type(2) {

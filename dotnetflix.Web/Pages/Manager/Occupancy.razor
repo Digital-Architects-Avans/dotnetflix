@@ -1,0 +1,132 @@
+@page "/manager/occupancy"
+@using System.Globalization
+
+<h3>Manager: Theater occupancy</h3>
+<NavigationHeader/>
+
+<FluentStack Orientation="Orientation.Vertical" Style="padding-bottom: 24px">
+    <FluentLabel>
+        Enter a date:
+    </FluentLabel>
+    <FluentDatePicker Value="_selectedDay" ValueChanged="OnDatePickerValueChanged"/>
+</FluentStack>
+
+<h1>@_selectedDay.Value.Date.ToString("dd-MM-yyyy", new CultureInfo("nl-NL"))</h1>
+
+@if (Shows != null)
+{
+    if (FilteredGroupedShowsByMovie != null)
+    {
+        if (!FilteredGroupedShowsByMovie.Any())
+        {
+            <p>No screenings available for the selected date.</p>
+        }
+        else
+        {
+            // Loop through the grouped timings
+            @foreach (var showGroup in FilteredGroupedShowsByMovie)
+            {
+                // Create timings list and get movie details
+                var shows = showGroup.ToList();
+                var movieDetails = Movies?.Where(movie => movie?.Id == shows.First().MovieId).First();
+
+                // Show movie details and timings
+                if (movieDetails != null)
+                {
+                    var isSneakPreview = shows.First().SneakPreview;
+                    <MovieDetails Movie="movieDetails" IsSneakPreview="@isSneakPreview"/>
+                }
+
+                <div class="row pt-3 pb-3">
+
+                    @foreach (var show in shows)
+                    {
+                        <SeatOccupation ShowId="show.Id"/>
+                    }
+
+                </div>
+            }
+        }
+    }
+}
+else
+{
+    <p>Gathering screenings...</p>
+}
+
+@code {
+    [Inject] public IShowService? ShowService { get; set; }
+    [Inject] public IMovieService? MovieService { get; set; }
+
+    private DateTime? _selectedDay = DateTime.Today;
+
+    private IEnumerable<ShowDto>? Shows { get; set; }
+    private IEnumerable<ShowDto>? FilteredShows { get; set; }
+    private IEnumerable<IGrouping<int, ShowDto>>? GroupedShowsByMovie { get; set; }
+    private IEnumerable<IGrouping<int, ShowDto>>? FilteredGroupedShowsByMovie { get; set; }
+    private IEnumerable<MovieDto?> Movies { get; set; } = new List<MovieDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ShowService != null && MovieService != null)
+        {
+            if (ShowService != null)
+            {
+                Shows = await ShowService.GetShows();
+
+                if (Shows != null)
+                {
+                    // Group timings by movie
+                    GroupedShowsByMovie = from show in Shows
+                        group show by show.MovieId
+                        into showGroup
+                        orderby showGroup.First().Date
+                        select showGroup;
+
+                    // Get movies for grouped shows
+                    if (MovieService != null)
+                    {
+                        foreach (var showGroup in GroupedShowsByMovie)
+                        {
+                            var movie = await MovieService.GetMovie(showGroup.First().MovieId);
+                            Movies = Movies.Append(movie);
+                        }
+                    }
+                }
+            }
+
+            await LoadData();
+        }
+    }
+
+    private async Task OnDatePickerValueChanged(DateTime? newValue)
+    {
+        _selectedDay = newValue;
+        await LoadData();
+    }
+
+    private Task LoadData()
+    {
+        if (ShowService != null && MovieService != null && _selectedDay.HasValue)
+        {
+            // Filter and order shows for selected day
+            var selectedDay = _selectedDay.Value.Date;
+            FilteredShows = Shows?.Where(show => show.Date.Date == selectedDay).OrderBy(show => show.Date);
+
+            // Recalculate grouped timings by movie
+            if (FilteredShows != null)
+            {
+                FilteredGroupedShowsByMovie = from show in FilteredShows
+                    group show by show.MovieId
+                    into showGroup
+                    orderby showGroup.First().Date
+                    select showGroup;
+            }
+
+            StateHasChanged();
+        }
+
+        return Task.CompletedTask;
+    }
+
+}

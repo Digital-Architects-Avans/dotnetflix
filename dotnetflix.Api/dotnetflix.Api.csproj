@@ -14,11 +14,19 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\dotnetflix.Models\dotnetflix.Models.csproj" />
     <ProjectReference Include="..\dotnetflix.Web\dotnetflix.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\00000000000000_CreateIdentitySchema.cs" />
+    <Compile Remove="Migrations\00000000000000_CreateIdentitySchema.Designer.cs" />
+    <Compile Remove="Migrations\20240315141600_UserAuthorization.cs" />
+    <Compile Remove="Migrations\20240315141600_UserAuthorization.Designer.cs" />
   </ItemGroup>
   
 </Project>

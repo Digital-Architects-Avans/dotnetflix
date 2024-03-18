@@ -29,9 +29,26 @@ public class TicketRepository: ITicketRepository
         return tickets;
     }
     
+    public async Task<IEnumerable<Ticket>> GetTicketsForMovie(string movieTitle)
+    {
+        var tickets = await _dotNetFlixDbContext.Tickets
+            .Where(t => t.Movie == movieTitle)
+            .ToListAsync();
+        return tickets;
+     }
+           
+    public async Task<IEnumerable<Ticket>> GetTicketsForOrder(int orderId)
+    {
+        var tickets = await _dotNetFlixDbContext.Tickets
+            .Where(t => t.OrderId == orderId)
+            .ToListAsync();
+        return tickets;
+    }
+    
     public async Task<Ticket?> GetTicket(int id)
     {
-        var ticket = await _dotNetFlixDbContext.Tickets.SingleOrDefaultAsync(t => t.Id == id);
+        var ticket = await _dotNetFlixDbContext.Tickets
+            .SingleOrDefaultAsync(t => t.Id == id);
         return ticket;
     }
 
@@ -70,7 +87,7 @@ public class TicketRepository: ITicketRepository
             ShowTime = show.Date,
             TicketTypeId = addTicketDto.TicketTypeId,
             TicketPrice = addTicketDto.TicketPrice,
-            Show = show // Assign the loaded show to the ticket
+            Show = show, // Assign the loaded show to the ticket
         };
         
         var result = await _dotNetFlixDbContext.Tickets.AddAsync(ticket);
