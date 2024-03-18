@@ -113,7 +113,7 @@ else
 
     // Group shows by movie and dates
     protected Task GetShowByDay(DateTime date, bool isDayGrid = true)
-        {
+    {
         moviesWithDatesList.Clear();
 
         if (Shows == null)
@@ -121,21 +121,25 @@ else
 
         var groupedShows = Shows.GroupBy(s => s.MovieId);
 
-            var count = 0;
-            foreach (var group in groupedShows)
-            {
-                ShowDto show = group.First();
+        var count = 0;
+        foreach (var group in groupedShows)
+        {
+            ShowDto show = group.First();
             List<ShowDto>? filteredGroup;
 
             if (isDayGrid)
             {
-                filteredGroup = group.Where(d => d.Date.Date == date.Date).ToList();
+                if (date.Date == DateTime.Now.Date)
+                    filteredGroup = group.Where(s => s.Date.Date == date.Date && s.Date.TimeOfDay >= date.TimeOfDay).ToList();
+                else
+                    filteredGroup = group.Where(s => s.Date.Date == date.Date).ToList();
+
                 ItemSize = 54;
                 IsDayGrid = true;
             } else
             {
                 DateTime endDate = date.AddDays(7);
-                filteredGroup = group.Where(d => d.Date >= date && d.Date <= endDate).ToList();
+                filteredGroup = group.Where(d => d.Date.Date >= date.Date && d.Date.Date <= endDate.Date).ToList();
                 filteredGroup.Reverse();
                 ItemSize = 100;
                 IsDayGrid = false;
