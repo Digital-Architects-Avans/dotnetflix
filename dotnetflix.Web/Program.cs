@@ -1,3 +1,5 @@
+using dotnetflix.Api.Services;
+using dotnetflix.Api.Services.Contracts;
 using dotnetflix.Web;
 using dotnetflix.Web.Services;
 using dotnetflix.Web.Services.Contracts;
@@ -19,6 +21,7 @@ builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderStateService, OrderStateService>();
 builder.Services.AddScoped<ISeatService, SeatService>();
+builder.Services.AddScoped<ITrustpilotService, MockTrustpilotService>();
 builder.Services.AddScoped<ISubscriberService, SubscriberService>();
 
 builder.Services.AddFluentUIComponents();

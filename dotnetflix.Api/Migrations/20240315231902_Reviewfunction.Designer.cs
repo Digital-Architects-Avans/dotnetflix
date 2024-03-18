@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetflix.Api.Data;
 
@@ -11,9 +12,11 @@ using dotnetflix.Api.Data;
 namespace dotnetflix.Api.Migrations
 {
     [DbContext(typeof(DotNetFlixDbContext))]
-    partial class DotNetFlixDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240315231902_Reviewfunction")]
+    partial class Reviewfunction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -514,27 +517,6 @@ namespace dotnetflix.Api.Migrations
                             TheaterId = 6,
                             Type = 0
                         });
-                });
-
-            modelBuilder.Entity("dotnetflix.Api.Data.Entities.Subscriber", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Subscribers");
                 });
 
             modelBuilder.Entity("dotnetflix.Api.Data.Entities.Theater", b =>

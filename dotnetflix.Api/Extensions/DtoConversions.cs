@@ -3,12 +3,14 @@ using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Order;
+using dotnetflix.Models.Dtos.Review;
 using dotnetflix.Models.Dtos.Seat;
 using dotnetflix.Models.Dtos.Show;
 using dotnetflix.Models.Dtos.Subscriber;
 using dotnetflix.Models.Dtos.Theater;
 using dotnetflix.Models.Dtos.TheaterRow;
 using dotnetflix.Models.Dtos.TicketType;
+using System.Collections.Generic;
 
 namespace dotnetflix.Api.Extensions;
 
@@ -52,6 +54,11 @@ public static class DtoConversions
 	public static IEnumerable<SeatDto> ConvertToDto(this IEnumerable<Seat> seats)
 	{
 		return seats.Select(seat => seat.ConvertToDto()).ToList();
+	}
+	
+	public static IEnumerable<ReviewDto> ConvertToDto(this IEnumerable<Review> reviews)
+	{
+		return reviews.Select(review => review.ConvertToDto()).ToList();
 	}
 
     public static IEnumerable<SubscriberDto> ConvertToDto(this IEnumerable<Subscriber> subscribers)
@@ -165,14 +172,15 @@ public static class DtoConversions
 		    SeatNumber = seat.SeatNumber
 	    };
     }
-
-    public static SubscriberDto ConvertToDto(this Subscriber subscriber)
-    {
-        return new SubscriberDto
-        {
-            Id = subscriber.id,
-            Name = subscriber.name,
-            Email = subscriber.email
-        };
-    }
+    
+    public static ReviewDto ConvertToDto(this Review review)
+	{
+	    return new ReviewDto
+	    {
+		    Id = review.Id,
+		    Name = review.Name,
+		    ReviewText = review.ReviewText,
+		    Stars = review.Stars
+	    };
+	}
 }
