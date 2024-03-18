@@ -13,6 +13,7 @@ public interface ITicketService
     Task<IEnumerable<TicketDto>?> GetTickets();
     Task<TicketDto?> GetTicket(int id);
     Task<IEnumerable<TicketDto>?> GetTicketsForShow(int showId);
+    Task<IEnumerable<TicketDto>?> GetTicketsForMovie(string movieTitle);
     Task<IEnumerable<TicketDto>?> GetTicketsForOrder(int orderId);
     Task<IEnumerable<TicketTypeDto>?> GetTicketTypes();
     Task<IEnumerable<SupplementDto>?> GetSupplements();

@@ -1,0 +1,68 @@
+@page "/manager/revenue"
+@using System.Globalization
+@using dotnetflix.Models.Dtos
+
+<h3>Manager: Movie revenue</h3>
+<NavigationHeader/>
+
+@if (_revenuePerMovie.Any() && Movies != null)
+{
+    @foreach (var movie in _revenuePerMovie)
+    {
+        var movieInfo = Movies.FirstOrDefault(m => m.Title == movie.Key);
+        if (movieInfo != null)
+        {
+            <FluentGrid Justify="JustifyContent.FlexStart">
+                <FluentGridItem Style="min-width: 200px;">
+                    <img src="/images/@movieInfo.Image" class="img-fluid rounded" alt="..." style="max-height: 250px;">
+                </FluentGridItem>
+                <FluentGridItem>
+                    <h5 class="card-title">@movieInfo.Title</h5>
+                    <p>Tickets sold: @movie.Value.Item1</p>
+                    <p>Total revenue: @movie.Value.Item2.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</p>
+                </FluentGridItem>
+            </FluentGrid>
+        }
+    }
+}
+else
+{
+    <p>Crunched the numbers...</p>
+}
+
+@code {
+    [Inject] public IMovieService? MovieService { get; set; }
+    [Inject] public ITicketService? TicketService { get; set; }
+
+    private IEnumerable<MovieDto>? Movies { get; set; }
+
+    private Dictionary<string, (int, decimal)> _revenuePerMovie = new Dictionary<string, (int, decimal)>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get all movies
+        if (MovieService != null)
+        {
+            Movies = await MovieService.GetMovies();
+        }
+
+        if (Movies != null && TicketService != null)
+        {
+            foreach (var movie in Movies)
+            {
+                var ticketsForMovie = await TicketService.GetTicketsForMovie(movie.Title);
+
+                var revenueForMovie = 0m;
+
+                if (ticketsForMovie != null)
+                {
+                    var ticketDtos = ticketsForMovie as TicketDto[] ?? ticketsForMovie.ToArray();
+                    revenueForMovie += ticketDtos.Sum(ticket => ticket.TicketPrice);
+
+                    _revenuePerMovie.Add(movie.Title, (ticketDtos.Count(), revenueForMovie));
+                }
+            }
+        }
+    }
+
+}

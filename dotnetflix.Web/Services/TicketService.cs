@@ -213,6 +213,26 @@ public class TicketService : ITicketService
             throw new Exception(message);
         }
     }
+    
+    public async Task<IEnumerable<TicketDto>?> GetTicketsForMovie(string movieTitle)
+    {
+        var response = await _httpClient.GetAsync($"api/Ticket/Movie/{movieTitle}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return Enumerable.Empty<TicketDto>();
+            }
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<TicketDto>>();
+        }
+        else
+        {
+            var message = await response.Content.ReadAsStringAsync();
+            throw new Exception(message);
+        }
+    }
 
     public async Task<List<TicketDto>> GenerateTickets(OrderRequestDto orderRequest)
     {
