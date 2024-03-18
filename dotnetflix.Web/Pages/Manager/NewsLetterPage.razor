@@ -1,0 +1,132 @@
+﻿@page "/manager/newsletter"
+@using System.ComponentModel.DataAnnotations
+@using dotnetflix.Models.Dtos.Email
+@using dotnetflix.Models.Dtos.Subscriber
+@inject IToastService ToastService
+@inject HttpClient Http
+
+<div class="m-lg-5 mt-3">
+
+    <FluentSplitter Orientation="Orientation.Horizontal" BarSize="5" Panel1Size="70%" Panel2Size="30%" Panel1MinSize="60%" Panel2MinSize="30%">
+
+        <Panel1>
+            <EditForm Model="@newsLetterForm" OnValidSubmit="@HandleValidSubmit" class="m-lg-3 me-lg-5" FormName="newsLetter">
+
+                <h1>Write and Send a News Letter</h1>
+
+                <FluentStack HorizontalAlignment="HorizontalAlignment.Start" Orientation="Orientation.Vertical">
+                    <FluentTextArea Appearance="FluentInputAppearance.Filled" Name="message" Label="Message" @bind-Value="newsLetterForm.Message" Rows="28" Required Style="width: 100%;" />
+                </FluentStack>
+
+                <FluentStack HorizontalAlignment="HorizontalAlignment.Start" Class="mt-2" Orientation="Orientation.Horizontal">
+                    <FluentTextField Appearance="FluentInputAppearance.Filled" Name="subject" Label="Subject" @bind-Value="newsLetterForm.Subject" Required Style="" />
+                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Send News Letter</FluentButton>
+                </FluentStack>
+            </EditForm>
+        </Panel1>
+
+        <Panel2>
+            <div class="m-lg-3">
+
+                    <h3>Subscribers</h3>
+
+                <FluentListbox Items="@Subscribers" OptionValue="@(i => i.Id.ToString())" @bind-SelectedOption=@Subscriber>
+                    <OptionTemplate>
+                        <FluentIcon Icon="Icons.Regular.Size16.Person" Slot="start" OnClick="@(() => DeleteSubscriber(context.Id))" />
+                        @if (IsNames)
+                            @context.Name
+                        else
+                            @context.Email
+                    </OptionTemplate>
+                </FluentListbox>
+
+                <FluentStack Orientation="Orientation.Horizontal" Class="mt-2">
+                    @if (Subscriber != null)
+                    {
+                    <FluentButton OnClick="@(() => DeleteSubscriber(Subscriber.Id))" Appearance="Appearance.Neutral" IconStart="new Icons.Regular.Size16.Delete()">
+                        Delete 
+                            @if(IsNames)
+                                @Subscriber.Name
+                            else
+                                @Subscriber.Email
+                    </FluentButton>
+                    }
+                    <FluentCheckbox @bind-Value="@IsNames" Class="mt-2" Label="Show names" />
+                </FluentStack>
+            </div>
+        </Panel2>
+
+    </FluentSplitter>
+
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private NewsLetterForm newsLetterForm { get; set; } = new();
+
+    [Inject]
+    public ISubscriberService? SubscriberService { get; set; }
+    public IEnumerable<SubscriberDto>? Subscribers { get; set; }
+
+    public SubscriberDto Subscriber { get; set; } = default;
+    public Boolean IsNames { get; set; } = false;
+
+    protected override async Task OnInitializedAsync() => await GetSubscribers();
+
+    private async Task HandleValidSubmit()
+    {
+        if (Subscribers == null || newsLetterForm.Message == null || newsLetterForm.Subject == null)
+            return;
+
+        foreach (var subscriber in Subscribers)
+        {
+            var msg = newsLetterForm.Message.Replace("{name}", subscriber.Name);
+
+            var emailDto = new EmailDto
+                {
+                    Subject = newsLetterForm.Subject,
+                    Message = newsLetterForm.Message,
+                    Recipient = subscriber.Email
+                };
+            var response = await Http.PostAsJsonAsync("api/email", emailDto);
+
+        }
+    }
+
+    private async Task GetSubscribers()
+    {
+        if (SubscriberService != null)
+            Subscribers = await SubscriberService.GetSubscribers();
+    }
+
+    private async void DeleteSubscriber(int id)
+    {
+        if (SubscriberService != null)
+        {
+            var response = await SubscriberService.DeleteSubscriber(id);
+
+            if (response)
+                ShowToast("Subscriber has been deleted");
+            else
+                ShowToast("Something went wrong, subscriber could not be deleted.");
+        }
+        await GetSubscribers();
+        StateHasChanged();
+    }
+
+    private void ShowToast(string message)
+    {
+        Random rnd = new();
+
+        var intent = Enum.GetValues<ToastIntent>()[rnd.Next(10)];
+        ToastService.ShowToast(intent, message);
+    }
+
+    public class NewsLetterForm
+    {
+        [Required]
+        public string? Subject { get; set; }
+        [Required]
+        public string? Message { get; set; }
+    }
+}

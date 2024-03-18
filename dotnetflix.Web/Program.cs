@@ -25,6 +25,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderStateService, OrderStateService>();
 builder.Services.AddScoped<ISeatService, SeatService>();
 builder.Services.AddScoped<ITrustpilotService, MockTrustpilotService>();
+builder.Services.AddScoped<ISubscriberService, SubscriberService>();
 
 builder.Services.AddFluentUIComponents();
 builder.Services.AddDataGridEntityFrameworkAdapter();

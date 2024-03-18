@@ -1,0 +1,103 @@
+﻿@page "/newsletter"
+@using dotnetflix.Models.Dtos.Subscriber
+@inject HttpClient Http
+@inject IToastService ToastService
+
+<div class="d-flex justify-content-center m-lg-5">
+
+    @if (!isSubscribed)
+    {
+        <EditForm Model="@newsLetterForm" OnValidSubmit="@HandleValidSubmit" FormName="newsLetter">
+
+            <h1>Subscribe to our News Letter!</h1>
+
+            <DataAnnotationsValidator />
+            <FluentValidationSummary />
+
+
+            <FluentStack Class="mt-5" HorizontalAlignment="HorizontalAlignment.Center" Orientation="Orientation.Vertical">
+                <div>
+                    <FluentTextField Name="name" Label="Name" @bind-Value="newsLetterForm.Name" Style="width: 250px;" Required />
+                    <FluentValidationMessage For="@(() => newsLetterForm.Name)" />
+                </div>
+                <div>
+                    <FluentTextField Name="email" Label="Email" @bind-Value="newsLetterForm.Email" Style="width: 250px;" Required />
+                    <FluentValidationMessage For="@(() => newsLetterForm.Email)" />
+                </div>
+                <FluentButton Type="ButtonType.Submit"  Appearance="Appearance.Accent">Subscribe!</FluentButton>
+            </FluentStack>
+        </EditForm>
+    } else
+    {
+        <FluentStack Class="mt-5" HorizontalAlignment="HorizontalAlignment.Center" Orientation="Orientation.Vertical">
+            <h2>Your subscription has been confirmed.</h2>
+            <h3 class="text-info">Thank you for Subscribing to our news Letter!</h3>
+            <FluentButton IconStart="@(new Icons.Filled.Size24.CaretLeft())" OnClick="@(() => ResetPage())">Back</FluentButton>
+        </FluentStack>
+    }
+
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    private NewsLetterForm newsLetterForm { get; set; } = new();
+    public AddSubscriberDto AddSubscriber = new AddSubscriberDto();
+    private bool isSubscribed = false;
+
+    private async void HandleValidSubmit()
+    {
+        if (newsLetterForm.Name == null || newsLetterForm.Email == null)
+        {
+            ShowToast("Something went wrong, please try again later.");
+            return;
+        }
+
+        AddSubscriber = new AddSubscriberDto()
+            {
+                Name = newsLetterForm.Name,
+                Email = newsLetterForm.Email
+            };
+
+        var response = await Http.PostAsJsonAsync("api/Subscriber", AddSubscriber);
+
+        if (response.IsSuccessStatusCode)
+        {
+            isSubscribed = true;
+            StateHasChanged();
+        }
+        else
+        {
+            ShowToast("Something went wrong, please try again later.");
+        }
+    }
+
+    public class NewsLetterForm
+    {
+        [Required]
+        [MinLength(3, ErrorMessage = "Name is too short!")]
+        [StringLength(32, ErrorMessage = "Name too long (32 character limit).")]
+        public string? Name { get; set; }
+
+        [Required]
+        [MinLength(3, ErrorMessage = "Name is too short!")]
+        [RegularExpression(@"[\w.]+@[\w.]+\.[\w.]+", ErrorMessage = "Email is not valid!")]
+        public string? Email { get; set; }
+    }
+
+    
+    private void ShowToast(string message)
+    {
+        Random rnd = new();
+
+        var intent = Enum.GetValues<ToastIntent>()[rnd.Next(10)];
+        ToastService.ShowToast(intent, message);
+    }
+
+    public Task ResetPage()
+    {
+        isSubscribed = false;
+        newsLetterForm = new();
+        return Task.CompletedTask;
+    }
+}

@@ -278,5 +278,6 @@ namespace dotnetflix.Api.Data
         public DbSet<Supplement> Supplements { get; set; }
         public DbSet<TicketSupplement> TicketSupplements { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Subscriber> Subscribers { get; set; }
     }
 }

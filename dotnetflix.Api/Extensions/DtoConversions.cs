@@ -6,12 +6,14 @@ using dotnetflix.Models.Dtos.Order;
 using dotnetflix.Models.Dtos.Review;
 using dotnetflix.Models.Dtos.Seat;
 using dotnetflix.Models.Dtos.Show;
+using dotnetflix.Models.Dtos.Subscriber;
 using dotnetflix.Models.Dtos.Supplement;
 using dotnetflix.Models.Dtos.Theater;
 using dotnetflix.Models.Dtos.TheaterRow;
 using dotnetflix.Models.Dtos.Ticket;
 using dotnetflix.Models.Dtos.TicketSupplements;
 using dotnetflix.Models.Dtos.TicketType;
+using System.Collections.Generic;
 
 namespace dotnetflix.Api.Extensions;
 
@@ -71,8 +73,13 @@ public static class DtoConversions
 	{
 		return reviews.Select(review => review.ConvertToDto()).ToList();
 	}
-	
-	public static MovieDto ConvertToDto(this Movie movie)
+
+    public static IEnumerable<SubscriberDto> ConvertToDto(this IEnumerable<Subscriber> subscribers)
+    {
+        return subscribers.Select(subscriber => subscriber.ConvertToDto()).ToList();
+    }
+
+    public static MovieDto ConvertToDto(this Movie movie)
     {
         return new MovieDto
         {
