@@ -1,4 +1,5 @@
 ﻿@page "/manager/newsletter"
+@using System.ComponentModel.DataAnnotations
 @using dotnetflix.Models.Dtos.Email
 @using dotnetflix.Models.Dtos.Subscriber
 @inject IToastService ToastService
@@ -87,7 +88,8 @@
                     Message = newsLetterForm.Message,
                     Recipient = subscriber.Email
                 };
-            await Http.PostAsJsonAsync("api/email", emailDto);
+            var response = await Http.PostAsJsonAsync("api/email", emailDto);
+
         }
     }
 
