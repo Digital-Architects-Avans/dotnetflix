@@ -2,6 +2,7 @@ using dotnetflix.Api.Data;
 using dotnetflix.Api.Repositories.Contracts;
 using dotnetflix.Api.Repositories.Movies;
 using dotnetflix.Api.Repositories.Orders;
+using dotnetflix.Api.Repositories.Reviews;
 using dotnetflix.Api.Repositories.Seats;
 using dotnetflix.Api.Repositories.Shows;
 using dotnetflix.Api.Repositories.TheaterRows;
@@ -11,6 +12,7 @@ using dotnetflix.Api.Repositories.TicketTypes;
 using dotnetflix.Api.Services;
 using dotnetflix.Api.Services.Contracts;
 using dotnetflix.Web.Services.Contracts;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 
@@ -25,6 +27,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DotNetFlixDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.Authority = builder.Configuration["Auth0:Authority"];
+    options.Audience = builder.Configuration["Auth0:ApiIdentifier"];
+    options.RequireHttpsMetadata = false; // Disable HTTPS metadata requirement (not recommended for production)
+
+});
+
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShowRepository, ShowRepository>();
@@ -34,6 +49,8 @@ builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
 builder.Services.AddScoped<ISeatRepository, SeatRepository>();
 builder.Services.AddScoped<IPayPalService, PayPalService>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
 
 builder.Services.AddHttpClient("PayPalSandBoxHttpClient", client =>
 {
@@ -75,6 +92,7 @@ app.UseHttpsRedirection();
 // Use CORS policy
 app.UseCors("AllowSpecificOrigin");
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

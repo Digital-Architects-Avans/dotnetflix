@@ -222,6 +222,12 @@ namespace dotnetflix.Api.Data
                     Id = 5,
                     Name = "Cinema Pass",
                     Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 7,
+                    Name = "VIP Ticket",
+                    Discount = -5.00M
                 }
             );
             
@@ -235,5 +241,7 @@ namespace dotnetflix.Api.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
+        
+        public DbSet<Review> Reviews { get; set; }
     }
 }
