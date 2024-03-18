@@ -57,7 +57,7 @@
 
         <MovieDetails Movie="Movie" IsSneakPreview="@_isSneakPreview"/>
 
-        <p style="margin-top: 24px">Tickets for order #@OrderCode:</p>
+        <h4 style="margin-top: 24px">Tickets for order #@OrderCode:</h4>
         @foreach (var ticket in Tickets)
         {
             <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>
@@ -131,8 +131,8 @@
             // Get tickets details
             if (TicketService != null)
             {
-                var tickets = await TicketService.GetTickets();
-                if (tickets != null) Tickets = tickets.Where(ticketDto => Order.TicketIds.Contains(ticketDto.Id)).ToList();
+                var tickets = await TicketService.GetTicketsForOrder(Order.Id);
+                Tickets = tickets.ToList();
             }
 
             // Get show details

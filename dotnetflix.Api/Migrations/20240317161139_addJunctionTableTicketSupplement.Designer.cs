@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnetflix.Api.Data;
 
@@ -11,9 +12,11 @@ using dotnetflix.Api.Data;
 namespace dotnetflix.Api.Migrations
 {
     [DbContext(typeof(DotNetFlixDbContext))]
-    partial class DotNetFlixDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240317161139_addJunctionTableTicketSupplement")]
+    partial class addJunctionTableTicketSupplement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,7 +192,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 1,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2540),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1500),
                             MovieId = 1,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -200,7 +203,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 2,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2600),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1580),
                             MovieId = 1,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -211,7 +214,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 3,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2620),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1590),
                             MovieId = 1,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -222,7 +225,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 4,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2630),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1600),
                             MovieId = 1,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -233,7 +236,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 5,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2640),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1610),
                             MovieId = 1,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -244,7 +247,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 6,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2660),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1630),
                             MovieId = 1,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -255,7 +258,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 7,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2670),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1640),
                             MovieId = 2,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -266,7 +269,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 8,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2680),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1650),
                             MovieId = 2,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -277,7 +280,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 9,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2700),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1660),
                             MovieId = 2,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -288,7 +291,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 10,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2710),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1670),
                             MovieId = 2,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -299,7 +302,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 11,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2720),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1680),
                             MovieId = 2,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -310,7 +313,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 12,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2730),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1690),
                             MovieId = 2,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -321,7 +324,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 13,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2750),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1720),
                             MovieId = 3,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -332,7 +335,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 14,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2760),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1730),
                             MovieId = 3,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -343,7 +346,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 15,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2770),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1740),
                             MovieId = 3,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -354,7 +357,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 16,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2790),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1750),
                             MovieId = 3,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -365,7 +368,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 17,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2800),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1760),
                             MovieId = 3,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -376,7 +379,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 18,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2810),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1770),
                             MovieId = 3,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -387,7 +390,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 19,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2820),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1780),
                             MovieId = 4,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -398,7 +401,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 20,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2840),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1790),
                             MovieId = 4,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -409,7 +412,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 21,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2850),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1800),
                             MovieId = 4,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -420,7 +423,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 22,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2860),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1810),
                             MovieId = 4,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -431,7 +434,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 23,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2870),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1820),
                             MovieId = 4,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -442,7 +445,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 24,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2890),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1830),
                             MovieId = 4,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -453,7 +456,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 25,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2920),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1840),
                             MovieId = 5,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -464,7 +467,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 26,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2930),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1850),
                             MovieId = 5,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -475,7 +478,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 27,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2940),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1860),
                             MovieId = 5,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -486,7 +489,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 28,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2960),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1870),
                             MovieId = 5,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -497,7 +500,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 29,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2970),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1880),
                             MovieId = 5,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -508,7 +511,7 @@ namespace dotnetflix.Api.Migrations
                         {
                             Id = 30,
                             BasePrice = 0m,
-                            Date = new DateTime(2024, 3, 17, 21, 4, 36, 468, DateTimeKind.Local).AddTicks(2980),
+                            Date = new DateTime(2024, 3, 17, 20, 11, 39, 262, DateTimeKind.Local).AddTicks(1890),
                             MovieId = 5,
                             ScreenTime = 90,
                             SneakPreview = false,
@@ -968,9 +971,6 @@ namespace dotnetflix.Api.Migrations
                     b.Property<int>("SupplementId")
                         .HasColumnType("int")
                         .HasColumnOrder(2);
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.HasKey("TicketId", "SupplementId");
 

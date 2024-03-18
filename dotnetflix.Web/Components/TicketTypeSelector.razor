@@ -1,15 +1,25 @@
 @using dotnetflix.Models.Dtos.TicketType
 @using dotnetflix.Models.Dtos.Seat
+@using System.Globalization
 
 <div class="form-group">
-    <label for="@($"ticketType_{Seat.Id}")">Ticket Type for Seat @Seat.SeatNumber:</label>
+    <label for="@($"ticketType_{Seat.Id}")" class="mb-2"><b>Ticket Type:</b></label>
 <select class="form-select form-select-sm" id="@($"ticketType_{Seat.Id}")" @onchange="e => HandleTicketTypeChange(e, Seat.Id)">
     @foreach (var ticketType in TicketTypes)
     {
         // Only display the option if the ticket type name is not "Child" or if ChildDiscountAvailable is true
         if (ChildDiscountAvailable || !ticketType.Name.Equals("Child", StringComparison.OrdinalIgnoreCase))
         {
-            <option value="@ticketType.Id">@ticketType.Name</option>
+            var discount = "";
+            if (ticketType.Discount > 0)
+            {
+                discount = "-" + @ticketType.Discount.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",");
+            }
+            else if (ticketType.Discount < 0)
+            {
+                discount = "+" + @ticketType.Discount.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",").Replace("-", "");
+            }
+            <option value="@ticketType.Id">@ticketType.Name @discount</option>
         }
     }
 </select>

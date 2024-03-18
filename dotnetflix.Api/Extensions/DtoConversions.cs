@@ -6,8 +6,11 @@ using dotnetflix.Models.Dtos.Order;
 using dotnetflix.Models.Dtos.Review;
 using dotnetflix.Models.Dtos.Seat;
 using dotnetflix.Models.Dtos.Show;
+using dotnetflix.Models.Dtos.Supplement;
 using dotnetflix.Models.Dtos.Theater;
 using dotnetflix.Models.Dtos.TheaterRow;
+using dotnetflix.Models.Dtos.Ticket;
+using dotnetflix.Models.Dtos.TicketSupplements;
 using dotnetflix.Models.Dtos.TicketType;
 
 namespace dotnetflix.Api.Extensions;
@@ -54,11 +57,20 @@ public static class DtoConversions
 		return seats.Select(seat => seat.ConvertToDto()).ToList();
 	}
 	
+	public static IEnumerable<SupplementDto> ConvertToDto(this IEnumerable<Supplement> supplements)
+	{
+		return supplements.Select(supplement => supplement.ConvertToDto()).ToList();
+	}
+	
+	public static IEnumerable<TicketSupplementDto> ConvertToDto(this IEnumerable<TicketSupplement> ticketSupplements)
+	{
+		return ticketSupplements.Select(ticketSupplement => ticketSupplement.ConvertToDto()).ToList();
+	}
+
 	public static IEnumerable<ReviewDto> ConvertToDto(this IEnumerable<Review> reviews)
 	{
 		return reviews.Select(review => review.ConvertToDto()).ToList();
 	}
-	
 	
 	public static MovieDto ConvertToDto(this Movie movie)
     {
@@ -167,6 +179,26 @@ public static class DtoConversions
 	    };
     }
     
+    public static SupplementDto ConvertToDto(this Supplement supplement)
+	{
+	    return new SupplementDto
+	    {
+		    Id = supplement.Id,
+		    Name = supplement.Name,
+		    Price = supplement.Price
+	    };
+	}
+    
+	public static TicketSupplementDto ConvertToDto(this TicketSupplement ticketSupplement)
+	{
+		return new TicketSupplementDto
+		{
+			Id = ticketSupplement.Id,
+			TicketId = ticketSupplement.TicketId,
+			SupplementId = ticketSupplement.SupplementId
+		};
+	}
+
     public static ReviewDto ConvertToDto(this Review review)
 	{
 	    return new ReviewDto
@@ -177,4 +209,5 @@ public static class DtoConversions
 		    Stars = review.Stars
 	    };
 	}
+
 }
