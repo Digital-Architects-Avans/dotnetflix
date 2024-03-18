@@ -14,4 +14,5 @@ public class TicketOrderDto
     public int TicketTypeId { get; set; }
     public int Quantity { get; set; }
     public decimal FinalPrice { get; set; } // Price for the ticket after discount applied to Show Base Price
+    public ICollection<int> SupplementIds { get; set; } = new List<int>(); // List of Supplement Ids
 }

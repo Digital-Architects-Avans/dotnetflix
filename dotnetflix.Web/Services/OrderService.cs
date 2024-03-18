@@ -79,7 +79,7 @@ public class OrderService : IOrderService
         var tickets = await _ticketService.GenerateTickets(orderRequest).ConfigureAwait(false);
         
         // Generate a random 6 character code
-        string orderCode = Path.GetRandomFileName().Replace(".", "").Substring(0, 6);
+        var orderCode = Path.GetRandomFileName().Replace(".", "").Substring(0, 6);
 
         // Prepare the data to be sent in the request
         var addOrderDto = new AddOrderDto

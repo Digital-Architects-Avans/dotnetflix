@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 *.idea/
+*.vscode/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -362,6 +363,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
 .DS_Store
+
 dotnetflix.Web/.DS_Store
 dotnetflix.Web/wwwroot/.DS_Store

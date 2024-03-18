@@ -15,6 +15,10 @@ namespace dotnetflix.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
+            // Composite primary key for junction table
+            modelBuilder.Entity<TicketSupplement>()
+                .HasKey(ts => new { ts.TicketId, ts.SupplementId });
 
             // Set the precision and scale for the TotalPrice and BasePrice properties
             modelBuilder.Entity<Order>()
@@ -28,6 +32,14 @@ namespace dotnetflix.Api.Data
             modelBuilder.Entity<TicketType>()
                 .Property(t => t.Discount)
                 .HasPrecision(6, 2);
+            
+            modelBuilder.Entity<Supplement>()
+                .Property(s => s.Price)
+                .HasPrecision(6, 2);
+            
+            modelBuilder.Entity<Show>()
+                .Property(s => s.BasePrice)
+                .HasPrecision(6, 2); 
 
             // Seed data for Movie
             modelBuilder.Entity<Movie>().HasData(
@@ -222,6 +234,34 @@ namespace dotnetflix.Api.Data
                     Id = 5,
                     Name = "Cinema Pass",
                     Discount = 1.50M
+                },
+                new TicketType
+                {
+                    Id = 7,
+                    Name = "VIP Ticket",
+                    Discount = -5.00M
+                }
+            );
+            
+            modelBuilder.Entity<Supplement>().HasData(
+
+                new Supplement()
+                {
+                    Id = 1,
+                    Name = "Large popcorn",
+                    Price = 3.00M
+                },
+                new Supplement()
+                {
+                    Id = 2,
+                    Name = "Large M&Ms",
+                    Price = 4.00M
+                },
+                new Supplement()
+                {
+                    Id = 3,
+                    Name = "Large popcorn",
+                    Price = 1.50M
                 }
             );
             
@@ -235,7 +275,8 @@ namespace dotnetflix.Api.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
-        
+        public DbSet<Supplement> Supplements { get; set; }
+        public DbSet<TicketSupplement> TicketSupplements { get; set; }
         public DbSet<Review> Reviews { get; set; }
     }
 }
