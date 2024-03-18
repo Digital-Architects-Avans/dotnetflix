@@ -216,5 +216,15 @@ public static class DtoConversions
 		    Stars = review.Stars
 	    };
 	}
+    
+    public static SubscriberDto ConvertToDto(this Subscriber subscriber)
+	{
+		return new SubscriberDto
+		{
+			Id = subscriber.Id,
+			Name = subscriber.Name,
+			Email = subscriber.Email
+		};
+	}
 
 }

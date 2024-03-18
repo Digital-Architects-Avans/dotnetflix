@@ -24,8 +24,8 @@ public class SubscribersRepository : ISubscribersRepository
     {
         var subscriber = new Subscriber
         {
-            name = addSubscriberDto.Name,
-            email = addSubscriberDto.Email
+            Name = addSubscriberDto.Name,
+            Email = addSubscriberDto.Email
         };
 
         var result = await _dotNetFlixDbContext.Subscribers.AddAsync(subscriber);
