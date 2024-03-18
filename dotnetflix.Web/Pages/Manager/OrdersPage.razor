@@ -43,7 +43,6 @@
                 <div class="form-group">
                     <label for="selectedTicketIds">Tickets</label>
                     <select id="selectedTicketIds" class="form-control" multiple @onchange="UpdateSelectedTickets">
-                        <option value="">Select tickets</option>
                         @foreach (var ticket in Tickets.Where(t => t.OrderId == null))
                         {
                             <option value="@ticket.Id">@ticket.Id, @ticket.ShowTime, @ticket.Movie, @ticket.TheaterName</option>
@@ -97,7 +96,6 @@
                 <div class="form-group">
                     <label for="selectedTicketIds">Select all wanted tickets</label>
                     <select id="selectedTicketIds" class="form-control" multiple @onchange="UpdateSelectedTickets">
-                        <option value="">Select tickets</option>
                         @foreach (var ticket in Tickets.Where(t => t.OrderId == null || t.OrderId == SelectedOrder.Id))
                         {
                             <option value="@ticket.Id">@ticket.Id, @ticket.ShowTime, @ticket.Movie, @ticket.TheaterName</option>
