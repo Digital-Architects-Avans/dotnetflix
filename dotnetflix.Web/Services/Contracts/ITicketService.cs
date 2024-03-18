@@ -10,6 +10,7 @@ public interface ITicketService
 {
     Task<IEnumerable<TicketDto>?> GetTickets();
     Task<IEnumerable<TicketDto>?> GetTicketsForShow(int showId);
+    Task<IEnumerable<TicketDto>?> GetTicketsForMovie(string movieTitle);
     Task<IEnumerable<TicketTypeDto>?> GetTicketTypes();
     Task<List<TicketDto>> GenerateTickets(OrderRequestDto orderRequestDto);
     
