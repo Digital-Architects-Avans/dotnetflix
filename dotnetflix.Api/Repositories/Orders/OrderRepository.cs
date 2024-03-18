@@ -113,6 +113,9 @@ public class OrderRepository : IOrderRepository
 
         // Calculate the total price based on the sum of ticket prices
         order.TotalPrice = currentTickets.Sum(t => t.TicketPrice);
+        order.CustomerName = updateOrderDto.CustomerName;
+        order.CustomerEmail = updateOrderDto.CustomerEmail;
+        order.Uuid = updateOrderDto.Uuid;
 
         await _dotNetFlixDbContext.SaveChangesAsync();
         return order;

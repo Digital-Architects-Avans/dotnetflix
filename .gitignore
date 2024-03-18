@@ -365,6 +365,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 .DS_Store
+
 dotnetflix.Web/.DS_Store
 dotnetflix.Web/wwwroot/.DS_Store
-
