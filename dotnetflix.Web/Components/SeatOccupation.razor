@@ -25,7 +25,7 @@
                 }
             </div>
         }
-        <h6 class="card-subtitle mb-2 text-body-secondary mt-3">Availability: @AvailableSeatsCount / @SeatsCount</h6>
+        <h6 class="card-subtitle mb-2 text-body-secondary mt-3">Availability: @AvailableSeatsCount / @SeatsCount (@Occupation%)</h6>
     </FluentCard>
 }
 else
@@ -44,6 +44,7 @@ else
     [Parameter] public decimal Price { get; set; }
     [Parameter] public int AvailableSeatsCount { get; set; }
     [Parameter] public int SeatsCount { get; set; }
+    [Parameter] public int Occupation { get; set; }
 
     private ShowDto? Show { get; set; }
 
@@ -89,6 +90,8 @@ else
                 {
                     Price = Show.BasePrice;
                 }
+                // Set occupation percentage
+                Occupation = (int)Math.Round((double)AvailableSeatsCount / SeatsCount * 100);
             }
         }
     }
