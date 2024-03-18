@@ -3,6 +3,7 @@ using dotnetflix.Api.Entities;
 using dotnetflix.Models.Dtos;
 using dotnetflix.Models.Dtos.Movie;
 using dotnetflix.Models.Dtos.Order;
+using dotnetflix.Models.Dtos.Review;
 using dotnetflix.Models.Dtos.Seat;
 using dotnetflix.Models.Dtos.Show;
 using dotnetflix.Models.Dtos.Theater;
@@ -52,6 +53,12 @@ public static class DtoConversions
 	{
 		return seats.Select(seat => seat.ConvertToDto()).ToList();
 	}
+	
+	public static IEnumerable<ReviewDto> ConvertToDto(this IEnumerable<Review> reviews)
+	{
+		return reviews.Select(review => review.ConvertToDto()).ToList();
+	}
+	
 	
 	public static MovieDto ConvertToDto(this Movie movie)
     {
@@ -159,4 +166,15 @@ public static class DtoConversions
 		    SeatNumber = seat.SeatNumber
 	    };
     }
+    
+    public static ReviewDto ConvertToDto(this Review review)
+	{
+	    return new ReviewDto
+	    {
+		    Id = review.Id,
+		    Name = review.Name,
+		    ReviewText = review.ReviewText,
+		    Stars = review.Stars
+	    };
+	}
 }
