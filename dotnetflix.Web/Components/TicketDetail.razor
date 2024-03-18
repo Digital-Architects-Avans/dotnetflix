@@ -18,7 +18,7 @@
 else
 {
     <FluentCard Style="max-width: 600px; margin: 16px 0;">
-        <img src="@QRCodeBase64" alt="Ticket QR Code" width="100" height="100"/>
+        <img src="@QRCodeBase64" alt="Ticket QR Code" width="148" height="148"/>
         <FluentDivider Style="margin: 20px 0;"></FluentDivider>
         <h4>@MovieTitle - @StartTime - @EndTime</h4>
         <dl class="row">
@@ -79,22 +79,22 @@ else
             }
 
             // Generate QR code for ticket URL
-            GenerateQRCode(TicketUrl);
+            GenerateQRCode(TicketUrl, moduleSize: 8);
             GenerateAsciiQRCode(TicketUrl);
         }
     }
 
     private string TicketUrl => $"{MyNavigationManager.Uri}";
 
-    private void GenerateQRCode(string text)
+    private void GenerateQRCode(string text, int moduleSize)
     {
         // Create QR code data
         QRCodeGenerator qrGenerator = new QRCodeGenerator();
         QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
 
-        // Calculate QR code image dimensions
-        int width = qrCodeData.ModuleMatrix.Count;
-        int height = qrCodeData.ModuleMatrix.Count;
+        // Calculate QR code image dimensions with increased resolution
+        int width = qrCodeData.ModuleMatrix.Count * moduleSize;
+        int height = qrCodeData.ModuleMatrix.Count * moduleSize;
 
         // Render QR code using ImageSharp
         var qrCodeImage = new Image<Rgba32>(width, height);
@@ -104,8 +104,12 @@ else
         {
             for (int x = 0; x < width; x++)
             {
+                // Calculate the module index in the QR code data based on the coordinates in the ImageSharp image
+                int moduleX = x / moduleSize;
+                int moduleY = y / moduleSize;
+
                 // Set black pixel for modules with data and white pixel for empty modules
-                qrCodeImage[x, y] = qrCodeData.ModuleMatrix[y][x] ? new Rgba32(0, 0, 0) : new Rgba32(255, 255, 255);
+                qrCodeImage[x, y] = qrCodeData.ModuleMatrix[moduleY][moduleX] ? new Rgba32(0, 0, 0) : new Rgba32(255, 255, 255);
             }
         }
 
