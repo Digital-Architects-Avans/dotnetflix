@@ -159,7 +159,8 @@ else
             var supplements = string.Join(", ", SupplementsForTicket.Select(s => $"{s.Name}"));
             await jsPdf.InvokeVoidAsync("text", $"Supplements: {supplements}", 10, 70);
         }
-
+        var imgData = @QRCodeBase64;
+        await jsPdf.InvokeVoidAsync("addImage", imgData, "PNG", 0, 80, 80, 80);
         await jsPdf.InvokeVoidAsync("save", "ticket.pdf");
     }
 
