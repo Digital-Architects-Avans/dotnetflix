@@ -82,7 +82,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>["OrderPageCurrentTickets"]</label>
+                    <label>@Localizer["OrderPageCurrentTickets"]</label>
                     @foreach (var ticketId in SelectedOrder.TicketIds)
                     {
                         var ticket = Tickets.FirstOrDefault(t => t.Id == ticketId);
@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="selectedTicketIds">["OrderPageSelectedWantedTickets"]</label>
+                    <label for="selectedTicketIds">@Localization["OrderPageSelectedWantedTickets"]</label>
                     <select id="selectedTicketIds" class="form-control" multiple @onchange="UpdateSelectedTickets">
                         @foreach (var ticket in Tickets.Where(t => t.OrderId == null || t.OrderId == SelectedOrder.Id))
                         {
