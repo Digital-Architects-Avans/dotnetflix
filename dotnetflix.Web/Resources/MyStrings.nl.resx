@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -271,7 +271,7 @@
     <value>Rijen</value>
   </data>
   <data name="NavigationHeaderTheaters" xml:space="preserve">
-    <value>Theaters</value>
+    <value>Zalen</value>
   </data>
   <data name="NavigationHeaderTickets" xml:space="preserve">
     <value>Kaartjes</value>
@@ -408,9 +408,6 @@
   <data name="ScreenTime" xml:space="preserve">
     <value>Speelduur</value>
   </data>
-  <data name="Sears" xml:space="preserve">
-    <value>Zoeken</value>
-  </data>
   <data name="Seat" xml:space="preserve">
     <value>Stoel</value>
   </data>
@@ -460,7 +457,7 @@
     <value>Voeg nieuwe versnapering toe</value>
   </data>
   <data name="SupplementsUpdateSupplement" xml:space="preserve">
-    <value>Update supplement</value>
+    <value>Versnapering bijwerken</value>
   </data>
   <data name="SupplementsTitle" xml:space="preserve">
     <value>Haal je favoriete snacks met korting</value>
@@ -469,10 +466,10 @@
     <value>Bijwerken versnaperingen</value>
   </data>
   <data name="Theater" xml:space="preserve">
-    <value>Theater</value>
+    <value>Zaal</value>
   </data>
   <data name="TheaterName" xml:space="preserve">
-    <value>Zaal</value>
+    <value>Zaalnaam</value>
   </data>
   <data name="TheaterRowManagementTitle" xml:space="preserve">
     <value>Beheer zaalrijen</value>
@@ -530,5 +527,20 @@
   </data>
   <data name="Year" xml:space="preserve">
     <value>Jaar</value>
+  </data>
+  <data name="OrderPageDetailsOrderPageDetails" xml:space="preserve">
+    <value>Bestellinggegevens</value>
+  </data>
+  <data name="ReviewsPageSubmitReview" xml:space="preserve">
+    <value>Beoordeling indienen</value>
+  </data>
+  <data name="GetDirections" xml:space="preserve">
+    <value>Haal de route op via Google Maps</value>
+  </data>
+  <data name="MapsTitle" xml:space="preserve">
+    <value>Routebeschrijving</value>
+  </data>
+  <data name="MapsDetails" xml:space="preserve">
+    <value>Je vind onze bioscoop in het hart van Breda. Lees verder voor meer routeinformatie</value>
   </data>
 </root>
