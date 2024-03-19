@@ -1,6 +1,6 @@
 <FluentFooter Style="padding: 24px">
     <FluentGridItem Gap="10px" Class="link2">
-        <h5 style="text-align: center">Find us on social media</h5>
+        <h5 style="text-align: center">@Localizer["SocialMediaBar"]</h5>
         <FluentAnchor Href="@_urlInstagram" Target="_blank">
             <i class="bi bi-instagram"></i>
         </FluentAnchor>
@@ -20,6 +20,7 @@
 </FluentFooter>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
     private string _urlInstagram = "https://www.instagram.com/pathenederland/";
     private string _urlFacebook = "https://www.facebook.com/pathenederlandd";
     private string _urlTiktok = "https://www.tiktok.com/@pathenederland";

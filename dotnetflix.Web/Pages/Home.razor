@@ -1,6 +1,6 @@
 @page "/"
 
-<h1>What's on</h1>
+<h1>@Localizer["HomeWhatsOn"]</h1>
 
 @if (FoundShows != null)
 {
@@ -20,17 +20,17 @@
             if (movieDetails != null)
             {
                 var isSneakPreview = shows.First().SneakPreview;
-                <MovieDetails Movie="movieDetails" IsSneakPreview="@isSneakPreview"/>
+                <MovieDetails Movie="movieDetails" IsSneakPreview="@isSneakPreview" />
             }
 
-            // Show timings
-            <h6 class="mt-3">Today</h6>
+                        // Show timings
+            <h6 class="mt-3">@Localizer["AgendaToday"]</h6>
             <div class="row pb-3">
 
                 @foreach (var show in shows)
                 {
                     <div class="col-xxl-2 col-xl-3 col-md-4 col-sm-6 pb-4 pt-2 show-time-card">
-                        <ShowTime Show="show"/>
+                        <ShowTime Show="show" />
                     </div>
                 }
 
@@ -40,7 +40,7 @@
 }
 else
 {
-    <p>Gathering screenings...</p>
+    <p>@Localizer["HomeGatheringScreenings"]...</p>
 }
 
 @code {
@@ -48,6 +48,7 @@ else
     // 1) Set properties te facilitate dependency injection
     [Inject] public IShowService? ShowService { get; set; }
     [Inject] public IMovieService? MovieService { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     // 2) Public properties to expose to the view
     private IEnumerable<ShowDto>? Shows { get; set; }
@@ -86,19 +87,19 @@ else
 
                 // Group timings by movie
                 GroupedShowsByMovie = from show in Shows
-                    group show by show.MovieId
+                                      group show by show.MovieId
                     into showGroup
-                    orderby showGroup.First().Date
-                    select showGroup;
+                                      orderby showGroup.First().Date
+                                      select showGroup;
 
                 // Group sneak preview timings by movie
                 if (SneakPreviewShows != null)
                 {
                     var sneakPreviewGroupedShows = from show in SneakPreviewShows
-                        group show by show.MovieId
+                                                   group show by show.MovieId
                         into showGroup
-                        orderby showGroup.First().Date
-                        select showGroup;
+                                                   orderby showGroup.First().Date
+                                                   select showGroup;
 
                     GroupedShowsByMovie = GroupedShowsByMovie.Concat(sneakPreviewGroupedShows);
                 }

@@ -23,32 +23,33 @@ else
         <FluentDivider Style="margin: 20px 0;"></FluentDivider>
         <h4>@MovieTitle - @StartTime - @EndTime</h4>
         <dl class="row">
-            <dt class="col-xl-3 col-sm-4">Theater:</dt>
+            <dt class="col-xl-3 col-sm-4">@Localizer["Theater"]:</dt>
             <dd class="col-xl-9 col-sm-8">@Ticket.TheaterName - @Show.Type</dd>
-            <dt class="col-xl-3 col-sm-4">Show Time:</dt>
+            <dt class="col-xl-3 col-sm-4">@Localizer["ShowTime"]:</dt>
             <dd class="col-xl-9 col-sm-8">@Ticket.ShowTime.ToString("dd-MM-yyyy - HH:mm", new CultureInfo("nl-NL"))</dd>
-            <dt class="col-xl-3 col-sm-4">Seat:</dt>
-            <dd class="col-xl-9 col-sm-8">Row @Ticket.RowNumber, Seat @Ticket.SeatNumber</dd>
-            <dt class="col-xl-3 col-sm-4">Ticket Type:</dt>
+            <dt class="col-xl-3 col-sm-4">@Localizer["Seat"]:</dt>
+            <dd class="col-xl-9 col-sm-8">@Localizer["Row"] @Ticket.RowNumber, @Localizer["Seat"] @Ticket.SeatNumber</dd>
+            <dt class="col-xl-3 col-sm-4">@Localizer["TicketType"]:</dt>
             <dd class="col-xl-9 col-sm-8">@TicketType</dd>
-            <dt class="col-xl-3 col-sm-4">Price:</dt>
+            <dt class="col-xl-3 col-sm-4">@Localizer["Price"]:</dt>
             <dd class="col-xl-9 col-sm-8">@Ticket.TicketPrice.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</dd>
 
             @if (SupplementsForTicket != null)
             {
                 foreach (var supplement in SupplementsForTicket)
                 {
-                    <dt class="col-xl-3 col-sm-4">Supplement:</dt>
+                    <dt class="col-xl-3 col-sm-4">@Localizer["Supplements"]:</dt>
                     <dd class="col-xl-9 col-sm-8">@supplement.Name (@supplement.Price.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ","))</dd>
                 }
             }
         </dl>
 
-        <FluentButton Appearance="Appearance.Accent" OnClick="@PrintTicket">Print ticket</FluentButton>
+        <FluentButton Appearance="Appearance.Accent" OnClick="@PrintTicket">@Localizer["PrintTicket"]</FluentButton>
     </FluentCard>
 }
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     // Set properties to facilitate dependency injection
     [Inject] public ITicketService? TicketService { get; set; }

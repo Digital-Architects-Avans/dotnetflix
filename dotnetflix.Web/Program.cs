@@ -27,6 +27,9 @@ builder.Services.AddScoped<ISeatService, SeatService>();
 builder.Services.AddScoped<ITrustpilotService, MockTrustpilotService>();
 builder.Services.AddScoped<ISubscriberService, SubscriberService>();
 
+// Localization
+builder.Services.AddLocalization();
+
 builder.Services.AddFluentUIComponents();
 builder.Services.AddDataGridEntityFrameworkAdapter();
 

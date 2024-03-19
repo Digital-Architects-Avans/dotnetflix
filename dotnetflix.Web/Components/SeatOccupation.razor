@@ -25,17 +25,18 @@
                 }
             </div>
         }
-        <h6 class="card-subtitle mb-2 text-body-secondary mt-3">Availability: @AvailableSeatsCount / @SeatsCount (@Occupation%)</h6>
+        <h6 class="card-subtitle mb-2 text-body-secondary mt-3">@Localizer["Availability"]: @AvailableSeatsCount / @SeatsCount (@Occupation%)</h6>
     </FluentCard>
 }
 else
 {
-    <p>No seats available for this show.</p>
+    <p>@Localizer["NoSeatsAvailable"].</p>
 }
 
 @code {
     [Inject] IShowService? ShowService { get; set; }
     [Inject] ISeatService? SeatService { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     // Parameter to be passed to the component
     [Parameter] public int ShowId { get; set; }

@@ -2,7 +2,7 @@
 @using System.Globalization
 @using dotnetflix.Models.Dtos
 
-<h3>Manager: Movie revenue</h3>
+<h3>@Localizer["ManagerRevenueTitle"]</h3>
 <NavigationHeader/>
 
 @if (_revenuePerMovie.Any() && Movies != null)
@@ -18,8 +18,8 @@
                 </FluentGridItem>
                 <FluentGridItem>
                     <h5 class="card-title">@movieInfo.Title</h5>
-                    <p>Tickets sold: @movie.Value.Item1</p>
-                    <p>Total revenue: @movie.Value.Item2.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</p>
+                    <p>@Localizer["ManagerRevenueTicketsSold"]: @movie.Value.Item1</p>
+                    <p>@Localizer["ManagerRevenueTotalRevenue"]: @movie.Value.Item2.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</p>
                 </FluentGridItem>
             </FluentGrid>
         }
@@ -27,12 +27,13 @@
 }
 else
 {
-    <p>Crunched the numbers...</p>
+    <p>@Localizer["Loading"]...</p>
 }
 
 @code {
     [Inject] public IMovieService? MovieService { get; set; }
     [Inject] public ITicketService? TicketService { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     private IEnumerable<MovieDto>? Movies { get; set; }
 

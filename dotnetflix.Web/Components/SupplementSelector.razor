@@ -4,7 +4,7 @@
 @using System.Globalization
 @using dotnetflix.Models.Dtos.TicketOrderDtos
 
-<p>Get your favourite cinema treats with discount:</p>
+<p>@Localizer["SupplementsTitle"]:</p>
 
 <FluentStack Orientation="Orientation.Vertical">
     @if (Supplements != null)
@@ -18,6 +18,8 @@
 </FluentStack>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     [Parameter] public IEnumerable<SupplementDto>? Supplements { get; set; }
     [Parameter] public SeatDto Seat { get; set; } = new SeatDto();
     [Parameter] public TicketOrderDto TicketOrder { get; set; }

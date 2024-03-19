@@ -5,7 +5,7 @@
 @using dotnetflix.Models.Dtos.Theater
 @inject HttpClient Http
 
-<h3>Theater Row Management</h3>
+<h3>@Localizer["TheaterRowManagementTitle"]</h3>
 
 <NavigationHeader />
 
@@ -14,18 +14,18 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Row Id</th>
-                <th>Row Number</th>
-                <th>Number of Seats</th>
-                <th>Actual Seat Count</th>
+                <th>@Localizer["Row"] Id</th>
+                <th>@Localizer["RowNumber"]</th>
+                <th>@Localizer["NumberOfSeats"]</th>
+                <th>@Localizer["ActualSeatCount"]</th>
                 <th>Theater</th>
             </tr>
             </thead>
             <tbody>
             <tr @onclick="() => SelectRow()" class="new-theater-row">
-                <td>Add</td>
-                <td>New</td>
-                <td>Row</td>
+                <td>@Localizer["Add"]</td>
+                <td>@Localizer["New"]</td>
+                <td>@Localizer["Row"]</td>
             </tr>
             @foreach (var row in TheaterRows)
             {
@@ -50,15 +50,15 @@
                 <ValidationSummary/>
 
                 <div class="form-group">
-                    <label for="rowNumber">Row Number</label>
+                    <label for="rowNumber">@Localizer["RowNumber"]</label>
                     <InputNumber id="rowNumber" class="form-control" @bind-Value="SelectedRow.RowNumber"/>
                 </div>
                 <div class="form-group">
-                    <label for="numberOfSeats">Number of Seats</label>
+                    <label for="numberOfSeats">@Localizer["NumberOfSeats"]</label>
                     <InputNumber id="numberOfSeats" class="form-control" @bind-Value="SelectedRow.NumberOfSeats"/>
                 </div>
                 <div class="form-group">
-                    <label for="theaterId">Theater</label>
+                    <label for="theaterId">@Localizer["Theater"]</label>
                     <InputSelect id="theaterId" class="form-control" @bind-Value="SelectedRow.TheaterId">
                         @foreach (var theater in Theaters)
                         {
@@ -66,7 +66,7 @@
                         }
                     </InputSelect>
                 </div>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">@Localizer["Add"]</button>
             </EditForm>
         }
         else
@@ -77,15 +77,15 @@
                 <ValidationSummary/>
 
                 <div class="form-group">
-                    <label for="rowNumber">Row Number</label>
+                    <label for="rowNumber">@Localizer["RowNumber"]</label>
                     <InputNumber id="rowNumber" class="form-control" @bind-Value="SelectedRow.RowNumber"/>
                 </div>
                 <div class="form-group">
-                    <label for="numberOfSeats">Number of Seats</label>
+                    <label for="numberOfSeats">@Localizer["NumberOfSeats"]</label>
                     <InputNumber id="numberOfSeats" class="form-control" @bind-Value="SelectedRow.NumberOfSeats"/>
                 </div>
                 <div class="form-group">
-                    <label for="theaterId">Theater</label>
+                    <label for="theaterId">@Localizer["Theater"]</label>
                     <InputSelect id="theaterId" class="form-control" @bind-Value="SelectedRow.TheaterId">
                         @foreach (var theater in Theaters)
                         {
@@ -93,14 +93,16 @@
                         }
                     </InputSelect>
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">@Localizer["Update"]</button>
             </EditForm>
-            <button class="btn btn-danger" @onclick="DeleteRowSubmit">Delete</button>
+            <button class="btn btn-danger" @onclick="DeleteRowSubmit">@Localizer["Delete"]</button>
         }
     </div>
 </div>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     List<TheaterRowDto> TheaterRows = new List<TheaterRowDto>();
     TheaterRowDto SelectedRow = new TheaterRowDto();
     AddTheaterRowDto NewRow = new AddTheaterRowDto();

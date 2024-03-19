@@ -11,12 +11,12 @@
         <h5 class="card-title">@MovieTitle</h5>
         <p class="card-text" style="max-width: 500px">@MovieDescription</p>
         <p class="card-text">
-            <small class="text-body-secondary">Run time: @Movie?.Runtime min</small>
+            <small class="text-body-secondary">@Localizer["RunTime"]: @Movie?.Runtime min</small>
         </p>
         <p class="card-text">
-            <small class="text-body-secondary">Rating: @Movie?.Rating</small>
+            <small class="text-body-secondary">@Localizer["Rating"]: @Movie?.Rating</small>
         </p>
-        <small class="text-body-secondary">First shown: @FirstShowDate days ago</small>
+        <small class="text-body-secondary">@Localizer["FirstShown"]: @FirstShowDate @Localizer["DaysAgo"]</small>
     </FluentGridItem>
 </FluentGrid>
 
@@ -47,6 +47,7 @@
     [Parameter] public decimal Price { get; set; }
 
     [Inject] public IShowService? ShowService { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     private IEnumerable<ShowDto>? Shows { get; set; }
     private int FirstShowDate { get; set; }
