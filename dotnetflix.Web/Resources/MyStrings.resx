@@ -459,6 +459,9 @@
   <data name="SupplementsAddNewSupplement" xml:space="preserve">
     <value>Add new supplement</value>
   </data>
+  <data name="SupplementsUpdateSupplement" xml:space="preserve">
+    <value>Update supplement</value>
+  </data>
   <data name="SupplementsTitle" xml:space="preserve">
     <value>Get your favourite cinema treats with discount</value>
   </data>

@@ -456,6 +456,9 @@
   <data name="SupplementsAddNewSupplement" xml:space="preserve">
     <value>Voeg nieuwe versnapering toe</value>
   </data>
+  <data name="SupplementsUpdateSupplement" xml:space="preserve">
+    <value>Update supplement</value>
+  </data>
   <data name="SupplementsTitle" xml:space="preserve">
     <value>Haal je favoriete snacks met korting</value>
   </data>
