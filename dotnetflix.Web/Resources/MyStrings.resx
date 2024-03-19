@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -530,5 +530,20 @@
   </data>
   <data name="Year" xml:space="preserve">
     <value>Year</value>
+  </data>
+  <data name="OrderPageDetails" xml:space="preserve">
+    <value>Order overview</value>
+  </data>
+  <data name="ReviewsPageSubmitReviewReviewsPageSubmitReview" xml:space="preserve">
+    <value>Submit your review</value>
+  </data>
+  <data name="GetDirections" xml:space="preserve">
+    <value>Get directions in Google Maps</value>
+  </data>
+  <data name="MapsTitle" xml:space="preserve">
+    <value>Get directions</value>
+  </data>
+  <data name="MapsDetails" xml:space="preserve">
+    <value>You can find our cinema in the heart of Breda. Please see below for more information</value>
   </data>
 </root>
