@@ -417,6 +417,9 @@
   <data name="Seats" xml:space="preserve">
     <value>Stoelen</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Zoeken</value>
+  </data>
   <data name="SeatSelectionNoSeatsAvailable" xml:space="preserve">
     <value>Geen stoelen meer beschikbaar voor deze voorstelling</value>
   </data>
