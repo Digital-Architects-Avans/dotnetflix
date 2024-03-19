@@ -19,10 +19,10 @@
         <table class="table" style="border-bottom-color: lightgrey;">
             <thead>
             <tr>
-                <th>Ticket type</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total Price</th>
+                <th>@Localizer["CheckoutPageTicketType"]</th>
+                <th>@Localizer["CheckoutPageQuantity"]</th>
+                <th>@Localizer["CheckoutPagePricePerTicket"]</th>
+                <th>@Localizer["CheckoutPageTotalPrice"]</th>
             </tr>
             </thead>
             <tbody>
@@ -66,7 +66,7 @@
 
                 <tr>
                     <td colspan="3" class="text-right">
-                        <strong>Grand Total:</strong>
+                        <strong>@Localizer["CheckoutGrandTotal"]:</strong>
                     </td>
                     <td>
                         <strong>@grandTotal.ToString(format: "C", provider: new CultureInfo("nl-NL")).Replace(".", ",")</strong>
@@ -76,7 +76,7 @@
             else
             {
                 <tr>
-                    <td colspan="4">No tickets selected.</td>
+                        <td colspan="4">@Localizer["CheckoutPageNoTicketsSelected"].</td>
                 </tr>
             }
             </tbody>
@@ -85,7 +85,7 @@
 
     <!-- Payment Method Column -->
     <div class="col-md-4">
-        <h2 class="mb-2">Payment Method</h2>
+        <h2 class="mb-2">@Localizer["PaymentMethod"]</h2>
         <div id="smart-button-container">
             <input type="hidden" name="descriptionInput" id="description" @bind="PaymentDescription"/>
             <input name="amountInput" type="hidden" id="amount" @bind="FormattedPaymentAmount">
@@ -107,7 +107,7 @@
     </div>
 </div>
 
-<h2>Get your tickets by mail</h2>
+<h2>@Localizer["CheckoutPageGetTicketsByMail"]</h2>
 <div class="row">
     <div class="col-md-6">
         <label for="customerName" class="form-label">Name</label>
@@ -128,6 +128,7 @@
     [Inject] public ITicketService TicketService { get; set; }
     [Inject] public IOrderService OrderService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     public OrderRequestDto? OrderRequest { get; set; }
 

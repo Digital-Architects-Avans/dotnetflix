@@ -16,38 +16,38 @@
     <div class="col-md-6">
         <table class="table">
             <thead>
-            <tr>
-                <th>Id</th>
-                <th>ShowId</th>
-                <th>Movie</th>
-                <th>DateTime</th>
-                <th>Theater</th>
-                <th>Row</th>
-                <th>Seat</th>
-                <th>Type</th>
-                <th>Price</th>
-            </tr>
+                <tr>
+                    <th>Id</th>
+                    <th>ShowId</th>
+                    <th>@Localizer["Movie"]</th>
+                    <th>DateTime</th>
+                    <th>Theater</th>
+                    <th>@Localizer["Row"]</th>
+                    <th>@Localizer["Seat"]</th>
+                    <th>Type</th>
+                    <th>@Localizer["Price"]</th>
+                </tr>
             </thead>
             <tbody>
-            <tr @onclick="() => SelectTicket()" class="new-ticket">
-                <td>Add</td>
-                <td>New</td>
-                <td>Ticket</td>
-            </tr>
-            @foreach (var ticket in Tickets)
-            {
-                <tr @onclick="() => SelectTicket(ticket)" class="@(SelectedTicket != null && SelectedTicket.Id == ticket.Id ? "selected-ticket" : "")">
-                    <td>@ticket.Id</td>
-                    <td>@ticket.ShowId</td>
-                    <td>@ticket.Movie</td>
-                    <td>@ticket.ShowTime</td>
-                    <td>@ticket.TheaterName</td>
-                    <td>@ticket.RowNumber</td>
-                    <td>@ticket.SeatNumber</td>
-                    <td>@ticket.TicketTypeId</td>
-                    <td>@ticket.TicketPrice</td>
+                <tr @onclick="() => SelectTicket()" class="new-ticket">
+                    <td>@Localizer["Add"]</td>
+                    <td>@Localizer["New"]</td>
+                    <td>@Localizer["Ticket"]</td>
                 </tr>
-            }
+                @foreach (var ticket in Tickets)
+                {
+                    <tr @onclick="() => SelectTicket(ticket)" class="@(SelectedTicket != null && SelectedTicket.Id == ticket.Id ? "selected-ticket" : "")">
+                        <td>@ticket.Id</td>
+                        <td>@ticket.ShowId</td>
+                        <td>@ticket.Movie</td>
+                        <td>@ticket.ShowTime</td>
+                        <td>@ticket.TheaterName</td>
+                        <td>@ticket.RowNumber</td>
+                        <td>@ticket.SeatNumber</td>
+                        <td>@ticket.TicketTypeId</td>
+                        <td>@ticket.TicketPrice</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -56,8 +56,62 @@
         {
             <h4>Add New Ticket</h4>
             <EditForm Model="SelectedTicket" OnValidSubmit="NewTicketSubmit">
-                <DataAnnotationsValidator/>
-                <ValidationSummary/>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="showId">Show</label>
+                    <InputSelect id="showId" class="form-control" @bind-Value="SelectedTicket.ShowId">
+                        <option value="">Select a show</option>
+                        @foreach (var show in Shows)
+                        {
+                            <option value="@show.Id">@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="seatId">@Localizer["Seat"]</label>
+                    <InputSelect id="seatId" class="form-control" @bind-Value="SelectedTicket.SeatId">
+                        <option value="">@Localizer["TicketsPageSelectSeat"]</option>
+                        @foreach (var seat in Seats)
+                        {
+                            <option value="@seat.Id">@seat.Id, @seat.SeatNumber</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="ticketTypeId">@Localizer["TicketType"]</label>
+                    <InputSelect id="ticketTypeId" class="form-control" @bind-Value="SelectedTicket.TicketTypeId">
+                        <option value="">Select a ticket type</option>
+                        @foreach (var ticketType in TicketTypes)
+                        {
+                            <option value="@ticketType.Id">@ticketType.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="ticketPrice">TicketPrice</label>
+                    <InputNumber id="ticketPrice" class="form-control" @bind-Value="SelectedTicket.TicketPrice" />
+                </div>
+                <div class="form-group">
+                    <label for="orderId">Order</label>
+                    <InputSelect id="orderId" class="form-control" @bind-Value="SelectedTicket.OrderId">
+                        <option value="">Select an order</option>
+                        @foreach (var order in Orders)
+                        {
+                            <option value="@order.Id">@order.Id, @order.CustomerName</option>
+                        }
+                    </InputSelect>
+                </div>
+                <button type="submit" class="btn btn-primary">@Localizer["Add"]</button>
+            </EditForm>
+        }
+        else
+        {
+            <h4>Update Ticket</h4>
+            <EditForm Model="SelectedTicket" OnValidSubmit="UpdateTicketSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
                 <div class="form-group">
                     <label for="showId">Show</label>
@@ -91,7 +145,7 @@
                 </div>
                 <div class="form-group">
                     <label for="ticketPrice">TicketPrice</label>
-                    <InputNumber id="ticketPrice" class="form-control" @bind-Value="SelectedTicket.TicketPrice"/>
+                    <InputNumber id="ticketPrice" class="form-control" @bind-Value="SelectedTicket.TicketPrice" />
                 </div>
                 <div class="form-group">
                     <label for="orderId">Order</label>
@@ -103,68 +157,16 @@
                         }
                     </InputSelect>
                 </div>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">@Localizer["Update"]</button>
             </EditForm>
-        }
-        else
-        {
-            <h4>Update Ticket</h4>
-            <EditForm Model="SelectedTicket" OnValidSubmit="UpdateTicketSubmit">
-                <DataAnnotationsValidator/>
-                <ValidationSummary/>
-
-                <div class="form-group">
-                    <label for="showId">Show</label>
-                    <InputSelect id="showId" class="form-control" @bind-Value="SelectedTicket.ShowId">
-                        <option value="">Select a show</option>
-                        @foreach (var show in Shows)
-                        {
-                            <option value="@show.Id">@show.Id, @show.MovieTitle, @show.TheaterName, @show.Date</option>
-                        }
-                    </InputSelect>
-                </div>
-                <div class="form-group">
-                    <label for="seatId">Seat</label>
-                    <InputSelect id="seatId" class="form-control" @bind-Value="SelectedTicket.SeatId">
-                        <option value="">Select a seat</option>
-                        @foreach (var seat in Seats)
-                        {
-                            <option value="@seat.Id">@seat.Id, @seat.SeatNumber</option>
-                        }
-                    </InputSelect>
-                </div>
-               <div class="form-group">
-                   <label for="ticketTypeId">Ticket Type</label>
-                   <InputSelect id="ticketTypeId" class="form-control" @bind-Value="SelectedTicket.TicketTypeId">
-                       <option value="">Select a ticket type</option>
-                       @foreach (var ticketType in TicketTypes)
-                       {
-                           <option value="@ticketType.Id">@ticketType.Name</option>
-                       }
-                   </InputSelect>
-               </div>
-               <div class="form-group">
-                   <label for="ticketPrice">TicketPrice</label>
-                   <InputNumber id="ticketPrice" class="form-control" @bind-Value="SelectedTicket.TicketPrice"/>
-               </div>
-               <div class="form-group">
-                   <label for="orderId">Order</label>
-                   <InputSelect id="orderId" class="form-control" @bind-Value="SelectedTicket.OrderId">
-                       <option value="">Select an order</option>
-                       @foreach (var order in Orders)
-                       {
-                           <option value="@order.Id">@order.Id, @order.CustomerName</option>
-                       }
-                   </InputSelect>
-               </div>
-                <button type="submit" class="btn btn-primary">Update</button>
-            </EditForm>
-            <button class="btn btn-danger" @onclick="DeleteTicketSubmit">Delete</button>
+            <button class="btn btn-danger" @onclick="DeleteTicketSubmit">@Localizer["Delete"]</button>
         }
     </div>
 </div>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     List<TicketDto> Tickets = new List<TicketDto>();
     TicketDto SelectedTicket = new TicketDto();
     UpdateTicketDto EditTicket = new UpdateTicketDto();
@@ -194,14 +196,14 @@
         else
         {
             SelectedTicket = new TicketDto
-            {
-                Id = ticket.Id,
-                ShowId = ticket.ShowId,
-                SeatId = ticket.SeatId,
-                TicketTypeId = ticket.TicketTypeId,
-                TicketPrice = ticket.TicketPrice,
-                OrderId = ticket.OrderId
-            };
+                {
+                    Id = ticket.Id,
+                    ShowId = ticket.ShowId,
+                    SeatId = ticket.SeatId,
+                    TicketTypeId = ticket.TicketTypeId,
+                    TicketPrice = ticket.TicketPrice,
+                    OrderId = ticket.OrderId
+                };
         }
 
     }
@@ -209,26 +211,26 @@
     private void SelectTicket()
     {
         SelectedTicket = new TicketDto
-        {
-            Id = 0,
-            ShowId = 0,
-            SeatId = 0,
-            TicketTypeId = 0,
-            TicketPrice = 0,
-            OrderId = 0
-        };
+            {
+                Id = 0,
+                ShowId = 0,
+                SeatId = 0,
+                TicketTypeId = 0,
+                TicketPrice = 0,
+                OrderId = 0
+            };
     }
 
     private async Task NewTicketSubmit()
     {
         NewTicket = new AddTicketDto
-        {
-            ShowId = SelectedTicket.ShowId,
-            SeatId = SelectedTicket.SeatId,
-            TicketTypeId = SelectedTicket.TicketTypeId,
-            TicketPrice = SelectedTicket.TicketPrice,
-            OrderId = SelectedTicket.OrderId
-        };
+            {
+                ShowId = SelectedTicket.ShowId,
+                SeatId = SelectedTicket.SeatId,
+                TicketTypeId = SelectedTicket.TicketTypeId,
+                TicketPrice = SelectedTicket.TicketPrice,
+                OrderId = SelectedTicket.OrderId
+            };
 
         var response = await Http.PostAsJsonAsync("api/ticket", NewTicket);
 
@@ -243,13 +245,13 @@
     private async Task UpdateTicketSubmit()
     {
         EditTicket = new UpdateTicketDto
-        {
-            ShowId = SelectedTicket.ShowId,
-            SeatId = SelectedTicket.SeatId,
-            TicketTypeId = SelectedTicket.TicketTypeId,
-            TicketPrice = SelectedTicket.TicketPrice,
-            OrderId = SelectedTicket.OrderId
-        };
+            {
+                ShowId = SelectedTicket.ShowId,
+                SeatId = SelectedTicket.SeatId,
+                TicketTypeId = SelectedTicket.TicketTypeId,
+                TicketPrice = SelectedTicket.TicketPrice,
+                OrderId = SelectedTicket.OrderId
+            };
 
         var response = await Http.PutAsJsonAsync($"api/ticket/{SelectedTicket.Id}", EditTicket);
 

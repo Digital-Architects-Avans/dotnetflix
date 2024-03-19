@@ -3,17 +3,18 @@
         <Authorized>
             <div>
                 Hello, @context.User.Identity!.Name | 
-                <a href="#" @onclick="BeginSignOut">Log out</a>
+                <a href="#" @onclick="BeginSignOut">@Localizer["LogOut"]</a>
             </div>
         </Authorized>
         <NotAuthorized>
-            <a href="authentication/login">Log in / Sign up</a>
+            <a href="authentication/login">@Localizer["LogIn"] / @Localizer["SignUp"]</a>
         </NotAuthorized>
     </AuthorizeView>
 </div>
  
 @code{
     [Inject] NavigationManager? NavigationManager { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
     
     private void BeginSignOut(MouseEventArgs args)
     {

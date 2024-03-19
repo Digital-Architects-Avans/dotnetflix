@@ -1,9 +1,9 @@
 @page "/manager"
 @attribute [Authorize(Roles = "Manager")]
-<h3>Manager Dashboard</h3>
+<h3>@Localizer["ManagerPageTitle"]</h3>
 
 <NavigationHeader />
 
 @code {
-    
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 }

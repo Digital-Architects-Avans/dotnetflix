@@ -4,7 +4,7 @@
 @using dotnetflix.Models.Dtos.TheaterRow
 @inject HttpClient Http
 
-<h3>Seat Management</h3>
+<h3>@Localizer["Seat"] Management</h3>
 
 <NavigationHeader />
 
@@ -13,24 +13,24 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Seat Number</th>
-                    <th>Theater Row</th>
+                    <th>@Localizer["Seat"] Number</th>
+                    <th>@Localizer["Theater"] @Localizer["Row"]</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-            <tr @onclick="() => SelectSeat()" class="new-Seat">
-                <td>Add New Seat</td>
-            </tr>
-            @foreach (var seat in Seats)
-            {
-                <tr @onclick="() => SelectSeat(seat)" class="@(SelectedSeat != null && SelectedSeat.Id == seat.Id ? "selected-seats" : "")">
-                    <td>@seat.SeatNumber</td>
-                    <td>@seat.TheaterRowId</td>
+                <tr @onclick="() => SelectSeat()" class="new-Seat">
+                    <td>Add New Seat</td>
                 </tr>
-            }
+                @foreach (var seat in Seats)
+                {
+                    <tr @onclick="() => SelectSeat(seat)" class="@(SelectedSeat != null && SelectedSeat.Id == seat.Id ? "selected-seats" : "")">
+                        <td>@seat.SeatNumber</td>
+                        <td>@seat.TheaterRowId</td>
+                    </tr>
+                }
             </tbody>
-            
+
         </table>
     </div>
     <div class="col-md-6">
@@ -38,15 +38,15 @@
         {
             <h4>Add New Seat</h4>
             <EditForm Model="SelectedSeat" OnValidSubmit="NewSeatSubmit">
-                <DataAnnotationsValidator/>
-                <ValidationSummary/>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="seatNumber">Seat Number</label>
-                    <InputNumber id="seatNumber" class="form-control" @bind-Value="SelectedSeat.SeatNumber"/>
+                    <label for="seatNumber">@Localizer["Seat"] Number</label>
+                    <InputNumber id="seatNumber" class="form-control" @bind-Value="SelectedSeat.SeatNumber" />
                 </div>
                 <div class="form-group">
-                    <label for="theaterRowId">Theater Row</label>
+                    <label for="theaterRowId">@Localizer["Theater"] @Localizer["Row"]</label>
                     <InputSelect id="theaterRowId" class="form-control" @bind-Value="SelectedSeat.TheaterRowId">
                         @foreach (var theaterRow in TheaterRows)
                         {
@@ -61,15 +61,15 @@
         {
             <h4>Update Seat</h4>
             <EditForm Model="SelectedSeat" OnValidSubmit="UpdateSeatSubmit">
-                <DataAnnotationsValidator/>
-                <ValidationSummary/>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="seatNumber">Seat Number</label>
-                    <InputNumber id="seatNumber" class="form-control" @bind-Value="SelectedSeat.SeatNumber"/>
+                    <label for="seatNumber">@Localizer["Seat"] Number</label>
+                    <InputNumber id="seatNumber" class="form-control" @bind-Value="SelectedSeat.SeatNumber" />
                 </div>
                 <div class="form-group">
-                    <label for="theaterRowId">Theater Row</label>
+                    <label for="theaterRowId">@Localizer["Theater"] @Localizer["Row"]</label>
                     <InputSelect id="theaterRowId" class="form-control" @bind-Value="SelectedSeat.TheaterRowId">
                         @foreach (var theaterRow in TheaterRows)
                         {
@@ -85,6 +85,8 @@
 </div>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     List<SeatDto> Seats = new List<SeatDto>();
     SeatDto SelectedSeat = new SeatDto();
     List<TheaterRowDto> TheaterRows = new List<TheaterRowDto>();
@@ -110,31 +112,31 @@
         else
         {
             SelectedSeat = new SeatDto
-            {
-                Id = seat.Id,
-                SeatNumber = seat.SeatNumber,
-                TheaterRowId = seat.TheaterRowId
-            };
+                {
+                    Id = seat.Id,
+                    SeatNumber = seat.SeatNumber,
+                    TheaterRowId = seat.TheaterRowId
+                };
         }
     }
 
     private void SelectSeat()
     {
         SelectedSeat = new SeatDto
-        {
-            Id = 0,
-            SeatNumber = 1,
-            TheaterRowId = 1
-        };
+            {
+                Id = 0,
+                SeatNumber = 1,
+                TheaterRowId = 1
+            };
     }
 
     private async Task NewSeatSubmit()
     {
         NewSeat = new AddSeatDto
-        {
-            SeatNumber = SelectedSeat.SeatNumber,
-            TheaterRowId = SelectedSeat.TheaterRowId
-        };
+            {
+                SeatNumber = SelectedSeat.SeatNumber,
+                TheaterRowId = SelectedSeat.TheaterRowId
+            };
 
         var response = await Http.PostAsJsonAsync("api/seat", NewSeat);
 
@@ -148,12 +150,12 @@
 
     private async Task UpdateSeatSubmit()
     {
-        
+
         EditSeat = new UpdateSeatDto
-        {
-            SeatNumber = SelectedSeat.SeatNumber,
-            TheaterRowId = SelectedSeat.TheaterRowId
-        };
+            {
+                SeatNumber = SelectedSeat.SeatNumber,
+                TheaterRowId = SelectedSeat.TheaterRowId
+            };
         var response = await Http.PutAsJsonAsync($"api/seat/{SelectedSeat.Id}", EditSeat);
 
         if (response.IsSuccessStatusCode)

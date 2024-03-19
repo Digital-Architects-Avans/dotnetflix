@@ -12,18 +12,18 @@
 
 @inject NavigationManager NavigationManager
 
-<h1>Collect your tickets</h1>
+<h1>@Localizer["OverviewCollectTickets"]</h1>
 
 @switch (Status)
 {
     case PageState.Loading:
 
-        <p>Loading...</p>
+        <p>@Localizer["OverviewLoading"]...</p>
 
         break;
     case PageState.CodeFound:
 
-        <p>Getting your tickets... <a href="/overview" @onclick="ResetPage">Try again</a></p>
+        <p>@Localizer["OverviewGettingTickets"]... <a href="/overview" @onclick="ResetPage">Try again</a></p>
 
         break;
     case PageState.EnterCode:
@@ -33,12 +33,12 @@
             <FluentTextField
                 @bind-Value=_orderCode
                 Minlength="6" Maxlength="6"
-                Label="Enter your unique order code:"
+                Label=@Localizer["OverviewEnterCode"]
                 Style="width: 140px;"/>
             <FluentButton IconStart="@(new Icons.Regular.Size20.TicketDiagonal())"
                           Appearance="Appearance.Accent"
                           OnClick="@CollectTicketsClicked">
-                Collect tickets
+                @Localizer["OverviewCollectTicketsButton"]
             </FluentButton>
         </FluentStack>
 
@@ -52,12 +52,12 @@
             }
             <FluentDivider Style="margin: 20px 0;"></FluentDivider>
             <FluentLabel Typo="Typography.HeroTitle">@Order.Uuid.ToUpper()</FluentLabel>
-            <p>Please use this code to collect your tickets in the cinema.</p>
+            <p>@Localizer["OverviewUseThisCode"]</p>
         </FluentCard>
 
         <MovieDetails Movie="Movie" IsSneakPreview="@_isSneakPreview"/>
 
-        <h4 style="margin-top: 24px">Tickets for order #@OrderCode:</h4>
+        <p style="margin-top: 24px">@Localizer["OverviewTicketsForOrder", OrderCode]:</p>
         @foreach (var ticket in Tickets)
         {
             <TicketDetail Ticket="ticket" Movie="Movie" Show="Show"/>
@@ -68,7 +68,7 @@
         break;
     case PageState.OrderNotFound:
 
-        <p>No order found with #@OrderCode. <a href="/overview" @onclick="ResetPage">Try again</a></p>
+        <p>@Localizer["OverviewNoOrderFound", OrderCode] <a href="/overview" @onclick="ResetPage">@Localizer["OverviewTryAgain"]</a></p>
         break;
     default:
         throw new ArgumentOutOfRangeException();
@@ -81,6 +81,7 @@
     [Inject] public ITicketService? TicketService { get; set; }
     [Inject] public IShowService? ShowService { get; set; }
     [Inject] public IMovieService? MovieService { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     // 2) Public properties to expose to the view
     private OrderDto Order { get; set; } = new OrderDto();

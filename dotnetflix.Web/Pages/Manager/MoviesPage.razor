@@ -1,53 +1,53 @@
 @page "/manager/movies"
 @using dotnetflix.Models.Dtos.Movie
 @inject HttpClient Http
-<h3>Manager: Movies</h3>
+<h3>@Localizer["MoviesPageManagerMovies"]</h3>
 
 <NavigationHeader />
 
 <div class="row">
     <div class="col-md-6">
-       <table class="table">
-                   <thead>
-                       <tr>
-                           <th>Movie titles</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                   @foreach (var movie in Movies)
-                   {
-                       <tr @onclick="() => SelectMovie(movie)" class="@(SelectedMovie.Id == movie.Id ? "selected-movie" : "new-movie")">
-                           <td>@movie.Title</td>
-                       </tr> 
-                   }
-                   <tr @onclick="() => SelectMovie()" class="new-movie">
-                       <td>Add New Movie</td>
-                   </tr>
-                   </tbody>
-               </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Localizer["MoviesPageMovieTitles"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var movie in Movies)
+                {
+                    <tr @onclick="() => SelectMovie(movie)" class="@(SelectedMovie.Id == movie.Id ? "selected-movie" : "new-movie")">
+                        <td>@movie.Title</td>
+                    </tr>
+                }
+                <tr @onclick="() => SelectMovie()" class="new-movie">
+                    <td>Add New Movie</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="col-md-6">
         @if (SelectedMovie.Id < 1)
         {
-            <h4>Add New Movie</h4>
+            <h4>@Localizer["MoviesPageAddNewMovie"]</h4>
             <EditForm Model="SelectedMovie" OnValidSubmit="NewMovieSubmit">
-                <DataAnnotationsValidator/>
-                <ValidationSummary/>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="title">Title</label>
-                    <InputText id="title" class="form-control" @bind-Value="SelectedMovie.Title"/>
+                    <label for="title">@Localizer["Title"]</label>
+                    <InputText id="title" class="form-control" @bind-Value="SelectedMovie.Title" />
                 </div>
                 <div class="form-group">
-                    <label for="year">Year</label>
-                    <InputNumber id="year" class="form-control" @bind-Value="SelectedMovie.Year"/>
+                    <label for="year">@Localizer["Year"]</label>
+                    <InputNumber id="year" class="form-control" @bind-Value="SelectedMovie.Year" />
                 </div>
                 <div class="form-group">
-                    <label for="description">Description</label>
-                    <InputText id="description" class="form-control" @bind-Value="SelectedMovie.Description"/>
+                    <label for="description">@Localizer["Description"]</label>
+                    <InputText id="description" class="form-control" @bind-Value="SelectedMovie.Description" />
                 </div>
                 <div class="form-group">
-                    <label for="rating">Rating</label>
+                    <label for="rating">@Localizer["Rating"]</label>
                     <InputSelect id="rating" class="form-control" @bind-Value="SelectedMovie.Rating">
                         @foreach (var rating in Enum.GetValues(typeof(Rating)))
                         {
@@ -56,74 +56,76 @@
                     </InputSelect>
                 </div>
                 <div class="form-group">
-                    <label for="runtime">Runtime</label>
-                    <InputNumber id="runtime" class="form-control" @bind-Value="SelectedMovie.Runtime"/>
+                    <label for="runtime">@Localizer["RunTime"]</label>
+                    <InputNumber id="runtime" class="form-control" @bind-Value="SelectedMovie.Runtime" />
                 </div>
                 <div class="form-group">
-                    <label for="spokenLanguages">Spoken Languages</label>
-                    <InputText id="spokenLanguages" class="form-control" @bind-Value="SelectedMovie.SpokenLanguages"/>
+                    <label for="spokenLanguages">@Localizer["SpokenLanguages"]</label>
+                    <InputText id="spokenLanguages" class="form-control" @bind-Value="SelectedMovie.SpokenLanguages" />
                 </div>
                 <div class="form-group">
-                    <label for="image">Image</label>
-                    <InputText id="image" class="form-control" @bind-Value="SelectedMovie.Image"/>
+                    <label for="image">@Localizer["Image"]</label>
+                    <InputText id="image" class="form-control" @bind-Value="SelectedMovie.Image" />
                 </div>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">@Localizer["Add"]</button>
             </EditForm>
         }
-else
-{
-    <h4>Update Movie</h4>
-    <EditForm Model="SelectedMovie" OnValidSubmit="UpdateMovieSubmit">
-        <DataAnnotationsValidator/>
-        <ValidationSummary/>
+        else
+        {
+            <h4>@Localizer["MoviesPageUpdateMovie"]</h4>
+            <EditForm Model="SelectedMovie" OnValidSubmit="UpdateMovieSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-        <div class="form-group">
-            <label for="title">Title</label>
-            <InputText id="title" class="form-control" @bind-Value="SelectedMovie.Title"/>
-        </div>
-        <div class="form-group">
-            <label for="year">Year</label>
-            <InputNumber id="year" class="form-control" @bind-Value="SelectedMovie.Year"/>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <InputText id="description" class="form-control" @bind-Value="SelectedMovie.Description"/>
-        </div>
-        <div class="form-group">
-            <label for="rating">Rating</label>
-            <InputSelect id="rating" class="form-control" @bind-Value="SelectedMovie.Rating">
-                @foreach (var rating in Enum.GetValues(typeof(Rating)))
-                {
-                    <option value="@rating">@rating</option>
-                }
-            </InputSelect>
-        </div>
-        <div class="form-group">
-            <label for="runtime">Runtime</label>
-            <InputNumber id="runtime" class="form-control" @bind-Value="SelectedMovie.Runtime"/>
-        </div>
-        <div class="form-group">
-            <label for="spokenLanguages">Spoken Languages</label>
-            <InputText id="spokenLanguages" class="form-control" @bind-Value="SelectedMovie.SpokenLanguages"/>
-        </div>
-        <div class="form-group">
-            <label for="image">Image</label>
-            <InputText id="image" class="form-control" @bind-Value="SelectedMovie.Image"/>
-        </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-    </EditForm>
-    <button class="btn btn-danger" @onclick="DeleteMovieSubmit">Delete</button>
+                <div class="form-group">
+                    <label for="title">@Localizer["Title"]</label>
+                    <InputText id="title" class="form-control" @bind-Value="SelectedMovie.Title" />
+                </div>
+                <div class="form-group">
+                    <label for="year">@Localizer["Year"]</label>
+                    <InputNumber id="year" class="form-control" @bind-Value="SelectedMovie.Year" />
+                </div>
+                <div class="form-group">
+                    <label for="description">@Localizer["Description"]</label>
+                    <InputText id="description" class="form-control" @bind-Value="SelectedMovie.Description" />
+                </div>
+                <div class="form-group">
+                    <label for="rating">@Localizer["Rating"]</label>
+                    <InputSelect id="rating" class="form-control" @bind-Value="SelectedMovie.Rating">
+                        @foreach (var rating in Enum.GetValues(typeof(Rating)))
+                        {
+                            <option value="@rating">@rating</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="runtime">@Localizer["RunTime"]</label>
+                    <InputNumber id="runtime" class="form-control" @bind-Value="SelectedMovie.Runtime" />
+                </div>
+                <div class="form-group">
+                    <label for="spokenLanguages">@Localizer["SpokenLanguages"]</label>
+                    <InputText id="spokenLanguages" class="form-control" @bind-Value="SelectedMovie.SpokenLanguages" />
+                </div>
+                <div class="form-group">
+                    <label for="image">@Localizer["Image"]</label>
+                    <InputText id="image" class="form-control" @bind-Value="SelectedMovie.Image" />
+                </div>
+                <button type="submit" class="btn btn-primary">@Localizer["Update"]</button>
+            </EditForm>
+            <button class="btn btn-danger" @onclick="DeleteMovieSubmit">@Localizer["Delete"]</button>
 
-}
+        }
     </div>
 </div>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
+
     List<MovieDto> Movies = new List<MovieDto>();
     MovieDto SelectedMovie = new MovieDto();
     UpdateMovieDto EditMovie = new UpdateMovieDto();
     AddMovieDto NewMovie = new AddMovieDto();
-    
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -132,52 +134,52 @@ else
         EditMovie = new UpdateMovieDto();
         SelectMovie();
     }
-    
+
     private void SelectMovie(MovieDto movie)
     {
         // Create a copy of the selected movie
         SelectedMovie = new MovieDto
-        {
-            Id = movie.Id,
-            Title = movie.Title,
-            Year = movie.Year,
-            Description = movie.Description,
-            Rating = movie.Rating,
-            Runtime = movie.Runtime,
-            SpokenLanguages = movie.SpokenLanguages,
-            Image = movie.Image
-        };
+            {
+                Id = movie.Id,
+                Title = movie.Title,
+                Year = movie.Year,
+                Description = movie.Description,
+                Rating = movie.Rating,
+                Runtime = movie.Runtime,
+                SpokenLanguages = movie.SpokenLanguages,
+                Image = movie.Image
+            };
     }
-    
+
     private void SelectMovie()
     {
         // Create a new movie offering default values
         SelectedMovie = new MovieDto
-        {
-            Id = 0,
-            Title = "Barry Pooter",
-            Year = 2001,
-            Description = "Master piece directed by Master Movies.",
-            Rating = Rating.G,
-            Runtime = 4,
-            SpokenLanguages = "NL",
-            Image = "no-cover.jpg"
-        };
+            {
+                Id = 0,
+                Title = "Barry Pooter",
+                Year = 2001,
+                Description = "Master piece directed by Master Movies.",
+                Rating = Rating.G,
+                Runtime = 4,
+                SpokenLanguages = "NL",
+                Image = "no-cover.jpg"
+            };
     }
-    
+
     private async Task NewMovieSubmit()
     {
         NewMovie = new AddMovieDto
-        {
-            Title = SelectedMovie.Title,
-            Year = SelectedMovie.Year,
-            Description = SelectedMovie.Description,
-            Rating = SelectedMovie.Rating,
-            Runtime = SelectedMovie.Runtime,
-            SpokenLanguages = SelectedMovie.SpokenLanguages,
-            Image = SelectedMovie.Image
-        };
-        
+            {
+                Title = SelectedMovie.Title,
+                Year = SelectedMovie.Year,
+                Description = SelectedMovie.Description,
+                Rating = SelectedMovie.Rating,
+                Runtime = SelectedMovie.Runtime,
+                SpokenLanguages = SelectedMovie.SpokenLanguages,
+                Image = SelectedMovie.Image
+            };
+
         var response = await Http.PostAsJsonAsync("api/movie", NewMovie);
 
         if (response.IsSuccessStatusCode)
@@ -198,16 +200,16 @@ else
     private async Task UpdateMovieSubmit()
     {
         EditMovie = new UpdateMovieDto
-        {
-            Title = SelectedMovie.Title,
-            Year = SelectedMovie.Year,
-            Description = SelectedMovie.Description,
-            Rating = SelectedMovie.Rating,
-            Runtime = SelectedMovie.Runtime,
-            SpokenLanguages = SelectedMovie.SpokenLanguages,
-            Image = SelectedMovie.Image
-        };
-        
+            {
+                Title = SelectedMovie.Title,
+                Year = SelectedMovie.Year,
+                Description = SelectedMovie.Description,
+                Rating = SelectedMovie.Rating,
+                Runtime = SelectedMovie.Runtime,
+                SpokenLanguages = SelectedMovie.SpokenLanguages,
+                Image = SelectedMovie.Image
+            };
+
         var response = await Http.PutAsJsonAsync($"api/movie/{SelectedMovie.Id}", EditMovie);
 
         if (response.IsSuccessStatusCode)
@@ -223,7 +225,7 @@ else
             // Handle error here, e.g., show an error message
         }
     }
-    
+
     private async Task DeleteMovieSubmit()
     {
         var response = await Http.DeleteAsync($"api/movie/{SelectedMovie.Id}");

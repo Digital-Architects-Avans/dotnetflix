@@ -5,18 +5,18 @@
 
 @if (Shows == null)
 {
-    <h1>Loading shows..</h1>
+    <h1>@Localizer["AgendaLoadingShows"]..</h1>
 }
 else
 {
     DateTime today = DateTime.Now;
-    <h1>Agenda</h1>
+    <h1>@Localizer["AgendaTitle"]</h1>
 
     // Days buttons
     <div class="d-grid">
         <div class="row-cols-7">
-            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today, false))">This Week</FluentButton>
-            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today))">Vandaag</FluentButton>
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today, false))">@Localizer["AgendaThisWeek"]</FluentButton>
+            <FluentButton Appearance="Appearance.Lightweight" class="m-2" OnClick="@(() => GetShowByDay(today))">@Localizer["AgendaToday"]</FluentButton>
             @for (int i = 0; i < 5; i++)
             {
                 DateTime day = today.AddDays(i + 1);
@@ -29,15 +29,15 @@ else
 
         @if (MoviesWithDates != null)
         {
-        <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)"></PropertyColumn>
+            <PropertyColumn Style="font-size: 20px;" Title="" Property="@(s => s.MovieTitle)"></PropertyColumn>
 
-        @* Movie info Column *@
-        <TemplateColumn>
+            @* Movie info Column *@
+            <TemplateColumn>
                 <FluentButton IconStart="@(new Icons.Regular.Size16.Info())" Appearance="Appearance.Accent" style="width: 30px; height: 30px;" OnClick="@(() => GetMovieDetails(context.MovieId))"></FluentButton>
-        </TemplateColumn>
+            </TemplateColumn>
 
-        @* Dates Column *@
-        <TemplateColumn Title="">
+            @* Dates Column *@
+            <TemplateColumn Title="">
                 @{
                     for (int i = 0; i < context.ShowIds.Count; i++)
                     {
@@ -56,7 +56,7 @@ else
                         </button>
                     }
                 }
-        </TemplateColumn>
+            </TemplateColumn>
         }
     </FluentDataGrid>
 }
@@ -66,7 +66,7 @@ else
     [Inject]
     public IMovieService? MovieService { get; set; }
     public MovieDto? Movie { get; set; }
-
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,7 +136,8 @@ else
 
                 ItemSize = 54;
                 IsDayGrid = true;
-            } else
+            }
+            else
             {
                 DateTime endDate = date.AddDays(7);
                 filteredGroup = group.Where(d => d.Date.Date >= date.Date && d.Date.Date <= endDate.Date).ToList();
@@ -145,20 +146,20 @@ else
                 IsDayGrid = false;
             }
 
-                MovieWithDates movieWithDates = new MovieWithDates
-                    {
+            MovieWithDates movieWithDates = new MovieWithDates
+                {
                     ShowIds = filteredGroup.Select(s => s.Id).ToList(),
                     TheaterId = filteredGroup.Select(s => s.TheaterId).ToList(),
-                        MovieId = show.MovieId,
-                        MovieTitle = show.MovieTitle,
+                    MovieId = show.MovieId,
+                    MovieTitle = show.MovieTitle,
                     Dates = filteredGroup.Select(s => s.Date).ToList()
-                    };
+                };
 
-                moviesWithDatesList.Add(movieWithDates);
-                count++;
-            }
-            MoviesWithDates = moviesWithDatesList.AsQueryable();
-        
+            moviesWithDatesList.Add(movieWithDates);
+            count++;
+        }
+        MoviesWithDates = moviesWithDatesList.AsQueryable();
+
         StateHasChanged();
         return Task.CompletedTask;
     }

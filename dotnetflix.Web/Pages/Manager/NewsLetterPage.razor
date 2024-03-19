@@ -12,7 +12,7 @@
         <Panel1>
             <EditForm Model="@newsLetterForm" OnValidSubmit="@HandleValidSubmit" class="m-lg-3 me-lg-5" FormName="newsLetter">
 
-                <h1>Write and Send a News Letter</h1>
+                <h1>@Localizer["NewsletterWriteTitle"]</h1>
 
                 <FluentStack HorizontalAlignment="HorizontalAlignment.Start" Orientation="Orientation.Vertical">
                     <FluentTextArea Appearance="FluentInputAppearance.Filled" Name="message" Label="Message" @bind-Value="newsLetterForm.Message" Rows="28" Required Style="width: 100%;" />
@@ -20,7 +20,7 @@
 
                 <FluentStack HorizontalAlignment="HorizontalAlignment.Start" Class="mt-2" Orientation="Orientation.Horizontal">
                     <FluentTextField Appearance="FluentInputAppearance.Filled" Name="subject" Label="Subject" @bind-Value="newsLetterForm.Subject" Required Style="" />
-                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Send News Letter</FluentButton>
+                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">@Localizer["NewsletterWriteSend"]</FluentButton>
                 </FluentStack>
             </EditForm>
         </Panel1>
@@ -28,7 +28,7 @@
         <Panel2>
             <div class="m-lg-3">
 
-                    <h3>Subscribers</h3>
+                    <h3>@Localizer["Subscribers"]</h3>
 
                 <FluentListbox Items="@Subscribers" OptionValue="@(i => i.Id.ToString())" @bind-SelectedOption=@Subscriber>
                     <OptionTemplate>
@@ -67,6 +67,7 @@
     [Inject]
     public ISubscriberService? SubscriberService { get; set; }
     public IEnumerable<SubscriberDto>? Subscribers { get; set; }
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     public SubscriberDto Subscriber { get; set; } = default;
     public Boolean IsNames { get; set; } = false;

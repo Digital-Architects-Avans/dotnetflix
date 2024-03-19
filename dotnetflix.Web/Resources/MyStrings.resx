@@ -1,0 +1,531 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActualSeatCount" xml:space="preserve">
+    <value>Actual seat count</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddNewShow" xml:space="preserve">
+    <value>Add new show</value>
+  </data>
+  <data name="AddNewTheater" xml:space="preserve">
+    <value>Add new theater</value>
+  </data>
+  <data name="AgendaLoadingShows" xml:space="preserve">
+    <value>Loading shows</value>
+  </data>
+  <data name="AgendaThisWeek" xml:space="preserve">
+    <value>This week</value>
+  </data>
+  <data name="AgendaTitle" xml:space="preserve">
+    <value>Agenda</value>
+  </data>
+  <data name="AgendaToday" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="Availability" xml:space="preserve">
+    <value>Availability</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="BasePrice" xml:space="preserve">
+    <value>Base prijs</value>
+  </data>
+  <data name="CheckoutGrandTotal" xml:space="preserve">
+    <value>Grand total</value>
+  </data>
+  <data name="CheckoutPageGetTicketsByMail" xml:space="preserve">
+    <value>Get your tickets by mail</value>
+  </data>
+  <data name="CheckoutPageNoTicketsSelected" xml:space="preserve">
+    <value>No tickets selected</value>
+  </data>
+  <data name="CheckoutPagePricePerTicket" xml:space="preserve">
+    <value>Price per ticket</value>
+  </data>
+  <data name="CheckoutPageQuantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="CheckoutPageTicketType" xml:space="preserve">
+    <value>Ticket type</value>
+  </data>
+  <data name="CheckoutPageTotalPrice" xml:space="preserve">
+    <value>Total price</value>
+  </data>
+  <data name="CollectTickets" xml:space="preserve">
+    <value>Collect tickets</value>
+  </data>
+  <data name="CustomerEmail" xml:space="preserve">
+    <value>Customer email</value>
+  </data>
+  <data name="CustomerName" xml:space="preserve">
+    <value>Customer name</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>days ago</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="FirstShown" xml:space="preserve">
+    <value>First shown</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Hello</value>
+  </data>
+  <data name="HomeGatheringScreenings" xml:space="preserve">
+    <value>Gathering screenings</value>
+  </data>
+  <data name="HomeWhatsOn" xml:space="preserve">
+    <value>What's on</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="ManagerOccupancyNoOccupancy" xml:space="preserve">
+    <value>No screenings available for the selected date</value>
+  </data>
+  <data name="ManagerOccupancyTitle" xml:space="preserve">
+    <value>Manager: Theater occupancy</value>
+  </data>
+  <data name="ManagerPageTitle" xml:space="preserve">
+    <value>Manager dashboard</value>
+  </data>
+  <data name="ManagerRevenueTicketsSold" xml:space="preserve">
+    <value>Tickets sold</value>
+  </data>
+  <data name="ManagerRevenueTitle" xml:space="preserve">
+    <value>Manager: Movie revenue</value>
+  </data>
+  <data name="ManagerRevenueTotalRevenue" xml:space="preserve">
+    <value>Total revenue</value>
+  </data>
+  <data name="Movie" xml:space="preserve">
+    <value>Movie</value>
+  </data>
+  <data name="MoviesPageAddNewMovie" xml:space="preserve">
+    <value>Add new movie</value>
+  </data>
+  <data name="MoviesPageManagerMovies" xml:space="preserve">
+    <value>Manager: Movies</value>
+  </data>
+  <data name="MoviesPageMovieTitles" xml:space="preserve">
+    <value>Movie titles</value>
+  </data>
+  <data name="MoviesPageUpdateMovie" xml:space="preserve">
+    <value>Update movie</value>
+  </data>
+  <data name="MovieTitle" xml:space="preserve">
+    <value>Movie title</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NavigationHeaderMovies" xml:space="preserve">
+    <value>Movies</value>
+  </data>
+  <data name="NavigationHeaderOrders" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="NavigationHeaderSeats" xml:space="preserve">
+    <value>Seats</value>
+  </data>
+  <data name="NavigationHeaderShows" xml:space="preserve">
+    <value>Shows</value>
+  </data>
+  <data name="NavigationHeaderTheaterRows" xml:space="preserve">
+    <value>Theater rows</value>
+  </data>
+  <data name="NavigationHeaderTheaters" xml:space="preserve">
+    <value>Theaters</value>
+  </data>
+  <data name="NavigationHeaderTickets" xml:space="preserve">
+    <value>Tickets</value>
+  </data>
+  <data name="NavigationHeaderTicketTypes" xml:space="preserve">
+    <value>Ticket types</value>
+  </data>
+  <data name="NavigationHeaderTitle" xml:space="preserve">
+    <value>Navigate to</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="Newsletter" xml:space="preserve">
+    <value>Newsletter</value>
+  </data>
+  <data name="NewsletterConfirm" xml:space="preserve">
+    <value>Your subscribtion is confirmed</value>
+  </data>
+  <data name="NewsletterThankYou" xml:space="preserve">
+    <value>Thank you for subscribing to our newsletter</value>
+  </data>
+  <data name="NewsletterTitle" xml:space="preserve">
+    <value>Subscribe to our newsletter</value>
+  </data>
+  <data name="NewsletterWriteSend" xml:space="preserve">
+    <value>Send newsletter</value>
+  </data>
+  <data name="NewsletterWriteTitle" xml:space="preserve">
+    <value>Write a newsletter</value>
+  </data>
+  <data name="NoSeatsAvailable" xml:space="preserve">
+    <value>No seats available for this show</value>
+  </data>
+  <data name="NumberOfSeats" xml:space="preserve">
+    <value>Number of seats</value>
+  </data>
+  <data name="Occupancy" xml:space="preserve">
+    <value>Occupancy</value>
+  </data>
+  <data name="Occupied" xml:space="preserve">
+    <value>Occupied</value>
+  </data>
+  <data name="OrderPageAddNewOrder" xml:space="preserve">
+    <value>Add new order</value>
+  </data>
+  <data name="OrderPageCurrentTickets" xml:space="preserve">
+    <value>Current tickets</value>
+  </data>
+  <data name="OrderPageDetailsOrderPageDetails" xml:space="preserve">
+    <value>Order details</value>
+  </data>
+  <data name="OrderPageSelectedWantedTickets" xml:space="preserve">
+    <value>Select all wanted tickets</value>
+  </data>
+  <data name="Orders" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="OrdersPageManagerOrders" xml:space="preserve">
+    <value>Manager: Orders</value>
+  </data>
+  <data name="OverviewCollectTickets" xml:space="preserve">
+    <value>Collect your tickets</value>
+  </data>
+  <data name="OverviewCollectTicketsButton" xml:space="preserve">
+    <value>Collect tickets</value>
+  </data>
+  <data name="OverviewEnterCode" xml:space="preserve">
+    <value>Enter your unique number</value>
+  </data>
+  <data name="OverviewGettingTickets" xml:space="preserve">
+    <value>Getting tickets</value>
+  </data>
+  <data name="OverviewLoading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="OverviewNoOrderFound" xml:space="preserve">
+    <value>No order found with #{0}</value>
+  </data>
+  <data name="OverviewTicketsForOrder" xml:space="preserve">
+    <value>Tickets for order #{0}</value>
+  </data>
+  <data name="OverviewTryAgain" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="OverviewUseThisCode" xml:space="preserve">
+    <value>Please use this code to collect your tickets in the cinema.</value>
+  </data>
+  <data name="PaymentMethod" xml:space="preserve">
+    <value>Payment method</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="PrintTicket" xml:space="preserve">
+    <value>Print ticket</value>
+  </data>
+  <data name="RateUs" xml:space="preserve">
+    <value>Rate us</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="Revenue" xml:space="preserve">
+    <value>Revenue</value>
+  </data>
+  <data name="ReviewsPageEnterName" xml:space="preserve">
+    <value>Enter your name</value>
+  </data>
+  <data name="ReviewsPageNoReviews" xml:space="preserve">
+    <value>No reviews yet</value>
+  </data>
+  <data name="ReviewsPageRateService" xml:space="preserve">
+    <value>Rate our service</value>
+  </data>
+  <data name="ReviewsPageSelect" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="ReviewsPageSubmitReview" xml:space="preserve">
+    <value>Submit your review</value>
+  </data>
+  <data name="ReviewsPageTitle" xml:space="preserve">
+    <value>Reviews .NETflix</value>
+  </data>
+  <data name="ReviewsPageWriteReview" xml:space="preserve">
+    <value>Write a review</value>
+  </data>
+  <data name="Row" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="RowNumber" xml:space="preserve">
+    <value>Row number</value>
+  </data>
+  <data name="RunTime" xml:space="preserve">
+    <value>Run time</value>
+  </data>
+  <data name="ScreenTime" xml:space="preserve">
+    <value>Screen time</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Seat" xml:space="preserve">
+    <value>Seat</value>
+  </data>
+  <data name="Seats" xml:space="preserve">
+    <value>Seats</value>
+  </data>
+  <data name="SeatSelectionNoSeatsAvailable" xml:space="preserve">
+    <value>No seats available for this show</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="ShowDate" xml:space="preserve">
+    <value>Show date</value>
+  </data>
+  <data name="ShowDetails" xml:space="preserve">
+    <value>Show details</value>
+  </data>
+  <data name="Shows" xml:space="preserve">
+    <value>Shows</value>
+  </data>
+  <data name="ShowTime" xml:space="preserve">
+    <value>Show time</value>
+  </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>Sign up</value>
+  </data>
+  <data name="SocialMediaBar" xml:space="preserve">
+    <value>Visit our socials</value>
+  </data>
+  <data name="SpokenLanguages" xml:space="preserve">
+    <value>Spoken languages</value>
+  </data>
+  <data name="Subscribers" xml:space="preserve">
+    <value>Subscribers</value>
+  </data>
+  <data name="Supplements" xml:space="preserve">
+    <value>Supplements</value>
+  </data>
+  <data name="SupplementsAddNewSupplement" xml:space="preserve">
+    <value>Add new supplement</value>
+  </data>
+  <data name="SupplementsTitle" xml:space="preserve">
+    <value>Get your favourite cinema treats with discount</value>
+  </data>
+  <data name="SupplementsUpdateSupplement" xml:space="preserve">
+    <value>Update supplements</value>
+  </data>
+  <data name="Theater" xml:space="preserve">
+    <value>Theater</value>
+  </data>
+  <data name="TheaterName" xml:space="preserve">
+    <value>Theater name</value>
+  </data>
+  <data name="TheaterRowManagementTitle" xml:space="preserve">
+    <value>Theater Row Management</value>
+  </data>
+  <data name="Ticket" xml:space="preserve">
+    <value>Ticket</value>
+  </data>
+  <data name="TicketsPageOrderConfirm" xml:space="preserve">
+    <value>Confirm order</value>
+  </data>
+  <data name="TicketsPageOrderTickets" xml:space="preserve">
+    <value>Order Tickets for {0}</value>
+  </data>
+  <data name="TicketsPageSelectSeat" xml:space="preserve">
+    <value>Select a seat</value>
+  </data>
+  <data name="TicketsPageSelectSeats" xml:space="preserve">
+    <value>Select seats</value>
+  </data>
+  <data name="TicketsPageSelectTicketTypes" xml:space="preserve">
+    <value>Select ticket types</value>
+  </data>
+  <data name="TicketType" xml:space="preserve">
+    <value>Ticket type</value>
+  </data>
+  <data name="TicketTypesDiscount" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="TicketTypesPageAddNewTicketType" xml:space="preserve">
+    <value>Add new ticket type</value>
+  </data>
+  <data name="TicketTypesPageName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="TicketTypesPageTicketType" xml:space="preserve">
+    <value>Ticket type / discount</value>
+  </data>
+  <data name="TicketTypesPageUpdateTicketType" xml:space="preserve">
+    <value>Update ticket type</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="TotalPrice" xml:space="preserve">
+    <value>Total price</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="WhatsOn" xml:space="preserve">
+    <value>What's on</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+</root>

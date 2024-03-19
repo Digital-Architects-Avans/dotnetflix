@@ -9,7 +9,7 @@
     {
         <EditForm Model="@newsLetterForm" OnValidSubmit="@HandleValidSubmit" FormName="newsLetter">
 
-            <h1>Subscribe to our News Letter!</h1>
+            <h1>@Localizer["NewsletterTitle"]</h1>
 
             <DataAnnotationsValidator />
             <FluentValidationSummary />
@@ -30,8 +30,8 @@
     } else
     {
         <FluentStack Class="mt-5" HorizontalAlignment="HorizontalAlignment.Center" Orientation="Orientation.Vertical">
-            <h2>Your subscription has been confirmed.</h2>
-            <h3 class="text-info">Thank you for Subscribing to our news Letter!</h3>
+            <h2>@Localizer["NewsletterConfirm"].</h2>
+            <h3 class="text-info">@Localizer["NewsletterThankYou"]!</h3>
             <FluentButton IconStart="@(new Icons.Filled.Size24.CaretLeft())" OnClick="@(() => ResetPage())">Back</FluentButton>
         </FluentStack>
     }
@@ -39,6 +39,7 @@
 </div>
 
 @code {
+    [Inject] public IStringLocalizer<MyStrings> Localizer { get; set; }
 
     [SupplyParameterFromForm]
     private NewsLetterForm newsLetterForm { get; set; } = new();
