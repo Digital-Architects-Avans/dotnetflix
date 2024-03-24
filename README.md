@@ -56,8 +56,10 @@ Het project bestaat uit drie solutions:
 Om de .NETflix applicatie lokaal uit te voeren, volg deze stappen:
 
 1. Kloon deze repository naar uw lokale machine.
-2. Navigeer naar de afzonderlijke `dotnetfix.Api` en `dotnetflix.Web` directories en voer `dotnet run` uit om de backend API en de frontend Blazor-app te starten.
+2. Navigeer naar de afzonderlijke dotnetfix.Api en dotnetflix.Web directories en voer dotnet run uit om de backend API en de frontend Blazor-app te starten.
 3. Zorg ervoor dat u de nodige afhankelijkheden en configuraties heeft ingesteld, inclusief toegang voor de database en Auth0-inloggegevens.
+
+Om verbinding te kunnen maken met de Azure SQL-database, moet het IP-adres van de gebruiker worden toegevoegd aan de white list met toegestane IP-adressen. Neem contact op met een van de projectleden om uw IP-adres toe te laten voegen aan de white list.
 
 ## Licentie
 
